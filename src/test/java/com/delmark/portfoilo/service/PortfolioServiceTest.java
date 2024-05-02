@@ -201,6 +201,7 @@ public class PortfolioServiceTest {
         Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(List.of(existingTech)));
 
         Mockito.when(techRepository.findById(1L)).thenReturn(Optional.of(existingTech));
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
         Mockito.when(portfolioRepository.save(expectedPortfolio)).thenReturn(expectedPortfolio);
 
@@ -218,6 +219,7 @@ public class PortfolioServiceTest {
 
         Mockito.when(techRepository.findById(1L)).thenReturn(Optional.of(existingTech));
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
         assertThrows(TechAlreadyInPortfolioException.class, () -> portfolioService.addTechToPortfolio(1L,1L));
     }
@@ -231,6 +233,7 @@ public class PortfolioServiceTest {
         Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
 
         Mockito.when(techRepository.findById(1L)).thenReturn(Optional.of(existingTech));
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
 
         assertThrows(AccessDeniedException.class, () -> portfolioService.addTechToPortfolio(1L,1L));
@@ -256,6 +259,7 @@ public class PortfolioServiceTest {
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
         Mockito.when(portfolioRepository.save(expectedPortfolio)).thenReturn(expectedPortfolio);
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
         assertEquals(expectedPortfolio, portfolioService.portfolioEdit(1L, dto));
     }
@@ -284,6 +288,7 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Попытка редактировать чужое портфолио")
     void editOtherUserPortfolio() {
         User otherUser = new User(2L, "la", "lala", true, new HashSet<>());
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
 
         PortfolioDto dto = new PortfolioDto(

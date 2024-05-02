@@ -1,37 +1,45 @@
 package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
+import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Projects;
+import com.delmark.portfoilo.service.interfaces.ProjectService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/projects")
 public class ProjectsController {
 
+    ProjectService projectService;
+
     @GetMapping
-    public ResponseEntity<Page<Projects>> getAllProjects(@RequestParam("portfolioId") Long id) {
-        return null;
+    public ResponseEntity<List<Projects>> getAllProjects(@RequestParam("portfolioId") Long id) {
+        return ResponseEntity.ok(projectService.getAllProjects(id));
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Projects> getProjectById(@PathVariable("id") Long id) {
-        return null;
+        return ResponseEntity.ok(projectService.getProjectById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody ProjectsDto dto, Principal principal) {
-        return null;
+    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody ProjectsDto dto) {
+        return ResponseEntity.ok(projectService.addProjectToPortfolio(id, dto));
     }
 
-    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody ProjectsDto dto, Principal principal) {
-        return null;
+    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody ProjectsDto dto) {
+        return ResponseEntity.ok(projectService.editProject(id,dto));
     }
 
-    @DeleteMapping ResponseEntity<Void> deleteProject(@RequestParam("projectId") Long id, Principal principal) {
-        return null;
+    @DeleteMapping ResponseEntity<Void> deleteProject(@RequestParam("projectId") Long id) {
+        projectService.deleteProject(id);
+        return ResponseEntity.ok().build();
     }
 }

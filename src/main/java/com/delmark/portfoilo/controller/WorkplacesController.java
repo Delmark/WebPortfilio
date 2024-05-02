@@ -10,7 +10,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/workPlaces")
-public class PlacesOfWorkController {
+public class WorkplacesController {
 
     @GetMapping
     public ResponseEntity<Page<PlacesOfWork>> getAllWorkplaces(@RequestParam("portfolioId") Long id) {
@@ -23,17 +23,17 @@ public class PlacesOfWorkController {
     }
 
     @PostMapping
-    public ResponseEntity<PlacesOfWork> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, PlacesOfWorkDto dto, Principal principal) {
+    public ResponseEntity<PlacesOfWork> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, PlacesOfWorkDto dto) {
         return null;
     }
 
     @PutMapping
-    public ResponseEntity<PlacesOfWork> editWorkplaceInfo(@RequestParam("workplaceId") Long id, PlacesOfWorkDto dto, Principal principal) {
+    public ResponseEntity<PlacesOfWork> editWorkplaceInfo(@RequestParam("workplaceId") Long id, PlacesOfWorkDto dto) {
         return null;
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteWorkplaceInfo(@RequestParam("workplaceId") Long id, Principal principal) {
+    public ResponseEntity<Void> deleteWorkplaceInfo(@RequestParam("workplaceId") Long id) {
         return null;
     }
 

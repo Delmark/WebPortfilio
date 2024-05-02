@@ -3,6 +3,7 @@ package com.delmark.portfoilo.service.implementations;
 import com.delmark.portfoilo.exceptions.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.Portfolio;
+import com.delmark.portfoilo.models.Role;
 import com.delmark.portfoilo.models.Techs;
 import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
@@ -63,7 +64,6 @@ public class PortfolioServiceImpl implements PortfolioService {
     public Portfolio portfolioCreation(PortfolioDto dto) {
         User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
         if (portfolioRepository.findByUser(sessionUser).isPresent()) {
             throw new UserAlreadyHavePortfolioException();
         }
@@ -82,15 +82,16 @@ public class PortfolioServiceImpl implements PortfolioService {
         return portfolioRepository.save(newPortfolio);
     }
 
-    // TODO: Создать отдельные исключения и их обработчики
     @Override
     public Portfolio addTechToPortfolio(Long portfolioId, Long techId) {
         Techs tech = techRepository.findById(techId).orElseThrow(NoSuchTechException::new);
         User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
 
+        Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
+
         // Проверка на доступ к портфолио
-        if (!portfolio.getUser().getId().equals(sessionUser.getId())) {
+        if (!portfolio.getUser().getId().equals(sessionUser.getId()) && !sessionUser.getAuthorities().contains(adminRole)) {
             throw new AccessDeniedException("У пользователя нет доступа к этму портфолио");
         }
 
@@ -108,8 +109,10 @@ public class PortfolioServiceImpl implements PortfolioService {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
         User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
+
         // Проверка на доступ к портфолио
-        if (!portfolio.getUser().getId().equals(sessionUser.getId())) {
+        if (!portfolio.getUser().getId().equals(sessionUser.getId()) && !sessionUser.getAuthorities().contains(adminRole)) {
             throw new AccessDeniedException("У пользователя нет доступа к этму портфолио");
         }
 
@@ -123,8 +126,10 @@ public class PortfolioServiceImpl implements PortfolioService {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
         User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
+
         // Проверка на доступ к портфолио
-        if (!portfolio.getUser().getId().equals(sessionUser.getId())) {
+        if (!portfolio.getUser().getId().equals(sessionUser.getId()) && !sessionUser.getAuthorities().contains(adminRole)) {
             throw new AccessDeniedException("У пользователя нет доступа к этму портфолио");
         }
 
