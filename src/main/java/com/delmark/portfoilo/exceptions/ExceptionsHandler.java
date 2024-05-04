@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+
+// TODO: Дописать обработчики исключений
 @Slf4j
 @ControllerAdvice
 @Component

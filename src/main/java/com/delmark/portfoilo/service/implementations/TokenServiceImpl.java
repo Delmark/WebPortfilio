@@ -23,7 +23,6 @@ public class TokenServiceImpl implements TokenService {
     private JwtEncoder jwtEncoder;
 
     private AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
 
     @Override
     public String generateJWT(Authentication auth) {
