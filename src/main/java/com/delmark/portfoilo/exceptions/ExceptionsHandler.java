@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
-// TODO: Дописать обработчики исключений
 @Slf4j
 @ControllerAdvice
 @Component
@@ -72,5 +71,47 @@ public class ExceptionsHandler {
                 )
         );
     }
+
+    @ExceptionHandler(NoSuchProjectException.class)
+    public ResponseEntity<ErrorResponse> handleException(NoSuchProjectException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "Проекта с таким индентификатором не существует"
+                )
+        );
+    }
+
+    @ExceptionHandler(NoSuchWorkException.class)
+    public ResponseEntity<ErrorResponse> handleException(NoSuchWorkException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "Работы с таким индентификатором не существует"
+                )
+        );
+    }
+
+    @ExceptionHandler(WorkplaceAlreadyExistsInPortfolioException.class)
+    public ResponseEntity<ErrorResponse> handleException(WorkplaceAlreadyExistsInPortfolioException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "Работа уже существует в портфолио"
+                )
+        );
+    }
+
+    @ExceptionHandler(TechAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleException(TechAlreadyExistsException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "Технология уже существует"
+                )
+        );
+    }
+
+
 
 }

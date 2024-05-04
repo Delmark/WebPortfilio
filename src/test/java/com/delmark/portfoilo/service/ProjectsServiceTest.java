@@ -33,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProjectsServiceTest {
     private static final ProjectsRepository projectsRepository = Mockito.mock(ProjectsRepository.class);
     private static final PortfolioRepository portfolioRepository = Mockito.mock(PortfolioRepository.class);
-    private static final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private static final RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
     public static final CustomMapper customMapper = new CustomMapperImpl();
 
