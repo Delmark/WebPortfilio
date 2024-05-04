@@ -12,6 +12,7 @@ import com.delmark.portfoilo.repository.PlacesOfWorkRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
+import com.delmark.portfoilo.utils.CustomMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,13 +24,19 @@ import java.util.List;
 @AllArgsConstructor
 public class WorkplacesServiceImpl implements WorkplacesService {
 
-    PlacesOfWorkRepository placesOfWorkRepository;
-    PortfolioRepository portfolioRepository;
-    RolesRepository rolesRepository;
+    private PlacesOfWorkRepository placesOfWorkRepository;
+    private PortfolioRepository portfolioRepository;
+    private RolesRepository rolesRepository;
+    public CustomMapper mapper;
 
     @Override
     public List<PlacesOfWork> getAllWorkplaces(Long portfolioId) {
-        return placesOfWorkRepository.findAllByPortfolioId(portfolioId);
+        if (portfolioRepository.existsById(portfolioId)) {
+            return placesOfWorkRepository.findAllByPortfolioId(portfolioId);
+        }
+        else {
+            throw new NoSuchPortfolioException();
+        }
     }
 
     @Override
@@ -44,7 +51,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
-        if (!(portfolio.getUser().getId().equals(user.getId()) && user.getRoles().contains(adminRole))) {
+        if (!portfolio.getUser().getId().equals(user.getId()) && !user.getRoles().contains(adminRole)) {
             throw new AccessDeniedException("Пользователь не имеет доступа к данному портфолио");
         }
 
@@ -55,6 +62,9 @@ public class WorkplacesServiceImpl implements WorkplacesService {
         PlacesOfWork workplace = new PlacesOfWork().
                 setWorkplaceName(dto.getWorkplaceName()).
                 setWorkplaceDesc(dto.getWorkplaceDesc()).
+                setFireDate(dto.getFireDate()).
+                setHireDate(dto.getHireDate()).
+                setPost(dto.getPost()).
                 setPortfolio(portfolio);
 
         return placesOfWorkRepository.save(workplace);
@@ -69,17 +79,11 @@ public class WorkplacesServiceImpl implements WorkplacesService {
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
-        if (!(portfolio.getUser().getId().equals(user.getId()) && user.getRoles().contains(adminRole))) {
+        if (!portfolio.getUser().getId().equals(user.getId()) && !user.getRoles().contains(adminRole)) {
             throw new AccessDeniedException("Нет доступа");
         }
 
-
-        if (dto.getWorkplaceName() != null) {
-            workplace.setWorkplaceName(dto.getWorkplaceName());
-        }
-        if (dto.getWorkplaceDesc() != null) {
-            workplace.setWorkplaceDesc(dto.getWorkplaceDesc());
-        }
+        mapper.updateWorkplaceFromDTO(dto, workplace);
 
         return placesOfWorkRepository.save(workplace);
     }
@@ -92,7 +96,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
-        if (!(portfolio.getUser().getId().equals(user.getId()) && user.getRoles().contains(adminRole))) {
+        if (!portfolio.getUser().getId().equals(user.getId()) && !user.getRoles().contains(adminRole)) {
             throw new AccessDeniedException("Нет доступа");
         }
 
