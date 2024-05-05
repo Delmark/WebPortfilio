@@ -27,7 +27,7 @@ public class AuthController {
         JwtTokenDTO jwtTokenDTO = tokenService.provideToken(dto.getUsername(), dto.getPassword());
         // TODO: Сделать исключение
         if (jwtTokenDTO.getToken() == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         else {
             return ResponseEntity.ok(jwtTokenDTO);

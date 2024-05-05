@@ -24,7 +24,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(UsernameAlreadyExistsException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(400).body(
                 new ErrorResponse(
                         400L,
                         "Пользватель с таким логином уже существует"
@@ -104,7 +104,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(TechAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(TechAlreadyExistsException e) {
-        return ResponseEntity.status(404).body(
+        return ResponseEntity.status(400).body(
                 new ErrorResponse(
                         400L,
                         "Технология уже существует"
