@@ -11,6 +11,7 @@ import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.PlacesOfWorkRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
+import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     private PlacesOfWorkRepository placesOfWorkRepository;
     private PortfolioRepository portfolioRepository;
     private RolesRepository rolesRepository;
+    private UserService userService;
     public CustomMapper mapper;
 
     @Override
@@ -47,7 +49,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     @Override
     public PlacesOfWork addWorkplaceToPortfolio(Long portfolioId, PlacesOfWorkDto dto) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
@@ -73,7 +75,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     @Override
     public PlacesOfWork editWorkplaceInfo(Long id, PlacesOfWorkDto dto) {
         PlacesOfWork workplace = placesOfWorkRepository.findById(id).orElseThrow(NoSuchWorkException::new);
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Portfolio portfolio = workplace.getPortfolio();
 
@@ -91,7 +93,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     @Override
     public void deleteWorkplace(Long id) {
         PlacesOfWork workplace = placesOfWorkRepository.findById(id).orElseThrow(NoSuchWorkException::new);
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
         Portfolio portfolio = workplace.getPortfolio();
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();

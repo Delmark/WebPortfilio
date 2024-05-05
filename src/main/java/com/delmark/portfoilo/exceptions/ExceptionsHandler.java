@@ -14,9 +14,9 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(UserDoesNotHavePortfolioException.class)
     public ResponseEntity<ErrorResponse> handleException(UserDoesNotHavePortfolioException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(404).body(
                 new ErrorResponse(
-                        400L,
+                        404L,
                         "Портфолио не существует, или пользователь его не создал"
                 )
         );
@@ -44,19 +44,19 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(NoSuchTechException.class)
     public ResponseEntity<ErrorResponse> handleException(NoSuchTechException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(404).body(
                 new ErrorResponse(
-                        400L,
-                        "Такой технологии не существует, указан некорректный индентификатор"
+                        404L,
+                        "Технологии с таким индетификатором не существует"
                 )
         );
     }
 
     @ExceptionHandler(NoSuchPortfolioException.class)
     public ResponseEntity<ErrorResponse> handleException(NoSuchPortfolioException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(404).body(
                 new ErrorResponse(
-                        400L,
+                        404L,
                         "Портфолио с таким индектификатором не существует"
                 )
         );
@@ -74,7 +74,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(NoSuchProjectException.class)
     public ResponseEntity<ErrorResponse> handleException(NoSuchProjectException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(404).body(
                 new ErrorResponse(
                         400L,
                         "Проекта с таким индентификатором не существует"
@@ -84,7 +84,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(NoSuchWorkException.class)
     public ResponseEntity<ErrorResponse> handleException(NoSuchWorkException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(404).body(
                 new ErrorResponse(
                         400L,
                         "Работы с таким индентификатором не существует"
@@ -104,10 +104,20 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(TechAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(TechAlreadyExistsException e) {
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.status(404).body(
                 new ErrorResponse(
                         400L,
                         "Технология уже существует"
+                )
+        );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException e) {
+        return ResponseEntity.status(404).body(
+                new ErrorResponse(
+                        404L,
+                        "Такого пользователя не существует"
                 )
         );
     }

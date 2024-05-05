@@ -33,15 +33,15 @@ public class PortfolioController {
     // POST
 
     @PostMapping
-    public ResponseEntity<Portfolio> createPortfolio(@RequestBody PortfolioDto portfolio, Principal principal) {
+    public ResponseEntity<Portfolio> createPortfolio(@RequestBody PortfolioDto portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioCreation(portfolio));
     }
 
     // PUT
 
     @PutMapping("/tech")
-    public ResponseEntity<Portfolio> addTechToPortfolio(@RequestParam Long portfolioID,
-                                                        @RequestParam Long techID) {
+    public ResponseEntity<Portfolio> addTechToPortfolio(@RequestParam("portId") Long portfolioID,
+                                                        @RequestParam("techId") Long techID) {
         return ResponseEntity.ok(portfolioService.addTechToPortfolio(portfolioID,techID));
     }
 

@@ -9,13 +9,16 @@ import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -46,6 +49,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         else {
             throw new UsernameAlreadyExistsException();
+        }
+    }
+
+    @Override
+    public User getUserByAuth(Authentication authentication) {
+        if (authentication.getPrincipal() instanceof Jwt jwt) {
+            String username = jwt.getSubject();
+            return (User) loadUserByUsername(username);
+        } else {
+            return (User) authentication.getPrincipal();
         }
     }
 

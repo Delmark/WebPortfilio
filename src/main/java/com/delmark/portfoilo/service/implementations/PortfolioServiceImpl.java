@@ -11,6 +11,7 @@ import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
+import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import org.mapstruct.Mapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class PortfolioServiceImpl implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+    private final UserService userService;
     private final UserRepository userRepository;
     private TechRepository techRepository;
     private final RolesRepository rolesRepository;
@@ -45,7 +48,7 @@ public class PortfolioServiceImpl implements PortfolioService {
             }
         }
         else {
-            throw new UsernameNotFoundException(username);
+            throw new UserNotFoundException();
         }
     }
 
@@ -62,7 +65,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Override
     public Portfolio portfolioCreation(PortfolioDto dto) {
-        User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         if (portfolioRepository.findByUser(sessionUser).isPresent()) {
             throw new UserAlreadyHavePortfolioException();
@@ -85,7 +88,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public Portfolio addTechToPortfolio(Long portfolioId, Long techId) {
         Techs tech = techRepository.findById(techId).orElseThrow(NoSuchTechException::new);
-        User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
@@ -107,7 +110,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public Portfolio portfolioEdit(Long id, PortfolioDto dto) {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
-        User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
@@ -124,7 +127,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public void deletePortfolio(Long id) {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
-        User sessionUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 

@@ -21,4 +21,6 @@ public interface CustomMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateWorkplaceFromDTO(PlacesOfWorkDto dto, @MappingTarget PlacesOfWork workplace);
+
+    Portfolio toEntity(PortfolioDto portfolioDto);
 }

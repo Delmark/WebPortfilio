@@ -7,7 +7,10 @@ import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
 import com.delmark.portfoilo.repository.PlacesOfWorkRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
+import com.delmark.portfoilo.repository.UserRepository;
+import com.delmark.portfoilo.service.implementations.UserServiceImpl;
 import com.delmark.portfoilo.service.implementations.WorkplacesServiceImpl;
+import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import com.delmark.portfoilo.utils.CustomMapperImpl;
@@ -19,6 +22,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -36,15 +41,19 @@ public class WorkplacesTest {
 
     private final Date date = new Date();
 
-    private PlacesOfWorkRepository placesOfWorkRepository = Mockito.mock(PlacesOfWorkRepository.class);;
+    private static PlacesOfWorkRepository placesOfWorkRepository = Mockito.mock(PlacesOfWorkRepository.class);;
 
-    private RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
+    private static RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
 
     private PortfolioRepository portfolioRepository = Mockito.mock(PortfolioRepository.class);
 
-    public CustomMapper mapper = new CustomMapperImpl();
+    private static final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private final WorkplacesService workplacesService = new WorkplacesServiceImpl(placesOfWorkRepository, portfolioRepository, rolesRepository, mapper);
+    public CustomMapper mapper = new CustomMapperImpl();
+    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder);
+
+    private final WorkplacesService workplacesService = new WorkplacesServiceImpl(placesOfWorkRepository, portfolioRepository, rolesRepository, userService, mapper);
 
     @Test
     @WithMockCustomUser

@@ -9,7 +9,9 @@ import com.delmark.portfoilo.models.Role;
 import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.implementations.ProjectServiceImpl;
+import com.delmark.portfoilo.service.implementations.UserServiceImpl;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
+import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import com.delmark.portfoilo.utils.CustomMapperImpl;
 import com.delmark.portfoilo.utils.WithMockCustomUser;
@@ -19,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -34,9 +38,12 @@ public class ProjectsServiceTest {
     private static final ProjectsRepository projectsRepository = Mockito.mock(ProjectsRepository.class);
     private static final PortfolioRepository portfolioRepository = Mockito.mock(PortfolioRepository.class);
     private static final RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
+    private static final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public static final CustomMapper customMapper = new CustomMapperImpl();
+    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder);
 
-    ProjectService projectService = new ProjectServiceImpl(projectsRepository, portfolioRepository, customMapper, rolesRepository);
+    ProjectService projectService = new ProjectServiceImpl(projectsRepository, portfolioRepository, userService, customMapper, rolesRepository);
 
     @Test
     @DisplayName("Получение всех проектов")

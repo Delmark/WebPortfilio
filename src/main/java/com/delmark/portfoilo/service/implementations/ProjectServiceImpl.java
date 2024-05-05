@@ -10,13 +10,16 @@ import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.ProjectsRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
+import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
+import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private ProjectsRepository projectsRepository;
     private PortfolioRepository portfolioRepository;
+    private UserService userService;
     public CustomMapper mapper;
     private final RolesRepository rolesRepository;
 
@@ -45,7 +49,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Projects addProjectToPortfolio(Long portfolioId, ProjectsDto dto) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
@@ -66,7 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Projects editProject(Long id, ProjectsDto dto) {
         Projects project = projectsRepository.findById(id).orElseThrow(NoSuchProjectException::new);
         Portfolio portfolio = project.getPortfolio();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
@@ -82,7 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(Long id) {
         Projects project = projectsRepository.findById(id).orElseThrow(NoSuchProjectException::new);
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
         Portfolio portfolio = project.getPortfolio();
 
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();

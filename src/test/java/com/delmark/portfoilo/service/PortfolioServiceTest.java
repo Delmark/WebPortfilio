@@ -1,9 +1,6 @@
 package com.delmark.portfoilo.service;
 
-import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
-import com.delmark.portfoilo.exceptions.TechAlreadyInPortfolioException;
-import com.delmark.portfoilo.exceptions.UserAlreadyHavePortfolioException;
-import com.delmark.portfoilo.exceptions.UserDoesNotHavePortfolioException;
+import com.delmark.portfoilo.exceptions.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Role;
@@ -14,7 +11,9 @@ import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.implementations.PortfolioServiceImpl;
+import com.delmark.portfoilo.service.implementations.UserServiceImpl;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
+import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import com.delmark.portfoilo.utils.CustomMapperImpl;
 import com.delmark.portfoilo.utils.WithMockCustomUser;
@@ -28,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContext;
@@ -52,9 +53,11 @@ public class PortfolioServiceTest {
     private static final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private static TechRepository techRepository = Mockito.mock(TechRepository.class);
     private static final RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder);
     public static final CustomMapper customMapper = new CustomMapperImpl();
 
-    PortfolioService portfolioService = new PortfolioServiceImpl(portfolioRepository, userRepository, techRepository, rolesRepository, customMapper);
+    PortfolioService portfolioService = new PortfolioServiceImpl(portfolioRepository, userService, userRepository, techRepository, rolesRepository, customMapper);
 
     @WithMockUser(username = "Delmark")
     @Test
@@ -91,7 +94,7 @@ public class PortfolioServiceTest {
         String inputUsername = "Delmark";
         Mockito.when(userRepository.existsByUsername(inputUsername)).thenReturn(false);
 
-        assertThrows(UsernameNotFoundException.class, () -> portfolioService.getPortfolioByUser(inputUsername));
+        assertThrows(UserNotFoundException.class, () -> portfolioService.getPortfolioByUser(inputUsername));
     }
 
     @WithMockUser(username = "Delmark")
