@@ -12,6 +12,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -45,8 +46,11 @@ public class SpringSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/auth/*").permitAll()
-                                .requestMatchers("/api/**").hasRole("USER")
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/projects**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/portfolio**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/workPlaces**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/tech/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 ).oauth2ResourceServer(auth -> auth.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
