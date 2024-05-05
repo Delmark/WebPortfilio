@@ -23,4 +23,6 @@ public interface CustomMapper {
     void updateWorkplaceFromDTO(PlacesOfWorkDto dto, @MappingTarget PlacesOfWork workplace);
 
     Portfolio toEntity(PortfolioDto portfolioDto);
+
+    Projects toEntity(ProjectsDto projectsDto);
 }
