@@ -140,7 +140,7 @@ export declare class VaadinDevTools extends LitElement {
     findNotificationIndex(id: number): number;
     toggleDontShowAgain(id: number): void;
     setActive(yes: boolean): void;
-    getStatusColor(status: ConnectionStatus | undefined): "none" | "var(--dev-tools-green-color)" | "var(--dev-tools-grey-color)" | "var(--dev-tools-yellow-hsl)" | "var(--dev-tools-red-color)";
+    getStatusColor(status: ConnectionStatus | undefined): "none" | "var(--dev-tools-green-color)" | "var(--dev-tools-grey-color)" | "var(--dev-tools-yellow-color)" | "var(--dev-tools-red-color)";
     renderMessage(messageObject: Message): TemplateResult<1>;
     render(): TemplateResult<1>;
     protected updated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void;

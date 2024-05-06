@@ -44,7 +44,7 @@ public class AuthControllerTest {
         User expectedUser = new User(2L, "Delmark", passwordEncoder.encode("123"), true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
         UserDto userDto = new UserDto("Delmark", "123");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDto)))
                 .andDo(MockMvcResultHandlers.print())
@@ -55,7 +55,7 @@ public class AuthControllerTest {
     void registerExistingUser() throws Exception {
         UserDto userDto = new UserDto("testAdmin", "123");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDto)))
                 .andDo(MockMvcResultHandlers.print())
@@ -66,7 +66,7 @@ public class AuthControllerTest {
     void getToken() throws Exception {
         UserDto userDto = new UserDto("testAdmin", "adminPass");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/auth/getToken")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/getToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDto)))
                 .andDo(MockMvcResultHandlers.print())
@@ -77,7 +77,7 @@ public class AuthControllerTest {
     void getTokenWithWrongUserData() throws Exception {
         UserDto userDto = new UserDto("test", "admass");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/auth/getToken")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/getToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDto)))
                 .andDo(MockMvcResultHandlers.print())

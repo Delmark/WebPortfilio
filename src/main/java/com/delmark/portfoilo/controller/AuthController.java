@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     private UserService userService;
     private TokenService tokenService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody UserDto registrationDto) {
+    public ResponseEntity<Void> registerRestUser(@RequestBody UserDto registrationDto) {
         userService.registration(registrationDto);
         return ResponseEntity.ok().build();
     }
@@ -32,5 +32,11 @@ public class AuthController {
         else {
             return ResponseEntity.ok(jwtTokenDTO);
         }
+    }
+
+    @GetMapping("/registerUser")
+    public ResponseEntity<Void> registerNewUser(@RequestBody UserDto userDto) {
+        userService.registration(userDto);
+        return ResponseEntity.ok().build();
     }
 }
