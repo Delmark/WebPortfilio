@@ -33,7 +33,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @Configuration
@@ -49,15 +49,20 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
         http
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers(new AntPathRequestMatcher("/line-awesome/**")).permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/projects**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/portfolio**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/workPlaces**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/tech/**").hasRole("ADMIN")
+                                .requestMatchers("/portfolio/**").permitAll()
                                 .requestMatchers("test").permitAll()
                 ).oauth2ResourceServer(auth -> auth.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .formLogin((loginPage) -> {
+                    loginPage.successForwardUrl("/");
+                })
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
 //        http.csrf(AbstractHttpConfigurer::disable);
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
