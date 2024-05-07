@@ -1,6 +1,7 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
+import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,18 @@ public class TokenServiceImpl implements TokenService {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             String token = generateJWT(authentication);
+
+            return new JwtTokenDTO(token);
+        }
+        catch (AuthenticationException e) {
+            return new JwtTokenDTO(null);
+        }
+    }
+
+    @Override
+    public JwtTokenDTO provideToken(Authentication authenticationFromUser) {
+        try {
+            String token = generateJWT(authenticationFromUser);
 
             return new JwtTokenDTO(token);
         }

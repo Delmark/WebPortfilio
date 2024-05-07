@@ -31,8 +31,6 @@ import java.util.Map;
 public class RegisterView extends HorizontalLayout implements BeforeEnterObserver {
 
     private UserService userService;
-    private boolean error = false;
-    private boolean userExistsError = false;
 
     private TextField username = new TextField("Логин", "Ваш логин");
     private PasswordField passwordField = new PasswordField("Пароль", "Ваш пароль");

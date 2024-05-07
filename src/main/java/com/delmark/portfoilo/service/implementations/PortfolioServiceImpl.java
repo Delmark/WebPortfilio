@@ -138,4 +138,17 @@ public class PortfolioServiceImpl implements PortfolioService {
 
         portfolioRepository.delete(portfolio);
     }
+
+    @Override
+    public boolean portfolioExistsByUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return portfolioRepository.findByUser(user).isPresent();
+    }
+
+    @Override
+    public Long getPortfolioIdByUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Portfolio portfolio = portfolioRepository.findByUser(user).orElseThrow(NoSuchPortfolioException::new);
+        return portfolio.getId();
+    }
 }

@@ -12,5 +12,7 @@ public interface PortfolioService {
     Portfolio portfolioCreation(PortfolioDto dto);
     Portfolio addTechToPortfolio(Long portfolioId, Long techId);
     Portfolio portfolioEdit(Long id, PortfolioDto dto);
+    boolean portfolioExistsByUser(String username);
+    Long getPortfolioIdByUser(String username);
     void deletePortfolio(Long id);
 }
