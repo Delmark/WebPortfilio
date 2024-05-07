@@ -1,8 +1,11 @@
 package com.delmark.portfoilo.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Type;
 
 import java.util.Date;
 
@@ -34,9 +37,11 @@ public class PlacesOfWork {
     @Column(name = "Post")
     private String post;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(name = "date_of_hire")
     private Date hireDate;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(name = "date_of_fire")
     private Date fireDate;
 }

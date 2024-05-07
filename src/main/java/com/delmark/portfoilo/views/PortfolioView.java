@@ -21,8 +21,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static com.delmark.portfoilo.utils.DateUtils.getDateString;
 
 @Route(value = "/portfolio/:id", layout = MainLayout.class)
 @PermitAll
@@ -40,6 +44,8 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         this.projectsRepository = projectsRepository;
         this.userRepository = userRepository;
         this.authenticationContext = authenticationContext;
+
+        this.setHeight("100%");
     }
 
     private void createMainLayout() {
@@ -136,7 +142,8 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                 String workplaceName = "Место работы: " + workplace.getWorkplaceName();
                 String workplaceDesc = workplace.getWorkplaceDesc();
                 String post = "Должность: " + ((workplace.getPost() == null) ? "N/A" : workplace.getPost());
-                String timeOfWork = ((workplace.getHireDate() == null) ? "N/A" : workplace.getHireDate()) + " - " + ((workplace.getFireDate() == null) ? "N/A" : workplace.getFireDate());
+                String timeOfWork = ((workplace.getHireDate() == null) ? "N/A" : getDateString(workplace.getHireDate())) +
+                        " - " + ((workplace.getFireDate() == null) ? "N/A" : getDateString(workplace.getFireDate()));
                 workCard.add(
                         new Span(workplaceName),
                         new Span(workplaceDesc),
@@ -153,7 +160,6 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         overall.add(scrollerWork);
 
-        overall.setAlignItems(Alignment.CENTER);
 
         return overall;
     }
@@ -176,8 +182,8 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                     portfolioId = String.valueOf(
                             portfolioRepository.findByUser(userRepository.
                                     findByUsername(portfolioId).
-                                    orElseThrow(NoSuchPortfolioException::new)).
-                                    orElseThrow(UserNotFoundException::new).getId()
+                                    orElseThrow(UserNotFoundException::new)).
+                                    orElseThrow(NoSuchPortfolioException::new).getId()
                     );
                 } catch (NoSuchPortfolioException e) {
                     if (authenticationContext.getPrincipalName().get().equals(portfolioId)) {
@@ -195,8 +201,19 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         }
         catch(IllegalArgumentException e){
                 event.rerouteTo(ErrorView.class, new RouteParameters("status", "404"));
-            }
+        }
 
         createMainLayout();
+    }
+
+    private Date trim(Date date) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 0);
+        return calendar.getTime();
     }
 }
