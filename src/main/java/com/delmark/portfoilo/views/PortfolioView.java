@@ -45,9 +45,12 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     private void createMainLayout() {
         com.delmark.portfoilo.models.Portfolio portfolio = portfolioRepository.findById(Long.parseLong(portfolioId)).get();
         VerticalLayout mainLayout = new VerticalLayout();
-        H1 yourProfile = new H1("Ваш профиль");
+        H1 yourProfile = new H1("Ваше портфолио");
+        Hr hr = new Hr();
         mainLayout.add(yourProfile);
+        mainLayout.setAlignSelf(Alignment.CENTER, yourProfile);
         mainLayout.add(createUserInfo(portfolio));
+        mainLayout.add(hr);
         mainLayout.add(createProjectsAndWorkplacesLayout(portfolio));
         mainLayout.setWidth("100%");
         mainLayout.setHeight("100%");
@@ -117,6 +120,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         overall.add(scroller);
 
+        VerticalLayout wrapper = new VerticalLayout();
         VerticalLayout acrdionLayout = new VerticalLayout();
         // Layout для мест работы
         Accordion accordion = new Accordion();
@@ -127,17 +131,27 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         }
         else {
             for (PlacesOfWork workplace : workplaces) {
+                Div workCard = new Div();
+                workCard.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN);
+                String workplaceName = "Место работы: " + workplace.getWorkplaceName();
+                String workplaceDesc = workplace.getWorkplaceDesc();
+                String post = "Должность: " + ((workplace.getPost() == null) ? "N/A" : workplace.getPost());
                 String timeOfWork = ((workplace.getHireDate() == null) ? "N/A" : workplace.getHireDate()) + " - " + ((workplace.getFireDate() == null) ? "N/A" : workplace.getFireDate());
-                String summary = "Место работы: " + workplace.getWorkplaceName() +
-                        "\n\n" + workplace.getWorkplaceDesc() +
-                        "\n\nДолжность: " + ((workplace.getPost() == null) ? "N/A" : workplace.getPost()) +
-                        "\n\nВремя работы: " + timeOfWork;
-                accordion.add(workplace.getWorkplaceName(), new Paragraph(summary));
+                workCard.add(
+                        new Span(workplaceName),
+                        new Span(workplaceDesc),
+                        new Span(post),
+                        new Span(timeOfWork)
+                );
+                accordion.add(workplace.getWorkplaceName(), workCard);
             }
         }
-        acrdionLayout.add(new H4("Ваши места работы"), accordion);
-        acrdionLayout.setWidth("50%");
-        overall.add(acrdionLayout);
+        acrdionLayout.add(accordion);
+        wrapper.add(new H4("Ваши места работы"), acrdionLayout);
+        Scroller scrollerWork = new Scroller(wrapper);
+        scroller.setWidth("50%");
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        overall.add(scrollerWork);
 
         overall.setAlignItems(Alignment.CENTER);
 

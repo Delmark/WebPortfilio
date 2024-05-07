@@ -23,6 +23,8 @@ public class MainPage extends VerticalLayout {
         H2 h2 = new H2("Веб-приложение для просмотра и создания портфолио");
         Button button = new Button("Начать!");
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        setAlignSelf(Alignment.CENTER,h1,h2);
+        div.add(h1,h2,button);
+        add(div);
+        setAlignSelf(Alignment.CENTER,div);
     }
 }

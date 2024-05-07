@@ -29,12 +29,12 @@ public class WorkplacesController {
     }
 
     @PostMapping
-    public ResponseEntity<PlacesOfWork> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, PlacesOfWorkDto dto) {
+    public ResponseEntity<PlacesOfWork> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody PlacesOfWorkDto dto) {
         return ResponseEntity.ok(workplacesService.addWorkplaceToPortfolio(id, dto));
     }
 
     @PutMapping
-    public ResponseEntity<PlacesOfWork> editWorkplaceInfo(@RequestParam("workplaceId") Long id, PlacesOfWorkDto dto) {
+    public ResponseEntity<PlacesOfWork> editWorkplaceInfo(@RequestParam("workplaceId") Long id, @RequestBody PlacesOfWorkDto dto) {
         return ResponseEntity.ok(workplacesService.editWorkplaceInfo(id, dto));
     }
 

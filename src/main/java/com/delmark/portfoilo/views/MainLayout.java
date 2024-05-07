@@ -26,7 +26,7 @@ public class MainLayout extends AppLayout {
 
     private void addDrawerContent() {
         H1 appName = new H1("DelmFolio");
-        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.AUTO);
         Header header = new Header(appName);
 
         Scroller scroller = new Scroller(createNav());
@@ -37,7 +37,7 @@ public class MainLayout extends AppLayout {
     private SideNav createNav() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Главная", (String) null, LineAwesomeIcon.HOME_SOLID.create()));
+        nav.addItem(new SideNavItem("Главная", MainPage.class, LineAwesomeIcon.HOME_SOLID.create()));
         if (!authenticationContext.isAuthenticated()) {
             nav.addItem(new SideNavItem("Войти", LoginView.class, LineAwesomeIcon.DOOR_OPEN_SOLID.create()));
         }
