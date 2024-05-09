@@ -67,10 +67,13 @@ public class SettingsView extends VerticalLayout implements BeforeEnterObserver 
             modal.open();
         });
 
+        getTokenFieldLayout.setAlignItems(Alignment.CENTER);
+
         getTokenFieldLayout.add(getTokenLabel, getTokenButton);
         mainLayout.add(getTokenFieldLayout, new Hr());
 
         HorizontalLayout deletePortfolioLayout = getDeletePortfolioLayout();
+        deletePortfolioLayout.setAlignItems(Alignment.CENTER);
         mainLayout.add(deletePortfolioLayout);
 
         return mainLayout;

@@ -15,7 +15,6 @@ public class PortfolioDto implements Serializable {
     String name;
     @NotNull
     String surname;
-    @NotNull
     String middleName;
     String aboutUser;
     String education;
