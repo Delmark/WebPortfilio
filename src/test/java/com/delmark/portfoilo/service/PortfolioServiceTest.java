@@ -54,7 +54,7 @@ public class PortfolioServiceTest {
     private static TechRepository techRepository = Mockito.mock(TechRepository.class);
     private static final RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder);
+    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder, portfolioRepository);
     public static final CustomMapper customMapper = new CustomMapperImpl();
 
     PortfolioService portfolioService = new PortfolioServiceImpl(portfolioRepository, userService, userRepository, techRepository, rolesRepository, customMapper);
@@ -65,7 +65,7 @@ public class PortfolioServiceTest {
     void getPortfolioFromCorrectUser() {
         String username = "Delmark";
         User existingUser = new User(1L, "Delmark", "123", true, new HashSet<>());
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, null);
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, null, new HashSet<>(), new HashSet<>());
         Mockito.when(userRepository.existsByUsername(username)).thenReturn(true);
         Mockito.when(userRepository.findByUsername("Delmark")).thenReturn(Optional.of(existingUser));
         Mockito.when(portfolioRepository.findByUser(existingUser)).thenReturn(Optional.of(existingPortfolio));
@@ -102,7 +102,7 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Получение портфолио по ID")
     void getPortfolioByExistingId() {
         User existingUser = new User(1L, "Delmark", "123", true, new HashSet<>());
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, null);
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, null, new HashSet<>(), new HashSet<>());
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
         assertEquals(existingPortfolio, portfolioService.getPortfolio(1L));
@@ -134,7 +134,7 @@ public class PortfolioServiceTest {
                 "TestEmail@gmail.com",
                 null,
                 null,
-                new LinkedHashSet<>()
+                new LinkedHashSet<>(), new HashSet<>(), new HashSet<>()
         );
         Portfolio preSavePortfolio = new Portfolio(
                 null,
@@ -147,7 +147,7 @@ public class PortfolioServiceTest {
                 "TestEmail@gmail.com",
                 null,
                 null,
-                new LinkedHashSet<>()
+                new LinkedHashSet<>(), new HashSet<>(), new HashSet<>()
         );
 
 
@@ -175,7 +175,7 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Попытка создать портфолио, когда оно уже существует у пользователя")
     void createPortfolioWhenItExists() {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         PortfolioDto dto = new PortfolioDto(
                 "TestName",
@@ -198,10 +198,10 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Добавление технологии в портфолио")
     void addTechToPortfolio() {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
         Techs existingTech = new Techs(1L, "Java", "Java?");
 
-        Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(List.of(existingTech)));
+        Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(List.of(existingTech)), new HashSet<>(), new HashSet<>());
 
         Mockito.when(techRepository.findById(1L)).thenReturn(Optional.of(existingTech));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
@@ -218,7 +218,7 @@ public class PortfolioServiceTest {
     void addExistingTechToPortfolio() {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Techs existingTech = new Techs(1L, "Java", "Java?");
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(List.of(existingTech)));
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(List.of(existingTech)), new HashSet<>(), new HashSet<>());
 
         Mockito.when(techRepository.findById(1L)).thenReturn(Optional.of(existingTech));
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
@@ -233,7 +233,7 @@ public class PortfolioServiceTest {
     void addTechToOtherUserPortfolio() {
         User otherUser = new User(2L, "la", "lala", true, new HashSet<>());
         Techs existingTech = new Techs(1L, "Java", "Java?");
-        Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         Mockito.when(techRepository.findById(1L)).thenReturn(Optional.of(existingTech));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
@@ -247,8 +247,8 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Редактирвание портфолио")
     void portfolioEdit() {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
-        Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "TestName", "TestSurname", "Test", "TestAbout", "Schoolar", "TestEmail@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
+        Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "TestName", "TestSurname", "Test", "TestAbout", "Schoolar", "TestEmail@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
         PortfolioDto dto = new PortfolioDto(
                 "TestName",
                 "TestSurname",
@@ -292,7 +292,7 @@ public class PortfolioServiceTest {
     void editOtherUserPortfolio() {
         User otherUser = new User(2L, "la", "lala", true, new HashSet<>());
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
-        Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         PortfolioDto dto = new PortfolioDto(
                 "TestName",
@@ -316,7 +316,7 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Удаление портфолио")
     void deletePortfolio() {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
         portfolioService.deletePortfolio(1L);
@@ -328,7 +328,7 @@ public class PortfolioServiceTest {
     @DisplayName(value = "Попытка удаления портфолио другого пользователя")
     void deleteOtherUserPortfolio() {
         User otherUser = new User(2L, "la", "lala", true, new HashSet<>());
-        Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
         assertThrows(AccessDeniedException.class, () -> portfolioService.deletePortfolio(1L));

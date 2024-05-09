@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class TechServiceImpl implements TechService {
@@ -55,5 +57,10 @@ public class TechServiceImpl implements TechService {
     public void deleteTech(Long id) {
         Techs existingTech = techRepository.findById(id).orElseThrow(NoSuchTechException::new);
         techRepository.delete(existingTech);
+    }
+
+    @Override
+    public List<Techs> getTechList() {
+        return techRepository.findAll();
     }
 }

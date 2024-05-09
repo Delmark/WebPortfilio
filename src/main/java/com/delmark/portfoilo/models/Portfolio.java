@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -63,4 +64,13 @@ public class Portfolio {
             inverseJoinColumns = @JoinColumn(name = "techses_id"))
     private Set<Techs> techses = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    Set<Projects> projects = new HashSet<>();
+
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    Set<PlacesOfWork> workplaces = new HashSet<>();
 }

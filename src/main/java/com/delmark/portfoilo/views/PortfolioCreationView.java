@@ -9,6 +9,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -60,7 +61,7 @@ public class PortfolioCreationView extends VerticalLayout implements BeforeEnter
         name.setRequired(true);
         TextField middleName = new TextField("Отчество");
         TextField education = new TextField("Образование");
-        TextField about = new TextField("О себе");
+        TextArea about = new TextArea("О себе");
         about.setRequired(true);
         TextField phone = new TextField("Телефон");
         EmailField email = new EmailField("Электронная почта");
@@ -79,10 +80,10 @@ public class PortfolioCreationView extends VerticalLayout implements BeforeEnter
                             name.getValue(),
                             surname.getValue(),
                             middleName.getValue(),
-                            education.getValue(),
                             about.getValue(),
-                            phone.getValue(),
+                            education.getValue(),
                             email.getValue(),
+                            phone.getValue(),
                             siteUrl.getValue()
                     )
             );

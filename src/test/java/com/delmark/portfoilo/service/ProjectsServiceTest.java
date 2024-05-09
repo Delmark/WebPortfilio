@@ -41,7 +41,7 @@ public class ProjectsServiceTest {
     private static final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public static final CustomMapper customMapper = new CustomMapperImpl();
-    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder);
+    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder, portfolioRepository);
 
     ProjectService projectService = new ProjectServiceImpl(projectsRepository, portfolioRepository, userService, customMapper, rolesRepository);
 

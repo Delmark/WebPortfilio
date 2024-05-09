@@ -51,7 +51,7 @@ public class WorkplacesTest {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public CustomMapper mapper = new CustomMapperImpl();
-    private static final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder);
+    private final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder, portfolioRepository);
 
     private final WorkplacesService workplacesService = new WorkplacesServiceImpl(placesOfWorkRepository, portfolioRepository, rolesRepository, userService, mapper);
 
