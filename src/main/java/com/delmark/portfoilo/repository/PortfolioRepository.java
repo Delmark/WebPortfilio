@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     Optional<Portfolio> findByUser(User user);
 
+    boolean existsByUser(User user);
 }

@@ -5,6 +5,7 @@ import com.delmark.portfoilo.exceptions.UserNotFoundException;
 import com.delmark.portfoilo.models.PlacesOfWork;
 import com.delmark.portfoilo.models.Projects;
 import com.delmark.portfoilo.repository.*;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.*;
@@ -173,6 +174,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         }
         else {
             event.rerouteTo(ErrorView.class, new RouteParameters("status", "404"));
+            return;
         }
 
         try {
@@ -189,6 +191,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                     if (authenticationContext.getPrincipalName().get().equals(portfolioId)) {
                         // TODO: Реализовать отправку на создание портфолио
                         event.rerouteTo(ErrorView.class, new RouteParameters("status", "404"));
+                        return;
                     }
                 } catch (UserNotFoundException e) {
                     throw new IllegalArgumentException();
@@ -200,20 +203,10 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             }
         }
         catch(IllegalArgumentException e){
-                event.rerouteTo(ErrorView.class, new RouteParameters("status", "404"));
+            event.rerouteTo(ErrorView.class, new RouteParameters("status", "404"));
+            return;
         }
 
         createMainLayout();
-    }
-
-    private Date trim(Date date) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR, 0);
-        return calendar.getTime();
     }
 }

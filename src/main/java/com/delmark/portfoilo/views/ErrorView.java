@@ -12,28 +12,26 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @AnonymousAllowed
 public class ErrorView extends VerticalLayout implements BeforeEnterObserver {
 
-    private String statusCode;
-    private String message;
+    H1 statusCode = new H1("Ошибка! Код: ");
+    H2 errorMessage = new H2();
 
     public ErrorView() {
-        H1 h1 = new H1("Ошибка! Код: " + statusCode);
-        H2 h2 = new H2(message);
-        setAlignSelf(Alignment.CENTER, h1, h2);
+        setAlignSelf(Alignment.CENTER);
         setAlignItems(Alignment.CENTER);
-        add(h1, h2);
+        add(statusCode, errorMessage);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        statusCode = beforeEnterEvent.getRouteParameters().get("status").orElse("500");
+        statusCode.setText(beforeEnterEvent.getRouteParameters().get("status").orElse("500"));
 
-        switch (statusCode) {
-            case "404" -> message = "Мы ничего не нашли :(";
-            case "500" -> message = "Внутреняя ошибка сервера";
-            case "403" -> message = "Доступ запрещён";
+        switch (statusCode.getText()) {
+            case "404" -> errorMessage.setText("Мы ничего не нашли :(");
+            case "500" -> errorMessage.setText("Внутреняя ошибка сервера");
+            case "403" -> errorMessage.setText("Доступ запрещён");
             default -> {
-                statusCode = "500";
-                message = "Внутреняя ошибка сервера";
+                statusCode.setText("500");
+                errorMessage.setText("Внутреняя ошибка сервера");
             }
         }
     }
