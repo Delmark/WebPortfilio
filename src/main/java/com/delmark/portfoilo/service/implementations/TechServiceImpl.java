@@ -2,6 +2,7 @@ package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.NoSuchTechException;
 import com.delmark.portfoilo.exceptions.TechAlreadyExistsException;
+import com.delmark.portfoilo.models.DTO.TechStatsProjection;
 import com.delmark.portfoilo.models.Techs;
 import com.delmark.portfoilo.repository.TechRepository;
 import com.delmark.portfoilo.service.interfaces.TechService;
@@ -62,5 +63,10 @@ public class TechServiceImpl implements TechService {
     @Override
     public List<Techs> getTechList() {
         return techRepository.findAll();
+    }
+
+    @Override
+    public List<TechStatsProjection> getTechStatistics() {
+        return techRepository.getTechStatistics();
     }
 }

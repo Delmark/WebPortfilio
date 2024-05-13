@@ -4,6 +4,7 @@ import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.NoSuchWorkException;
 import com.delmark.portfoilo.exceptions.WorkplaceAlreadyExistsInPortfolioException;
 import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
+import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
 import com.delmark.portfoilo.models.PlacesOfWork;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Role;
@@ -103,5 +104,10 @@ public class WorkplacesServiceImpl implements WorkplacesService {
         }
 
         placesOfWorkRepository.delete(workplace);
+    }
+
+    @Override
+    public List<WorkplacesStatsDTO> getStatistics() {
+        return placesOfWorkRepository.getStatistics();
     }
 }

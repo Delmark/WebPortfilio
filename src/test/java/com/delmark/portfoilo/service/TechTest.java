@@ -119,4 +119,5 @@ public class TechTest {
 
         assertThrows(NoSuchTechException.class, () -> techService.deleteTech(1L));
     }
+
 }

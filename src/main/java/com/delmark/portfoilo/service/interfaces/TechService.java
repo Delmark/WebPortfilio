@@ -1,5 +1,6 @@
 package com.delmark.portfoilo.service.interfaces;
 
+import com.delmark.portfoilo.models.DTO.TechStatsProjection;
 import com.delmark.portfoilo.models.Techs;
 import org.springframework.data.domain.Page;
 import java.util.List;
@@ -11,4 +12,5 @@ public interface TechService {
     Techs editTech(Long id, Techs tech);
     void deleteTech(Long id);
     List<Techs> getTechList();
+    List<TechStatsProjection> getTechStatistics();
 }
