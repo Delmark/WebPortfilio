@@ -19,9 +19,9 @@ public class Techs {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tech_id_seq")
     private Long id;
 
-    @Column(name = "Technology_Name")
+    @Column(name = "technology_Name")
     private String techName;
 
-    @Column(name = "Technology_Description")
+    @Column(name = "technology_description")
     private String techDesc;
 }
