@@ -10,7 +10,6 @@ import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
 import com.delmark.portfoilo.service.interfaces.TechService;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
@@ -30,7 +29,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
-import com.vaadin.flow.function.SerializableSupplier;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -55,7 +53,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
     private String portfolioId;
     private final PortfolioRepository portfolioRepository;
-    private final PlacesOfWorkRepository placesOfWorkRepository;
+    private final WorkplacesRepository workplacesRepository;
     private final ProjectsRepository projectsRepository;
     private final ProjectService projectService;
     private final UserRepository userRepository;
@@ -64,7 +62,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     private final WorkplacesService workplacesService;
     private final PortfolioService portfolioService;
     public PortfolioView(PortfolioRepository portfolioRepository,
-                         PlacesOfWorkRepository placesOfWorkRepository,
+                         WorkplacesRepository workplacesRepository,
                          ProjectsRepository projectsRepository,
                          UserRepository userRepository,
                          AuthenticationContext authenticationContext,
@@ -74,7 +72,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                          PortfolioService portfolioService) {
         this.projectService = projectService;
         this.portfolioRepository = portfolioRepository;
-        this.placesOfWorkRepository = placesOfWorkRepository;
+        this.workplacesRepository = workplacesRepository;
         this.projectsRepository = projectsRepository;
         this.userRepository = userRepository;
         this.authenticationContext = authenticationContext;
@@ -333,13 +331,13 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         acrdionLayout.addClassNames(LumoUtility.AlignItems.CENTER);
         // Layout для мест работы
         Accordion accordion = new Accordion();
-        List<PlacesOfWork> workplaces = placesOfWorkRepository.findAllByPortfolioId(Long.parseLong(portfolioId));
+        List<Workplace> workplaces = workplacesRepository.findAllByPortfolioId(Long.parseLong(portfolioId));
 
         if (workplaces.isEmpty()) {
             accordion.add(new AccordionPanel("У вас нет мест работы :("));
         }
         else {
-            for (PlacesOfWork workplace : workplaces) {
+            for (Workplace workplace : workplaces) {
                 Div workCard = new Div();
                 workCard.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN);
                 String workplaceName = "Место работы: " + workplace.getWorkplaceName();

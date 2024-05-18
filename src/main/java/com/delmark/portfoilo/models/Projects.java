@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-@Entity(name = "Projects")
-@Table(name = "Projects")
+@Entity(name = "projects")
+@Table(name = "projects")
 @Accessors(chain = true)
 @EqualsAndHashCode
 @AllArgsConstructor

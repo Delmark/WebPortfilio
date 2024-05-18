@@ -2,15 +2,13 @@ package com.delmark.portfoilo.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.Type;
 
 import java.util.Date;
 
-@Table(name="Places_Of_Work")
-@Entity(name="Places_Of_Work")
+@Table(name="workplace")
+@Entity(name="workplace")
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,14 +16,14 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class PlacesOfWork {
+public class Workplace {
     @Id
     @SequenceGenerator(name = "work_id_seq", sequenceName = "work_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "work_id_seq")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "Portfolio_id")
+    @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
     @Column(name = "workplace_name")

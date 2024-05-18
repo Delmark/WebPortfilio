@@ -4,7 +4,7 @@ import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.NoSuchWorkException;
 import com.delmark.portfoilo.models.*;
 import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
-import com.delmark.portfoilo.repository.PlacesOfWorkRepository;
+import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
@@ -17,8 +17,6 @@ import com.delmark.portfoilo.utils.CustomMapperImpl;
 import com.delmark.portfoilo.utils.WithMockCustomUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +26,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +38,7 @@ public class WorkplacesTest {
 
     private final Date date = new Date();
 
-    private static PlacesOfWorkRepository placesOfWorkRepository = Mockito.mock(PlacesOfWorkRepository.class);;
+    private static WorkplacesRepository workplacesRepository = Mockito.mock(WorkplacesRepository.class);;
 
     private static RolesRepository rolesRepository = Mockito.mock(RolesRepository.class);
 
@@ -53,7 +50,7 @@ public class WorkplacesTest {
     public CustomMapper mapper = new CustomMapperImpl();
     private final UserService userService = new UserServiceImpl(userRepository, rolesRepository, passwordEncoder, portfolioRepository);
 
-    private final WorkplacesService workplacesService = new WorkplacesServiceImpl(placesOfWorkRepository, portfolioRepository, rolesRepository, userService, mapper);
+    private final WorkplacesService workplacesService = new WorkplacesServiceImpl(workplacesRepository, portfolioRepository, rolesRepository, userService, mapper);
 
     @Test
     @WithMockCustomUser
@@ -64,36 +61,36 @@ public class WorkplacesTest {
                 .setUser(user)
                 .setName("test");
 
-        List<PlacesOfWork> existingWorkplaces = List.of(
-                new PlacesOfWork(1L, existingPortfolio, "test", "test", "test", date, date),
-                new PlacesOfWork(2L, existingPortfolio, "test", "test", "test", date, date)
+        List<Workplace> existingWorkplaces = List.of(
+                new Workplace(1L, existingPortfolio, "test", "test", "test", date, date),
+                new Workplace(2L, existingPortfolio, "test", "test", "test", date, date)
         );
 
         Mockito.when(portfolioRepository.existsById(1L)).thenReturn(true);
-        Mockito.when(placesOfWorkRepository.findAllByPortfolioId(1L)).thenReturn(existingWorkplaces);
+        Mockito.when(workplacesRepository.findAllByPortfolioId(1L)).thenReturn(existingWorkplaces);
 
         assertEquals(existingWorkplaces, workplacesService.getAllWorkplaces(1L));
     }
 
     @Test
     void getAllWorkplacesByNonExistingId() {
-        Mockito.when(placesOfWorkRepository.existsById(1L)).thenReturn(false);
+        Mockito.when(workplacesRepository.existsById(1L)).thenReturn(false);
 
         assertThrows(NoSuchPortfolioException.class, () -> workplacesService.getAllWorkplaces(1L));
     }
 
     @Test
     void getWorkplaceById() {
-        PlacesOfWork existingWorkplace = new PlacesOfWork(1L, null, "test", "test", "test", date, date);
+        Workplace existingWorkplace = new Workplace(1L, null, "test", "test", "test", date, date);
 
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
 
         assertEquals(existingWorkplace, workplacesService.getWorkplaceById(1L));
     }
 
     @Test
     void getWorkplaceByNonExistingId() {
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(NoSuchWorkException.class, () -> workplacesService.getWorkplaceById(1L));
     }
@@ -109,12 +106,12 @@ public class WorkplacesTest {
 
         PlacesOfWorkDto dto = new PlacesOfWorkDto("test", "test", "test", date, date);
 
-        PlacesOfWork savedWorkplace = new PlacesOfWork(null, existingPortfolio, "test", "test", "test", date, date);
-        PlacesOfWork expectedWorkplace = new PlacesOfWork(1L, existingPortfolio, "test", "test", "test", date, date);
+        Workplace savedWorkplace = new Workplace(null, existingPortfolio, "test", "test", "test", date, date);
+        Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
-        Mockito.when(placesOfWorkRepository.save(savedWorkplace)).thenReturn(expectedWorkplace);
+        Mockito.when(workplacesRepository.save(savedWorkplace)).thenReturn(expectedWorkplace);
 
 
         assertEquals(expectedWorkplace, workplacesService.addWorkplaceToPortfolio(1L, dto));
@@ -157,12 +154,12 @@ public class WorkplacesTest {
 
         PlacesOfWorkDto dto = new PlacesOfWorkDto("test", "test", "test", date, date);
 
-        PlacesOfWork existingWorkplace = new PlacesOfWork(1L, existingPortfolio, "none", "none", "none", date, date);
-        PlacesOfWork expectedWorkplace = new PlacesOfWork(1L, existingPortfolio, "test", "test", "test", date, date);
+        Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
+        Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
 
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
-        Mockito.when(placesOfWorkRepository.save(expectedWorkplace)).thenReturn(expectedWorkplace);
+        Mockito.when(workplacesRepository.save(expectedWorkplace)).thenReturn(expectedWorkplace);
 
 
         assertEquals(expectedWorkplace, workplacesService.editWorkplaceInfo(1L, dto));
@@ -170,7 +167,7 @@ public class WorkplacesTest {
 
     @Test
     void updateWorkplaceForNonExistingWork() {
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(NoSuchWorkException.class, () -> workplacesService.editWorkplaceInfo(1L, null));
     }
 
@@ -182,9 +179,9 @@ public class WorkplacesTest {
                 .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
-        PlacesOfWork existingWorkplace = new PlacesOfWork(1L, existingPortfolio, "none", "none", "none", date, date);
+        Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
 
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
         assertThrows(AccessDeniedException.class, () -> workplacesService.editWorkplaceInfo(1L, null));
@@ -199,17 +196,17 @@ public class WorkplacesTest {
                 .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
-        PlacesOfWork existingWorkplace = new PlacesOfWork(1L, existingPortfolio, "none", "none", "none", date, date);
+        Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
 
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         workplacesService.deleteWorkplace(1L);
-        Mockito.verify(placesOfWorkRepository, Mockito.times(1)).delete(existingWorkplace);
+        Mockito.verify(workplacesRepository, Mockito.times(1)).delete(existingWorkplace);
     }
 
     @Test
     void deleteWorkplaceForNonExistingWork() {
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(NoSuchWorkException.class, () -> workplacesService.deleteWorkplace(1L));
     }
 
@@ -221,9 +218,9 @@ public class WorkplacesTest {
                 .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
-        PlacesOfWork existingWorkplace = new PlacesOfWork(1L, existingPortfolio, "none", "none", "none", date, date);
+        Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
 
-        Mockito.when(placesOfWorkRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
+        Mockito.when(workplacesRepository.findById(1L)).thenReturn(Optional.of(existingWorkplace));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
         assertThrows(AccessDeniedException.class, () -> workplacesService.deleteWorkplace(1L));

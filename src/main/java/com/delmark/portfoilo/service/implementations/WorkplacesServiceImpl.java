@@ -5,11 +5,11 @@ import com.delmark.portfoilo.exceptions.NoSuchWorkException;
 import com.delmark.portfoilo.exceptions.WorkplaceAlreadyExistsInPortfolioException;
 import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
 import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
-import com.delmark.portfoilo.models.PlacesOfWork;
+import com.delmark.portfoilo.models.Workplace;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Role;
 import com.delmark.portfoilo.models.User;
-import com.delmark.portfoilo.repository.PlacesOfWorkRepository;
+import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.service.interfaces.UserService;
@@ -26,16 +26,16 @@ import java.util.List;
 @AllArgsConstructor
 public class WorkplacesServiceImpl implements WorkplacesService {
 
-    private PlacesOfWorkRepository placesOfWorkRepository;
+    private WorkplacesRepository workplacesRepository;
     private PortfolioRepository portfolioRepository;
     private RolesRepository rolesRepository;
     private UserService userService;
     public CustomMapper mapper;
 
     @Override
-    public List<PlacesOfWork> getAllWorkplaces(Long portfolioId) {
+    public List<Workplace> getAllWorkplaces(Long portfolioId) {
         if (portfolioRepository.existsById(portfolioId)) {
-            return placesOfWorkRepository.findAllByPortfolioId(portfolioId);
+            return workplacesRepository.findAllByPortfolioId(portfolioId);
         }
         else {
             throw new NoSuchPortfolioException();
@@ -43,12 +43,12 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     }
 
     @Override
-    public PlacesOfWork getWorkplaceById(Long workId) {
-        return placesOfWorkRepository.findById(workId).orElseThrow(NoSuchWorkException::new);
+    public Workplace getWorkplaceById(Long workId) {
+        return workplacesRepository.findById(workId).orElseThrow(NoSuchWorkException::new);
     }
 
     @Override
-    public PlacesOfWork addWorkplaceToPortfolio(Long portfolioId, PlacesOfWorkDto dto) {
+    public Workplace addWorkplaceToPortfolio(Long portfolioId, PlacesOfWorkDto dto) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
@@ -58,11 +58,11 @@ public class WorkplacesServiceImpl implements WorkplacesService {
             throw new AccessDeniedException("Пользователь не имеет доступа к данному портфолио");
         }
 
-        if (placesOfWorkRepository.findByWorkplaceNameAndPortfolio(dto.getWorkplaceName(), portfolio).isPresent()) {
+        if (workplacesRepository.findByWorkplaceNameAndPortfolio(dto.getWorkplaceName(), portfolio).isPresent()) {
             throw new WorkplaceAlreadyExistsInPortfolioException();
         }
 
-        PlacesOfWork workplace = new PlacesOfWork().
+        Workplace workplace = new Workplace().
                 setWorkplaceName(dto.getWorkplaceName()).
                 setWorkplaceDesc(dto.getWorkplaceDesc()).
                 setFireDate(dto.getFireDate()).
@@ -70,12 +70,12 @@ public class WorkplacesServiceImpl implements WorkplacesService {
                 setPost(dto.getPost()).
                 setPortfolio(portfolio);
 
-        return placesOfWorkRepository.save(workplace);
+        return workplacesRepository.save(workplace);
     }
 
     @Override
-    public PlacesOfWork editWorkplaceInfo(Long id, PlacesOfWorkDto dto) {
-        PlacesOfWork workplace = placesOfWorkRepository.findById(id).orElseThrow(NoSuchWorkException::new);
+    public Workplace editWorkplaceInfo(Long id, PlacesOfWorkDto dto) {
+        Workplace workplace = workplacesRepository.findById(id).orElseThrow(NoSuchWorkException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         Portfolio portfolio = workplace.getPortfolio();
@@ -88,12 +88,12 @@ public class WorkplacesServiceImpl implements WorkplacesService {
 
         mapper.updateWorkplaceFromDTO(dto, workplace);
 
-        return placesOfWorkRepository.save(workplace);
+        return workplacesRepository.save(workplace);
     }
 
     @Override
     public void deleteWorkplace(Long id) {
-        PlacesOfWork workplace = placesOfWorkRepository.findById(id).orElseThrow(NoSuchWorkException::new);
+        Workplace workplace = workplacesRepository.findById(id).orElseThrow(NoSuchWorkException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
         Portfolio portfolio = workplace.getPortfolio();
 
@@ -103,11 +103,11 @@ public class WorkplacesServiceImpl implements WorkplacesService {
             throw new AccessDeniedException("Нет доступа");
         }
 
-        placesOfWorkRepository.delete(workplace);
+        workplacesRepository.delete(workplace);
     }
 
     @Override
     public List<WorkplacesStatsDTO> getStatistics() {
-        return placesOfWorkRepository.getStatistics();
+        return workplacesRepository.getStatistics();
     }
 }

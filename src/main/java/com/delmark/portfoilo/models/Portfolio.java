@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Entity(name = "Portfolio")
-@Table(name = "Portfolio")
+@Entity(name = "portfolio")
+@Table(name = "portfolio")
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -59,7 +59,7 @@ public class Portfolio {
     @ToString.Exclude
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "Portfolio_techses",
+    @JoinTable(name = "portfolio_techses",
             joinColumns = @JoinColumn(name = "portfolio_id"),
             inverseJoinColumns = @JoinColumn(name = "techses_id"))
     private Set<Techs> techses = new LinkedHashSet<>();
@@ -72,5 +72,5 @@ public class Portfolio {
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    Set<PlacesOfWork> workplaces = new HashSet<>();
+    Set<Workplace> workplaces = new HashSet<>();
 }
