@@ -1,5 +1,6 @@
 package com.delmark.portfoilo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -26,6 +27,7 @@ public class User implements UserDetails {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private boolean enabled;

@@ -3,6 +3,8 @@ package com.delmark.portfoilo.models;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity(name = "projects")
 @Table(name = "projects")
@@ -19,7 +21,8 @@ public class Projects {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "proj_id_seq")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 

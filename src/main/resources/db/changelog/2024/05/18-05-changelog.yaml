@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1716061473358-1
+      id: 1716063593066-1
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -9,7 +9,7 @@ databaseChangeLog:
             sequenceName: port_id_seq
             startValue: 1
   - changeSet:
-      id: 1716061473358-2
+      id: 1716063593066-2
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -18,7 +18,7 @@ databaseChangeLog:
             sequenceName: proj_id_seq
             startValue: 1
   - changeSet:
-      id: 1716061473358-3
+      id: 1716063593066-3
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -27,7 +27,7 @@ databaseChangeLog:
             sequenceName: tech_id_seq
             startValue: 1
   - changeSet:
-      id: 1716061473358-4
+      id: 1716063593066-4
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -36,7 +36,7 @@ databaseChangeLog:
             sequenceName: user_id_seq
             startValue: 1
   - changeSet:
-      id: 1716061473358-5
+      id: 1716063593066-5
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -45,7 +45,7 @@ databaseChangeLog:
             sequenceName: work_id_seq
             startValue: 1
   - changeSet:
-      id: 1716061473358-6
+      id: 1716063593066-6
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -71,7 +71,7 @@ databaseChangeLog:
                   type: BOOLEAN
             tableName: app_user
   - changeSet:
-      id: 1716061473358-7
+      id: 1716063593066-7
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -93,7 +93,7 @@ databaseChangeLog:
                   type: BIGINT
             tableName: app_user_roles
   - changeSet:
-      id: 1716061473358-8
+      id: 1716063593066-8
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -135,7 +135,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: portfolio
   - changeSet:
-      id: 1716061473358-9
+      id: 1716063593066-9
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -157,7 +157,7 @@ databaseChangeLog:
                   type: BIGINT
             tableName: portfolio_projects
   - changeSet:
-      id: 1716061473358-10
+      id: 1716063593066-10
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -179,7 +179,7 @@ databaseChangeLog:
                   type: BIGINT
             tableName: portfolio_techses
   - changeSet:
-      id: 1716061473358-11
+      id: 1716063593066-11
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -201,7 +201,7 @@ databaseChangeLog:
                   type: BIGINT
             tableName: portfolio_workplaces
   - changeSet:
-      id: 1716061473358-12
+      id: 1716063593066-12
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -228,7 +228,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: projects
   - changeSet:
-      id: 1716061473358-13
+      id: 1716063593066-13
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -247,7 +247,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: roles
   - changeSet:
-      id: 1716061473358-14
+      id: 1716063593066-14
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -268,7 +268,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: technologies
   - changeSet:
-      id: 1716061473358-15
+      id: 1716063593066-15
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -301,7 +301,7 @@ databaseChangeLog:
                   type: DATETIME
             tableName: workplace
   - changeSet:
-      id: 1716061473358-16
+      id: 1716063593066-16
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -319,7 +319,7 @@ databaseChangeLog:
                   type: BIGINT
             tableName: workplaces_statsdto
   - changeSet:
-      id: 1716061473358-17
+      id: 1716063593066-17
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -328,7 +328,7 @@ databaseChangeLog:
             constraintName: uc_portfolio_projects_projects
             tableName: portfolio_projects
   - changeSet:
-      id: 1716061473358-18
+      id: 1716063593066-18
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -337,7 +337,7 @@ databaseChangeLog:
             constraintName: uc_portfolio_workplaces_workplaces
             tableName: portfolio_workplaces
   - changeSet:
-      id: 1716061473358-19
+      id: 1716063593066-19
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -348,7 +348,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: app_user
   - changeSet:
-      id: 1716061473358-20
+      id: 1716063593066-20
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -356,10 +356,11 @@ databaseChangeLog:
             baseColumnNames: portfolio_id
             baseTableName: projects
             constraintName: FK_PROJECTS_ON_PORTFOLIO
+            onDelete: CASCADE
             referencedColumnNames: id
             referencedTableName: portfolio
   - changeSet:
-      id: 1716061473358-21
+      id: 1716063593066-21
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -367,10 +368,11 @@ databaseChangeLog:
             baseColumnNames: portfolio_id
             baseTableName: workplace
             constraintName: FK_WORKPLACE_ON_PORTFOLIO
+            onDelete: CASCADE
             referencedColumnNames: id
             referencedTableName: portfolio
   - changeSet:
-      id: 1716061473358-22
+      id: 1716063593066-22
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -381,7 +383,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: roles
   - changeSet:
-      id: 1716061473358-23
+      id: 1716063593066-23
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -392,7 +394,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: app_user
   - changeSet:
-      id: 1716061473358-24
+      id: 1716063593066-24
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -403,7 +405,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: portfolio
   - changeSet:
-      id: 1716061473358-25
+      id: 1716063593066-25
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -414,7 +416,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: projects
   - changeSet:
-      id: 1716061473358-26
+      id: 1716063593066-26
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -425,7 +427,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: portfolio
   - changeSet:
-      id: 1716061473358-27
+      id: 1716063593066-27
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -436,7 +438,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: technologies
   - changeSet:
-      id: 1716061473358-28
+      id: 1716063593066-28
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -447,7 +449,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: portfolio
   - changeSet:
-      id: 1716061473358-29
+      id: 1716063593066-29
       author: Classic (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
