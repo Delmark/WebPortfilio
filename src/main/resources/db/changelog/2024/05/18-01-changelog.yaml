@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-05-18-01-yml
+      author: Delmark
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: role
+                  value: "ADMIN"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: role
+                  value: "USER"

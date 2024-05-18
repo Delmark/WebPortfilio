@@ -21,13 +21,13 @@ public class PortfoiloApplication {
 		SpringApplication.run(PortfoiloApplication.class, args);
 	}
 
+	// Только для разработки, добавляет администратора с именем testAdmin и паролем adminPass
 	@Bean
 	CommandLineRunner run(RolesRepository rolesRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		return (args) -> {
-			if (rolesRepository.findByAuthority("ADMIN").isPresent()) return;
+			if (userRepository.existsByUsername("testAdmin")) return;
 
-			Role adminRole = rolesRepository.save(new Role(null, "ADMIN"));
-			rolesRepository.save(new Role(null, "USER"));
+			Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
 			HashSet<Role> roles = new HashSet<>();
 			roles.add(adminRole);
