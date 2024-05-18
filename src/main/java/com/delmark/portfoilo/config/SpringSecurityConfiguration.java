@@ -59,7 +59,6 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/settings").permitAll()
-                                .requestMatchers("test").permitAll()
                 ).oauth2ResourceServer(auth -> auth.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .formLogin((loginPage) -> {
                     loginPage.successForwardUrl("/");

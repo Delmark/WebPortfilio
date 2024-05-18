@@ -33,10 +33,4 @@ public class AuthController {
             return ResponseEntity.ok(jwtTokenDTO);
         }
     }
-
-    @GetMapping("/registerUser")
-    public ResponseEntity<Void> registerNewUser(@RequestBody UserDto userDto) {
-        userService.registration(userDto);
-        return ResponseEntity.ok().build();
-    }
 }
