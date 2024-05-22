@@ -84,9 +84,9 @@ public class SettingsView extends VerticalLayout implements BeforeEnterObserver 
         H4 deletePortfolioLabel = new H4("Удалить портфолио: ");
         deletePortfolioLabel.addClassNames(LumoUtility.TextColor.WARNING);
         Button deletePortfolioBtn = new Button("Удалить портфолио", event -> {
-            Long portfolioId = portfolioService.getPortfolioIdByUser(
+            Long portfolioId = portfolioService.getPortfolioByUser(
                     ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()
-            );
+            ).getId();
             portfolioService.deletePortfolio(portfolioId);
             UI.getCurrent().navigate("/");
         });
