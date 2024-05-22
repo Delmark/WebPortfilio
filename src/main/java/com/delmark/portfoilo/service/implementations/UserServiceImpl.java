@@ -1,7 +1,6 @@
 package com.delmark.portfoilo.service.implementations;
 
-import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
-import com.delmark.portfoilo.exceptions.UsernameAlreadyExistsException;
+import com.delmark.portfoilo.exceptions.*;
 import com.delmark.portfoilo.models.DTO.UserDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Role;
@@ -81,6 +80,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Portfolio getPortfolioByUser(String username) {
         return portfolioRepository.findByUser((User) loadUserByUsername(username)).orElseThrow(NoSuchPortfolioException::new);
+    }
+
+    @Override
+    public User grantAuthority(String authority, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Role role = rolesRepository.findByAuthority(authority).orElseThrow(NoSuchRoleException::new);
+
+        if (user.getAuthorities().contains(role)) {
+            throw new UserAlreadyHaveRoleException();
+        }
+
+        user.getRoles().add(role);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User revokeAuthority(String authority, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Role role = rolesRepository.findByAuthority(authority).orElseThrow(NoSuchRoleException::new);
+
+        if (!user.getAuthorities().contains(role)) {
+            throw new UserDoesNotHaveRoleException();
+        }
+
+        user.getRoles().remove(role);
+        return userRepository.save(user);
     }
 
     @Override

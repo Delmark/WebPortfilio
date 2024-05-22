@@ -15,4 +15,6 @@ public interface UserService {
     Page<User> getAllUsers(int page);
     List<User> getUsersWithPortfolio();
     Portfolio getPortfolioByUser(String username);
+    User grantAuthority(String authority, String username);
+    User revokeAuthority(String authority, String username);
 }

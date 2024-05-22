@@ -122,6 +122,33 @@ public class ExceptionsHandler {
         );
     }
 
+    @ExceptionHandler(NoSuchRoleException.class)
+    public ResponseEntity<ErrorResponse> handleException(NoSuchRoleException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "Такой роли не существует"
+                )
+        );
+    }
 
+    @ExceptionHandler(UserDoesNotHaveRoleException.class)
+    public ResponseEntity<ErrorResponse> handleException(UserDoesNotHaveRoleException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "Пользователь не имеет такой роли"
+                )
+        );
+    }
 
+    @ExceptionHandler(UserAlreadyHaveRoleException.class)
+    public ResponseEntity<ErrorResponse> handleException(UserAlreadyHaveRoleException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(
+                        400L,
+                        "У пользователя уже есть такая роль"
+                )
+        );
+    }
 }

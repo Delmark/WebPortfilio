@@ -54,6 +54,7 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                                 .requestMatchers("/api/projects**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/portfolio**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/workPlaces**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/tech/**").hasRole("ADMIN")
                                 .requestMatchers("/portfolio/**").permitAll()
                                 .requestMatchers("/register").permitAll()
