@@ -333,4 +333,34 @@ public class PortfolioServiceTest {
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.of(existingPortfolio));
         assertThrows(AccessDeniedException.class, () -> portfolioService.deletePortfolio(1L));
     }
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName(value = "Проверка существования портфолио у пользователя")
+    void portfolioExistsByUser() {
+        User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
+        Mockito.when(userRepository.findByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
+        Mockito.when(portfolioRepository.findByUser(existingUser)).thenReturn(Optional.of(existingPortfolio));
+
+        assertTrue(portfolioService.portfolioExistsByUser(existingUser.getUsername()));
+    }
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName(value = "Отсутствие портфолио при проверке существования портфолио по пользователю")
+    void nonExistingPortfolioByUser() {
+        User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Mockito.when(userRepository.findByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
+        Mockito.when(portfolioRepository.findByUser(existingUser)).thenReturn(Optional.empty());
+
+        assertFalse(portfolioService.portfolioExistsByUser(existingUser.getUsername()));
+    }
+
+    @Test
+    @DisplayName("Проверка существования портфолио по несуществующему пользователю")
+    void checkPortfolioExistenceByNonExisingUser() {
+        Mockito.when(userRepository.findByUsername("Delmark")).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, ()-> portfolioService.portfolioExistsByUser("Delmark"));
+    }
 }
