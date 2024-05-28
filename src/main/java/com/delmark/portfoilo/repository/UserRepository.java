@@ -14,7 +14,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long>, PagingAndSortingRepository<User, Long> {
     Optional<User> findByUsername(String username);
     boolean existsByUsername(String username);
-
     @Query("FROM app_user u JOIN portfolio p ON p.user.id = u.id")
     List<User> getUsersWithExistingPortfolio();
 }
