@@ -1,10 +1,14 @@
 package com.delmark.portfoilo.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.UUID;
 
 
 @Slf4j
@@ -12,142 +16,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Component
 public class ExceptionsHandler {
 
-    @ExceptionHandler(UserDoesNotHavePortfolioException.class)
-    public ResponseEntity<ErrorResponse> handleException(UserDoesNotHavePortfolioException e) {
-        return ResponseEntity.status(404).body(
+    @ExceptionHandler(ResponseException.class)
+    public ResponseEntity<ErrorResponse> onRestRequestExceptionHandler(ResponseException ex) {
+        return ResponseEntity.status(ex.code).body(
                 new ErrorResponse(
-                        404L,
-                        "Портфолио не существует, или пользователь его не создал"
-                )
-        );
-    }
-
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleException(UsernameAlreadyExistsException e) {
-        return ResponseEntity.status(400).body(
-                new ErrorResponse(
-                        400L,
-                        "Пользватель с таким логином уже существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(UserAlreadyHavePortfolioException.class)
-    public ResponseEntity<ErrorResponse> handleException(UserAlreadyHavePortfolioException e) {
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(
-                        400L,
-                        "Пользватель уже имеет портфолио"
-                )
-        );
-    }
-
-    @ExceptionHandler(NoSuchTechException.class)
-    public ResponseEntity<ErrorResponse> handleException(NoSuchTechException e) {
-        return ResponseEntity.status(404).body(
-                new ErrorResponse(
-                        404L,
-                        "Технологии с таким индетификатором не существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(NoSuchPortfolioException.class)
-    public ResponseEntity<ErrorResponse> handleException(NoSuchPortfolioException e) {
-        return ResponseEntity.status(404).body(
-                new ErrorResponse(
-                        404L,
-                        "Портфолио с таким индектификатором не существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(TechAlreadyInPortfolioException.class)
-    public ResponseEntity<ErrorResponse> handleException(TechAlreadyInPortfolioException e) {
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(
-                        400L,
-                        "Портфолио уже имеет технологию с таким индентификатором"
-                )
-        );
-    }
-
-    @ExceptionHandler(NoSuchProjectException.class)
-    public ResponseEntity<ErrorResponse> handleException(NoSuchProjectException e) {
-        return ResponseEntity.status(404).body(
-                new ErrorResponse(
-                        400L,
-                        "Проекта с таким индентификатором не существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(NoSuchWorkException.class)
-    public ResponseEntity<ErrorResponse> handleException(NoSuchWorkException e) {
-        return ResponseEntity.status(404).body(
-                new ErrorResponse(
-                        400L,
-                        "Работы с таким индентификатором не существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(WorkplaceAlreadyExistsInPortfolioException.class)
-    public ResponseEntity<ErrorResponse> handleException(WorkplaceAlreadyExistsInPortfolioException e) {
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(
-                        400L,
-                        "Работа уже существует в портфолио"
-                )
-        );
-    }
-
-    @ExceptionHandler(TechAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleException(TechAlreadyExistsException e) {
-        return ResponseEntity.status(400).body(
-                new ErrorResponse(
-                        400L,
-                        "Технология уже существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException e) {
-        return ResponseEntity.status(404).body(
-                new ErrorResponse(
-                        404L,
-                        "Такого пользователя не существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(NoSuchRoleException.class)
-    public ResponseEntity<ErrorResponse> handleException(NoSuchRoleException e) {
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(
-                        400L,
-                        "Такой роли не существует"
-                )
-        );
-    }
-
-    @ExceptionHandler(UserDoesNotHaveRoleException.class)
-    public ResponseEntity<ErrorResponse> handleException(UserDoesNotHaveRoleException e) {
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(
-                        400L,
-                        "Пользователь не имеет такой роли"
-                )
-        );
-    }
-
-    @ExceptionHandler(UserAlreadyHaveRoleException.class)
-    public ResponseEntity<ErrorResponse> handleException(UserAlreadyHaveRoleException e) {
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(
-                        400L,
-                        "У пользователя уже есть такая роль"
+                        ex.code,
+                        ex.message
                 )
         );
     }
