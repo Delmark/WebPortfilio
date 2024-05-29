@@ -2,6 +2,7 @@ package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.Techs;
 import com.delmark.portfoilo.service.interfaces.TechService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,12 @@ public class TechController {
     }
 
     @PostMapping
-    ResponseEntity<Techs> createTech(@RequestBody Techs techs) {
+    ResponseEntity<Techs> createTech(@RequestBody @Valid Techs techs) {
         return ResponseEntity.ok(techService.createTech(techs));
     }
 
     @PutMapping ("/{id}")
-    ResponseEntity<Techs> editTech(@PathVariable("id") Long id, @RequestBody Techs techs) {
+    ResponseEntity<Techs> editTech(@PathVariable("id") Long id, @RequestBody @Valid Techs techs) {
         return ResponseEntity.ok(techService.editTech(id, techs));
     }
 

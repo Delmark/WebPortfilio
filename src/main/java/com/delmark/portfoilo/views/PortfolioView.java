@@ -2,7 +2,7 @@ package com.delmark.portfoilo.views;
 
 import com.delmark.portfoilo.exceptions.*;
 import com.delmark.portfoilo.models.*;
-import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
+import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
 import com.delmark.portfoilo.repository.*;
@@ -392,7 +392,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         saveButton.addClickListener(e -> {
             workplacesService.addWorkplaceToPortfolio(
                     Long.parseLong(portfolioId),
-                    new PlacesOfWorkDto(
+                    new WorkplaceDto(
                             workplaceName.getValue(),
                             workplaceDesc.getValue(),
                             post.getValue(),

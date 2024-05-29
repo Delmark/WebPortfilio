@@ -136,7 +136,7 @@ public class ProjectsControllerTest {
     void addProjectToPortfolio() throws Exception {
         Portfolio portfolio = portfolioRepository.findById(1L).get();
 
-        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "Link");
+        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "https://projectlink.com");
 
         Projects expectedProject = mapper.toEntity(dto);
         expectedProject.setId(1L).setPortfolio(portfolio);
@@ -158,7 +158,7 @@ public class ProjectsControllerTest {
 
     @Test
     void addProjectToNonExistingPortfolio() throws Exception {
-        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "Link");
+        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "https://projectlink.com");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/projects?portfolioId=2")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,13 +176,13 @@ public class ProjectsControllerTest {
 
     @Test
     void addProjectToOtherUserPortfolio() throws Exception {
-        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "Link");
+        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "https://projectlink.com");
 
         User otherUser = userRepository.save(
                 new User(
                         null,
                         "Who",
-                        passwordEncoder.encode("123"),
+                        passwordEncoder.encode("123456"),
                         true,
                         new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get()))
                 )

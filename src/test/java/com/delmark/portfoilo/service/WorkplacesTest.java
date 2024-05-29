@@ -3,7 +3,7 @@ package com.delmark.portfoilo.service;
 import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.NoSuchWorkException;
 import com.delmark.portfoilo.models.*;
-import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
+import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
@@ -104,7 +104,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(user);
 
-        PlacesOfWorkDto dto = new PlacesOfWorkDto("test", "test", "test", date, date);
+        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
 
         Workplace savedWorkplace = new Workplace(null, existingPortfolio, "test", "test", "test", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
@@ -134,7 +134,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(otherUser);
 
-        PlacesOfWorkDto dto = new PlacesOfWorkDto("test", "test", "test", date, date);
+        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
@@ -152,7 +152,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(user);
 
-        PlacesOfWorkDto dto = new PlacesOfWorkDto("test", "test", "test", date, date);
+        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
 
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);

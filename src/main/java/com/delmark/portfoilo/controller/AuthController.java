@@ -4,6 +4,7 @@ import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
 import com.delmark.portfoilo.models.DTO.UserDto;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,13 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerRestUser(@RequestBody UserDto registrationDto) {
+    public ResponseEntity<Void> registerRestUser(@RequestBody @Valid UserDto registrationDto) {
         userService.registration(registrationDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getToken")
-    public ResponseEntity<JwtTokenDTO> getToken(@RequestBody UserDto dto) {
+    public ResponseEntity<JwtTokenDTO> getToken(@RequestBody @Valid UserDto dto) {
         JwtTokenDTO jwtTokenDTO = tokenService.provideToken(dto.getUsername(), dto.getPassword());
         // TODO: Сделать исключение
         if (jwtTokenDTO.getToken() == null) {

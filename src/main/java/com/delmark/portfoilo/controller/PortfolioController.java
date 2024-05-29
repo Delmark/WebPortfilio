@@ -4,7 +4,9 @@ import com.delmark.portfoilo.exceptions.ErrorResponse;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,7 +35,7 @@ public class PortfolioController {
     // POST
 
     @PostMapping
-    public ResponseEntity<Portfolio> createPortfolio(@RequestBody PortfolioDto portfolio) {
+    public ResponseEntity<Portfolio> createPortfolio(@RequestBody @Valid PortfolioDto portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioCreation(portfolio));
     }
 
@@ -47,7 +49,7 @@ public class PortfolioController {
 
 
     @PutMapping
-    public ResponseEntity<Portfolio> editPortfolio(@RequestParam Long id, @RequestBody PortfolioDto portfolio) {
+    public ResponseEntity<Portfolio> editPortfolio(@RequestParam Long id, @RequestBody @Valid PortfolioDto portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioEdit(id, portfolio));
     }
 

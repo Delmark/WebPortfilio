@@ -4,6 +4,7 @@ import com.delmark.portfoilo.models.DTO.ProjectsDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Projects;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +31,11 @@ public class ProjectsController {
     }
 
     @PostMapping
-    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody ProjectsDto dto) {
+    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid ProjectsDto dto) {
         return ResponseEntity.ok(projectService.addProjectToPortfolio(id, dto));
     }
 
-    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody ProjectsDto dto) {
+    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody @Valid ProjectsDto dto) {
         return ResponseEntity.ok(projectService.editProject(id,dto));
     }
 

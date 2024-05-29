@@ -42,7 +42,7 @@ public class AuthControllerTest {
     @Test
     void registerNewUser() throws Exception {
         User expectedUser = new User(2L, "Delmark", passwordEncoder.encode("123"), true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
-        UserDto userDto = new UserDto("Delmark", "123");
+        UserDto userDto = new UserDto("Delmark", "123456");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
