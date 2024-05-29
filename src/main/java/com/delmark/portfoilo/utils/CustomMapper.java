@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.utils;
 
-import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
+import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
 import com.delmark.portfoilo.models.Workplace;
@@ -20,7 +20,7 @@ public interface CustomMapper {
     void updateProjectFromDTO(ProjectsDto dto, @MappingTarget Projects project);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateWorkplaceFromDTO(PlacesOfWorkDto dto, @MappingTarget Workplace workplace);
+    void updateWorkplaceFromDTO(WorkplaceDto dto, @MappingTarget Workplace workplace);
 
     Portfolio toEntity(PortfolioDto portfolioDto);
 

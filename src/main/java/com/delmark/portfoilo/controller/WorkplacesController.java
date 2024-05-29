@@ -1,8 +1,9 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.DTO.PlacesOfWorkDto;
+import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.models.Workplace;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +28,12 @@ public class WorkplacesController {
     }
 
     @PostMapping
-    public ResponseEntity<Workplace> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody PlacesOfWorkDto dto) {
+    public ResponseEntity<Workplace> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid WorkplaceDto dto) {
         return ResponseEntity.ok(workplacesService.addWorkplaceToPortfolio(id, dto));
     }
 
     @PutMapping
-    public ResponseEntity<Workplace> editWorkplaceInfo(@RequestParam("workplaceId") Long id, @RequestBody PlacesOfWorkDto dto) {
+    public ResponseEntity<Workplace> editWorkplaceInfo(@RequestParam("workplaceId") Long id, @RequestBody @Valid WorkplaceDto dto) {
         return ResponseEntity.ok(workplacesService.editWorkplaceInfo(id, dto));
     }
 
