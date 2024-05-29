@@ -27,6 +27,7 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldBase;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.*;
@@ -495,7 +496,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         TextField middleName = new TextField("Отчество");
         middleName.setValue(portfolio.getMiddleName());
 
-        TextField education = new TextField("Отчество");
+        TextField education = new TextField("Образование");
         education.setValue(portfolio.getEducation());
 
         EmailField email = new EmailField("Email");
@@ -511,29 +512,49 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         TextField siteUrl = new TextField("Сайт");
         siteUrl.setValue(portfolio.getSiteUrl());
 
+        // Первичная валидация
+        setPortfolioValidationParams(firstName, lastName, middleName, education, email, about, phone);
+
+
         Button saveButton = new Button("Сохранить");
         Button cancelButton = new Button("Отмена");
 
+        List<TextFieldBase> fields = List.of(firstName, lastName, middleName, education, about, phone, email, siteUrl);
+
         cancelButton.addClickListener(e -> dialog.close());
         saveButton.addClickListener(e -> {
-            portfolioService.portfolioEdit(
-                    Long.parseLong(portfolioId),
-                    new PortfolioDto(
-                            firstName.getValue(),
-                            lastName.getValue(),
-                            middleName.getValue(),
-                            about.getValue(),
-                            education.getValue(),
-                            email.getValue(),
-                            phone.getValue(),
-                            siteUrl.getValue()
-                    ));
-            dialog.close();
-            UI.getCurrent().getPage().reload();
+
+            boolean allFieldsIsValid = true;
+
+            for (TextFieldBase field : fields) {
+                if (field.isInvalid()) {
+                    allFieldsIsValid = false;
+                    break;
+                }
+            }
+
+            if (allFieldsIsValid) {
+                portfolioService.portfolioEdit(
+                        Long.parseLong(portfolioId),
+                        new PortfolioDto(
+                                firstName.getValue(),
+                                lastName.getValue(),
+                                middleName.getValue(),
+                                about.getValue(),
+                                education.getValue(),
+                                email.getValue(),
+                                phone.getValue(),
+                                siteUrl.getValue()
+                        ));
+                dialog.close();
+                UI.getCurrent().getPage().reload();
+            }
+            else {
+                Notification.show("Введите корректные данные!");
+            }
         });
 
         dialog.getFooter().add(saveButton, cancelButton);
-
 
         VerticalLayout dialogLayout = new VerticalLayout(firstName, lastName, middleName, education, email, about, phone, siteUrl);
         dialogLayout.setSpacing(true);
@@ -542,6 +563,24 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    public static void setPortfolioValidationParams(TextField firstName, TextField lastName, TextField middleName, TextField education, EmailField email, TextArea about, TextField phone) {
+        firstName.setMaxLength(32);
+        firstName.setMinLength(2);
+        firstName.setRequired(true);
+        lastName.setRequired(true);
+        lastName.setMaxLength(32);
+        lastName.setMinLength(2);
+        middleName.setMaxLength(32);
+        middleName.setMinLength(2);
+        education.setMinLength(3);
+        education.setMaxLength(32);
+        about.setRequired(true);
+        about.setMaxLength(255);
+        about.setMinLength(5);
+        email.setRequired(true);
+        phone.setPattern("^\\+?\\d{1,3}?\\(\\d{3}\\)\\-?\\d{3}\\-?\\d{4}$");
     }
 
 

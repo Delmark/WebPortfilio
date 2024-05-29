@@ -34,7 +34,7 @@ public class PortfolioDto implements Serializable {
     @Email(message = "Некорректная почта")
     String email;
 
-    @Pattern(regexp =  "^\\+\\d{1,3}\\(\\d{3}\\)\\d{3}-\\d{4}$", message = "Номер телефона должен быть корректным")
+    @Pattern(regexp =  "^\\+?\\d{1,3}?\\(\\d{3}\\)\\-?\\d{3}\\-?\\d{4}$", message = "Номер телефона должен быть корректным")
     String phone;
 
     @URL(message = "Некорректная ссылка на ваш сайт")
