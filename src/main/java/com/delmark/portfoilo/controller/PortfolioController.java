@@ -10,10 +10,12 @@ import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/portfolio")
