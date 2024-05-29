@@ -120,6 +120,28 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
+    public Portfolio removeTechFromPortfolio(Long portfolioId, Long techId) {
+        Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+        Techs tech = techRepository.findById(techId).orElseThrow(NoSuchTechException::new);
+
+        Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
+
+        // Проверка на доступ к портфолио
+        if (!portfolio.getUser().getId().equals(sessionUser.getId()) && !sessionUser.getAuthorities().contains(adminRole)) {
+            throw new AccessDeniedException("У пользователя нет доступа к этму портфолио");
+        }
+
+        if (!portfolio.getTechses().contains(tech)) {
+            throw new NoSuchTechInPortfolio();
+        }
+
+        portfolio.getTechses().add(tech);
+
+        return portfolioRepository.save(portfolio);
+    }
+
+    @Override
     public void deletePortfolio(Long id) {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());

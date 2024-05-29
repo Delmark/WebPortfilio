@@ -345,4 +345,59 @@ public class PortfolioControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
+
+    @Test
+    void deleteTechFromPortfolio() throws Exception {
+        Techs java = techRepository.findByTechName("Java").get();
+        Portfolio existingPortfolio = portfolioRepository.findById(1L).get();
+
+        existingPortfolio.getTechses().add(java);
+        portfolioRepository.save(existingPortfolio);
+        existingPortfolio.getTechses().remove(java);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/tech?portId=1&techId=1")
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
+                {
+                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+                    return grantedAuthoritiesConverter.convert(jwt);
+                })))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(existingPortfolio)));
+    }
+
+    @Test
+    void deleteNonExistingTechFromPortfolio() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/tech?portId=1&techId=1")
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
+                        {
+                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+                            return grantedAuthoritiesConverter.convert(jwt);
+                        })))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void deleteTechFromOtherUserPortfolio() throws Exception {
+        Portfolio existingPortfolio = portfolioRepository.findById(1L).get();
+        User user = new User(null, "OtherUser", "123", true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+        userRepository.save(user);
+        portfolioRepository.save(existingPortfolio.setUser(user));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/tech?portId=1&techId=1")
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
+                {
+                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+                    return grantedAuthoritiesConverter.convert(jwt);
+                })))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
 }

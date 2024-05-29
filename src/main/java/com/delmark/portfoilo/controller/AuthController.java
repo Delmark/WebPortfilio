@@ -20,7 +20,7 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerRestUser(@RequestBody @Valid UserDto registrationDto) {
+    public ResponseEntity<Void> registerUser(@RequestBody @Valid UserDto registrationDto) {
         userService.registration(registrationDto);
         return ResponseEntity.ok().build();
     }
@@ -28,7 +28,7 @@ public class AuthController {
     @GetMapping("/getToken")
     public ResponseEntity<JwtTokenDTO> getToken(@RequestBody @Valid UserDto dto) {
         JwtTokenDTO jwtTokenDTO = tokenService.provideToken(dto.getUsername(), dto.getPassword());
-        // TODO: Сделать исключение
+
         if (jwtTokenDTO.getToken() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

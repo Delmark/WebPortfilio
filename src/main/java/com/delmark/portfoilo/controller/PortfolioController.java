@@ -57,6 +57,13 @@ public class PortfolioController {
 
     // DELETE
 
+    @DeleteMapping("/tech")
+    public ResponseEntity<Portfolio> removeTechFromPortfolio(
+            @RequestParam("portId") Long portfolioId,
+            @RequestParam("techId") Long techId
+    ) {
+        return ResponseEntity.ok(portfolioService.removeTechFromPortfolio(portfolioId, techId));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePortfolio(@PathVariable Long id) {
