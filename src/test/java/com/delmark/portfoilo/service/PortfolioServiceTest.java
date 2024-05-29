@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.service;
 
-import com.delmark.portfoilo.exceptions.*;
+import com.delmark.portfoilo.exceptions.response.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Role;
@@ -17,29 +17,21 @@ import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import com.delmark.portfoilo.utils.CustomMapperImpl;
 import com.delmark.portfoilo.utils.WithMockCustomUser;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;

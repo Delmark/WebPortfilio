@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.views;
 
-import com.delmark.portfoilo.exceptions.UserDoesNotHavePortfolioException;
+import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.vaadin.flow.component.UI;

@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.service.implementations;
 
-import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
-import com.delmark.portfoilo.exceptions.NoSuchProjectException;
+import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
+import com.delmark.portfoilo.exceptions.response.NoSuchProjectException;
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Projects;
@@ -10,20 +10,15 @@ import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.ProjectsRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
-import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

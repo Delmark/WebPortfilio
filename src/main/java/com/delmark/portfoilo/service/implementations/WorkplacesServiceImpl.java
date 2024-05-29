@@ -1,8 +1,8 @@
 package com.delmark.portfoilo.service.implementations;
 
-import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
-import com.delmark.portfoilo.exceptions.NoSuchWorkException;
-import com.delmark.portfoilo.exceptions.WorkplaceAlreadyExistsInPortfolioException;
+import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
+import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
+import com.delmark.portfoilo.exceptions.response.WorkplaceAlreadyExistsInPortfolioException;
 import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
 import com.delmark.portfoilo.models.Workplace;

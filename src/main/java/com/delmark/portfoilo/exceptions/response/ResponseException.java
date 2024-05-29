@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.exceptions;
+package com.delmark.portfoilo.exceptions.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class ResponseException extends RuntimeException{
-    String message = "Ошибка на стороне сервера";
-    int code = 500;
+    public String message = "Ошибка на стороне сервера";
+    public int code = 500;
 }

@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.exceptions;
+package com.delmark.portfoilo.exceptions.response;
 
 public class UserAlreadyHaveRoleException extends ResponseException{
     public UserAlreadyHaveRoleException() {

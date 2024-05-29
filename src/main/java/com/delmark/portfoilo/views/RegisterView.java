@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.views;
 
-import com.delmark.portfoilo.exceptions.UsernameAlreadyExistsException;
+import com.delmark.portfoilo.exceptions.response.UsernameAlreadyExistsException;
 import com.delmark.portfoilo.models.DTO.UserDto;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.vaadin.flow.component.ClickEvent;

@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.service.implementations;
 
-import com.delmark.portfoilo.exceptions.*;
+import com.delmark.portfoilo.exceptions.response.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Role;
@@ -13,16 +13,11 @@ import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
-import com.nimbusds.jose.proc.SecurityContext;
 import lombok.AllArgsConstructor;
-import org.mapstruct.Mapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Service

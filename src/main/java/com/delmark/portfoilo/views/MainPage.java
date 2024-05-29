@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.views;
 
-import com.delmark.portfoilo.exceptions.UserDoesNotHavePortfolioException;
+import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.models.DTO.TechStatsProjection;
 import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;

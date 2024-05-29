@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.service;
 
-import com.delmark.portfoilo.exceptions.NoSuchPortfolioException;
-import com.delmark.portfoilo.exceptions.NoSuchProjectException;
+import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
+import com.delmark.portfoilo.exceptions.response.NoSuchProjectException;
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
 import com.delmark.portfoilo.models.Portfolio;
 import com.delmark.portfoilo.models.Projects;
