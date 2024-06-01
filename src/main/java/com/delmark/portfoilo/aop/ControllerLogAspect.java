@@ -29,6 +29,6 @@ public class ControllerLogAspect {
 
     @AfterReturning(value = "handleControllerPointcut()", returning = "response")
     public void afterControllerExecution(JoinPoint joinPoint, ResponseEntity<?> response) {
-        log.info("Controller {} returned response with status code: {}", joinPoint.getSignature(), response.getBody(), response.getStatusCode());
+        log.info("Controller {} returned response with status code: {}", joinPoint.getSignature(), response.getStatusCode());
     }
 }
