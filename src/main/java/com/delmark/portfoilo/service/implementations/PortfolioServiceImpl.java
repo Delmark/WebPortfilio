@@ -1,8 +1,12 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.models.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
+import com.delmark.portfoilo.models.messages.Comment;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Techs;
+import com.delmark.portfoilo.models.userdata.Role;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
@@ -65,11 +69,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         Portfolio newPortfolio = new Portfolio()
-                .setName(dto.getName())
-                .setMiddleName(dto.getMiddleName())
-                .setSurname(dto.getSurname())
                 .setAboutUser(dto.getAboutUser())
-                .setEmail(dto.getEmail())
                 .setEducation(dto.getEducation())
                 .setPhone(dto.getPhone())
                 .setSiteUrl(dto.getSiteUrl())

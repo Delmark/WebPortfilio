@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.models.DTO;
 
-import com.delmark.portfoilo.models.Workplace;
+import com.delmark.portfoilo.models.portfoliodata.Workplace;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;

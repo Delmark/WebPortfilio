@@ -2,7 +2,7 @@ package com.delmark.portfoilo.service.interfaces;
 
 import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
-import com.delmark.portfoilo.models.Workplace;
+import com.delmark.portfoilo.models.portfoliodata.Workplace;
 
 import java.util.List;
 

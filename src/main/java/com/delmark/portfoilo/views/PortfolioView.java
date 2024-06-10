@@ -3,10 +3,14 @@ package com.delmark.portfoilo.views;
 import com.delmark.portfoilo.exceptions.response.TechAlreadyInPortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
-import com.delmark.portfoilo.models.*;
 import com.delmark.portfoilo.models.DTO.WorkplaceDto;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Projects;
+import com.delmark.portfoilo.models.portfoliodata.Techs;
+import com.delmark.portfoilo.models.portfoliodata.Workplace;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
@@ -87,7 +91,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     }
 
     private void createMainLayout() {
-        com.delmark.portfoilo.models.Portfolio portfolio = portfolioRepository.findById(Long.parseLong(portfolioId)).get();
+        Portfolio portfolio = portfolioRepository.findById(Long.parseLong(portfolioId)).get();
         VerticalLayout mainLayout = new VerticalLayout();
         H1 yourProfile = new H1("Ваше портфолио");
         Hr hr = new Hr();
@@ -201,7 +205,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
 
 
-    private HorizontalLayout createUserInfo(com.delmark.portfoilo.models.Portfolio portfolio) {
+    private HorizontalLayout createUserInfo(Portfolio portfolio) {
         HorizontalLayout userInfoLayout = new HorizontalLayout();
         VerticalLayout userData = new VerticalLayout();
 
@@ -283,7 +287,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         return userInfoLayout;
     }
 
-    private HorizontalLayout createProjectsAndWorkplacesLayout(com.delmark.portfoilo.models.Portfolio portfolio) {
+    private HorizontalLayout createProjectsAndWorkplacesLayout(Portfolio portfolio) {
         HorizontalLayout overall = new HorizontalLayout();
         overall.setMaxHeight("50%");
         overall.setWidth("100%");
@@ -489,20 +493,9 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
         Portfolio portfolio = portfolioRepository.findById(Long.parseLong(portfolioId)).get();
 
-        TextField firstName = new TextField("Имя");
-        firstName.setValue(portfolio.getName());
-
-        TextField lastName = new TextField("Фамилия");
-        lastName.setValue(portfolio.getSurname());
-
-        TextField middleName = new TextField("Отчество");
-        middleName.setValue(portfolio.getMiddleName());
 
         TextField education = new TextField("Образование");
         education.setValue(portfolio.getEducation());
-
-        EmailField email = new EmailField("Email");
-        email.setValue(portfolio.getEmail());
 
         TextArea about = new TextArea("О себе");
         about.setValue(portfolio.getAboutUser());
@@ -515,13 +508,13 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         siteUrl.setValue(portfolio.getSiteUrl());
 
         // Первичная валидация
-        setPortfolioValidationParams(firstName, lastName, middleName, education, email, about, phone);
+        setPortfolioValidationParams(education, about, phone);
 
 
         Button saveButton = new Button("Сохранить");
         Button cancelButton = new Button("Отмена");
 
-        List<TextFieldBase> fields = List.of(firstName, lastName, middleName, education, about, phone, email, siteUrl);
+        List<TextFieldBase> fields = List.of(education, about, phone, siteUrl);
 
         cancelButton.addClickListener(e -> dialog.close());
         saveButton.addClickListener(e -> {
@@ -539,12 +532,8 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                 portfolioService.portfolioEdit(
                         Long.parseLong(portfolioId),
                         new PortfolioDto(
-                                firstName.getValue(),
-                                lastName.getValue(),
-                                middleName.getValue(),
                                 about.getValue(),
                                 education.getValue(),
-                                email.getValue(),
                                 phone.getValue(),
                                 siteUrl.getValue()
                         ));
@@ -558,7 +547,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
         dialog.getFooter().add(saveButton, cancelButton);
 
-        VerticalLayout dialogLayout = new VerticalLayout(firstName, lastName, middleName, education, email, about, phone, siteUrl);
+        VerticalLayout dialogLayout = new VerticalLayout(education, about, phone, siteUrl);
         dialogLayout.setSpacing(true);
         dialogLayout.setPadding(true);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
@@ -567,21 +556,12 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         dialog.open();
     }
 
-    public static void setPortfolioValidationParams(TextField firstName, TextField lastName, TextField middleName, TextField education, EmailField email, TextArea about, TextField phone) {
-        firstName.setMaxLength(32);
-        firstName.setMinLength(2);
-        firstName.setRequired(true);
-        lastName.setRequired(true);
-        lastName.setMaxLength(32);
-        lastName.setMinLength(2);
-        middleName.setMaxLength(32);
-        middleName.setMinLength(2);
+    public static void setPortfolioValidationParams(TextField education, TextArea about, TextField phone) {
         education.setMinLength(3);
         education.setMaxLength(32);
         about.setRequired(true);
         about.setMaxLength(255);
         about.setMinLength(5);
-        email.setRequired(true);
         phone.setPattern("^\\+?\\d{1,3}?\\(\\d{3}\\)\\-?\\d{3}\\-?\\d{4}$");
     }
 

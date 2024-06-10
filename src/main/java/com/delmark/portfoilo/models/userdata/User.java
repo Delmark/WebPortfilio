@@ -1,6 +1,9 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.userdata;
 
+import com.delmark.portfoilo.models.messages.Chat;
+import com.delmark.portfoilo.utils.ImageUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -21,6 +24,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class User implements UserDetails {
+
+    // Индефикаторы пользователя
     @Id
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
@@ -31,11 +36,27 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    // Информация о пользователе
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
+    @Column(name = "middle_name")
+    @Nullable
+    private String middleName;
+
+    @Column(name = "email")
+    private String email;
+
     @Lob
     @Column(name = "avatar_image")
-    private byte[] avatar;
+    private byte[] avatar = ImageUtils.getDefaultAvatar();
 
     private boolean enabled;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

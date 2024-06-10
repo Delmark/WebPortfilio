@@ -1,8 +1,6 @@
 package com.delmark.portfoilo.service.implementations;
 
-import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
-import com.delmark.portfoilo.models.User;
-import com.delmark.portfoilo.repository.UserRepository;
+import com.delmark.portfoilo.models.DTO.authorization.JwtTokenDTO;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

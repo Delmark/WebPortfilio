@@ -1,8 +1,7 @@
 package com.delmark.portfoilo.views;
 
-import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.DTO.authorization.JwtTokenDTO;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import com.vaadin.flow.component.UI;
@@ -14,7 +13,6 @@ import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;

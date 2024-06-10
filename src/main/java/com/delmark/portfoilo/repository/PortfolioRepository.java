@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.repository;
 
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.userdata.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

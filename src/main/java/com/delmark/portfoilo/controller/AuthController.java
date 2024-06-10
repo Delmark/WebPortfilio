@@ -1,7 +1,8 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
-import com.delmark.portfoilo.models.DTO.UserDto;
+import com.delmark.portfoilo.models.DTO.authorization.JwtTokenDTO;
+import com.delmark.portfoilo.models.DTO.authorization.UserAuthDto;
+import com.delmark.portfoilo.models.DTO.authorization.UserRegDto;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import jakarta.validation.Valid;
@@ -20,13 +21,13 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody @Valid UserDto registrationDto) {
+    public ResponseEntity<Void> registerUser(@RequestBody @Valid UserRegDto registrationDto) {
         userService.registration(registrationDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getToken")
-    public ResponseEntity<JwtTokenDTO> getToken(@RequestBody @Valid UserDto dto) {
+    public ResponseEntity<JwtTokenDTO> getToken(@RequestBody @Valid UserAuthDto dto) {
         JwtTokenDTO jwtTokenDTO = tokenService.provideToken(dto.getUsername(), dto.getPassword());
 
         if (jwtTokenDTO.getToken() == null) {

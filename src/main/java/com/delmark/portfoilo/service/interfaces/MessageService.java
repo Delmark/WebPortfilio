@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.models.Message;
+import com.delmark.portfoilo.models.messages.Message;
 
 public interface MessageService {
     Message createMessage(Long chatId, String message, Long senderId);

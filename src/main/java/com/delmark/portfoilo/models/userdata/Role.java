@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.userdata;
 
 import jakarta.persistence.*;
 import lombok.*;

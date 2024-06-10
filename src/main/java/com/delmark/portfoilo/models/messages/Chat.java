@@ -1,9 +1,8 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.messages;
 
+import com.delmark.portfoilo.models.userdata.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +20,9 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "chat_name", nullable = false)
+    private String chatName;
 
     @JsonIgnore
     @ToString.Exclude

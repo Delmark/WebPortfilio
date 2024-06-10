@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

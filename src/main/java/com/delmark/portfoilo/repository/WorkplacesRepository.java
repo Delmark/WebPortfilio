@@ -1,8 +1,8 @@
 package com.delmark.portfoilo.repository;
 
 import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
-import com.delmark.portfoilo.models.Workplace;
-import com.delmark.portfoilo.models.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Workplace;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

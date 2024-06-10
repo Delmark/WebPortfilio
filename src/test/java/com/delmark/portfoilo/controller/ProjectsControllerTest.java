@@ -1,10 +1,10 @@
 package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Projects;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Projects;
+import com.delmark.portfoilo.models.userdata.Role;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.ProjectsRepository;
 import com.delmark.portfoilo.repository.RolesRepository;

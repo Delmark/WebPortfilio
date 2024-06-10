@@ -1,11 +1,16 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.portfoliodata;
 
+import com.delmark.portfoilo.models.userdata.User;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "portfolio_rating")
+@Data
+@NoArgsConstructor
 public class PortfolioRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +25,7 @@ public class PortfolioRating {
     private User user;
 
     @Column(nullable = false)
-    private Integer rating;
+    private Double rating;
 
     @Column(nullable = false)
     private LocalDateTime ratedAt;

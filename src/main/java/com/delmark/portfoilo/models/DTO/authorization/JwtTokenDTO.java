@@ -1,6 +1,5 @@
-package com.delmark.portfoilo.models.DTO;
+package com.delmark.portfoilo.models.DTO.authorization;
 
-import com.delmark.portfoilo.models.User;
 import lombok.Value;
 
 import java.io.Serializable;

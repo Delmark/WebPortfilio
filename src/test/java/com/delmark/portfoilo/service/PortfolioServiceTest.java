@@ -2,10 +2,10 @@ package com.delmark.portfoilo.service;
 
 import com.delmark.portfoilo.exceptions.response.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.Techs;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.userdata.Role;
+import com.delmark.portfoilo.models.portfoliodata.Techs;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;

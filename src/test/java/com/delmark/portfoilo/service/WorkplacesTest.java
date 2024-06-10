@@ -2,8 +2,11 @@ package com.delmark.portfoilo.service;
 
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
-import com.delmark.portfoilo.models.*;
 import com.delmark.portfoilo.models.DTO.WorkplaceDto;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Workplace;
+import com.delmark.portfoilo.models.userdata.Role;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;

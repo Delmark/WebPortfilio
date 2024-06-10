@@ -1,7 +1,6 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.DTO.authorization.JwtTokenDTO;
 import org.springframework.security.core.Authentication;
 
 public interface TokenService {

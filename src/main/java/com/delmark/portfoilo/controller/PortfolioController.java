@@ -1,19 +1,13 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.exceptions.ErrorResponse;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @Validated
 @RestController

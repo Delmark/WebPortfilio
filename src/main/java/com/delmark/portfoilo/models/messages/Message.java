@@ -1,5 +1,6 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.messages;
 
+import com.delmark.portfoilo.models.userdata.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +22,11 @@ public class Message {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
     private Chat chat;
 }

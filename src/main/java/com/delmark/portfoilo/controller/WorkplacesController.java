@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.DTO.WorkplaceDto;
-import com.delmark.portfoilo.models.Workplace;
+import com.delmark.portfoilo.models.portfoliodata.Workplace;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

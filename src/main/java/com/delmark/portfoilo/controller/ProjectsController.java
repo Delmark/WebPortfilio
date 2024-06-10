@@ -1,17 +1,14 @@
 package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Projects;
+import com.delmark.portfoilo.models.portfoliodata.Projects;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @Validated

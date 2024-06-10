@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.models.Comment;
+import com.delmark.portfoilo.models.messages.Comment;
 
 public interface CommentService {
     Comment createComment(Long portfolioId, String comment, Long senderId);

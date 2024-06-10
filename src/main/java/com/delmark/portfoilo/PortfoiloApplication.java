@@ -1,7 +1,7 @@
 package com.delmark.portfoilo;
 
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.userdata.Role;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @SpringBootApplication
 public class PortfoiloApplication {
@@ -32,12 +30,16 @@ public class PortfoiloApplication {
 			HashSet<Role> roles = new HashSet<>();
 			roles.add(adminRole);
 
-			userRepository.save(new User(1L, "testAdmin",
-					passwordEncoder.encode("adminPass"),
-					true,
-					roles
-					)
-			);
+			User user = new User().
+					setUsername("testAdmin").
+					setSurname("Админович").
+					setMiddleName("").
+					setName("Администратор").
+					setPassword(passwordEncoder.encode("adminPass")).
+					setEnabled(true).
+					setRoles(roles);
+
+			userRepository.save(user);
 		};
 	}
 

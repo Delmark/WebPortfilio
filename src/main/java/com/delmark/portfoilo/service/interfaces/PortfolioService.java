@@ -1,12 +1,9 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.models.Comment;
+import com.delmark.portfoilo.models.messages.Comment;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
+import com.delmark.portfoilo.models.portfoliodata.Portfolio;
 
-import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface PortfolioService {

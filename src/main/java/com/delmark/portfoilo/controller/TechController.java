@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.Techs;
+import com.delmark.portfoilo.models.portfoliodata.Techs;
 import com.delmark.portfoilo.service.interfaces.TechService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

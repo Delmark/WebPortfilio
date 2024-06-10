@@ -1,12 +1,9 @@
 package com.delmark.portfoilo.views;
 
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.User;
-import com.delmark.portfoilo.repository.PortfolioRepository;
+import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LitRenderer;

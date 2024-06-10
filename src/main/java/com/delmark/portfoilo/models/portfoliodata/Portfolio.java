@@ -1,13 +1,15 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.portfoliodata;
 
+import com.delmark.portfoilo.models.messages.Comment;
+import com.delmark.portfoilo.models.userdata.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -28,28 +30,16 @@ public class Portfolio {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "port_id_seq")
     private Long id;
 
-    @ManyToOne
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "surname")
-    private String surname;
-
-    @Column(name = "middle_name")
-    @Nullable
-    private String middleName;
 
     @Column(name = "about")
     private String aboutUser;
 
     @Column(name = "education")
     private String education;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "phone")
     @Nullable

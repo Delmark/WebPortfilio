@@ -1,9 +1,7 @@
 package com.delmark.portfoilo.service.interfaces;
 
 import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Projects;
-import org.springframework.data.domain.Page;
+import com.delmark.portfoilo.models.portfoliodata.Projects;
 
 import java.util.List;
 

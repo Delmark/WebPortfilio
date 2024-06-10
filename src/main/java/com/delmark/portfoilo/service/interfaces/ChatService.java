@@ -1,8 +1,8 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.models.Chat;
-import com.delmark.portfoilo.models.Message;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.messages.Chat;
+import com.delmark.portfoilo.models.messages.Message;
+import com.delmark.portfoilo.models.userdata.User;
 
 import java.util.List;
 import java.util.Set;
