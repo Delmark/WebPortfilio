@@ -38,6 +38,7 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
                     WorkplacesService workplacesService,
                     AuthenticationContext authenticationContext,
                     PortfolioService portfolioService) {
+
         this.authenticationContext = authenticationContext;
         this.techService = techService;
         this.workplacesService = workplacesService;
@@ -85,9 +86,6 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
 
                 DataSeries dataSeries = new DataSeries();
 
-                // Наверное лучше всего было вынести лист с TechStatsProjection в отдельную переменную и
-                // отсортировать его с помощью Comparator.comparingInt(TechStatsProjection::getCount).reversed()?
-                // Но тогда придётся начинать массив не с 0, а с 1?
                 Optional<DataSeriesItem> mostUsedTechnology = Optional.empty();
                 int maxCount = 0;
 

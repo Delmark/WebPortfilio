@@ -1,11 +1,8 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.*;
+import com.delmark.portfoilo.models.*;
 import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.Techs;
-import com.delmark.portfoilo.models.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
@@ -19,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -139,6 +137,12 @@ public class PortfolioServiceImpl implements PortfolioService {
         portfolio.getTechses().add(tech);
 
         return portfolioRepository.save(portfolio);
+    }
+
+    // TODO: Реализовать получение комментариев портфолио
+    @Override
+    public Set<Comment> getPortfolioComments(Long portfolioId) {
+        return null;
     }
 
     @Override

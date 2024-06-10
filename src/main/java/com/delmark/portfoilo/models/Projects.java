@@ -26,8 +26,15 @@ public class Projects {
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
+    @Column(name = "project_name")
     private String projectName;
+
+
+    @Column(name = "project_description")
     private String projectDesc;
+
+
+    @Column(name = "project_link")
     private String projectLink;
 
 }

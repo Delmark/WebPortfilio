@@ -1,0 +1,13 @@
+package com.delmark.portfoilo.service.interfaces;
+
+import com.delmark.portfoilo.models.Comment;
+
+public interface CommentService {
+    Comment createComment(Long portfolioId, String comment, Long senderId);
+
+    Comment getCommentById(Long commentId);
+
+    Comment editCommentById(Long commentId, String comment);
+
+    void deleteCommentById(Long commentId);
+}

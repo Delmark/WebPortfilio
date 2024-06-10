@@ -611,7 +611,6 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                     );
                 } catch (UserDoesNotHavePortfolioException e) {
                     if (authenticationContext.getPrincipalName().get().equals(portfolioId)) {
-                        // TODO: Реализовать отправку на создание портфолио
                         event.rerouteTo(PortfolioCreationView.class);
                         return;
                     }

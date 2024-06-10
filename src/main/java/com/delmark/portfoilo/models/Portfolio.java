@@ -69,11 +69,16 @@ public class Portfolio {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Projects> projects = new HashSet<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Workplace> workplaces = new HashSet<>();
+
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    Set<Comment> comments = new HashSet<>();
 }

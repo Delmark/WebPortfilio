@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Table(name = "app_user")
@@ -30,6 +31,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Lob
+    @Column(name = "avatar_image")
+    private byte[] avatar;
+
     private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -39,6 +44,9 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Chat> chats = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
