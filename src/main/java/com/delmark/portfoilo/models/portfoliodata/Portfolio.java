@@ -30,7 +30,7 @@ public class Portfolio {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "port_id_seq")
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;

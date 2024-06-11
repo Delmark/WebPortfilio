@@ -14,8 +14,10 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.HasValidationProperties;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldBase;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -35,6 +37,10 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
 
     private TextField username = new TextField("Логин", "Ваш логин");
     private PasswordField passwordField = new PasswordField("Пароль", "Ваш пароль");
+    private TextField email = new TextField("Email", "Ваш Email");
+    private TextField name = new TextField("Имя", "Ваше имя");
+    private TextField surname = new TextField("Фамилия", "Ваша фамилия");
+    private TextField middleName = new TextField("Отчество", "Ваше отчество");
     private Button button = new Button("Зарегистрироваться");
     private VerticalLayout registerFormLayout = new VerticalLayout();
     private Span errorSpan = new Span();
@@ -77,7 +83,13 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
     private FormLayout createRegisterForm() {
         FormLayout formLayout = new FormLayout();
 
-        formLayout.add(username, passwordField);
+        username.setRequired(true);
+        passwordField.setRequired(true);
+        email.setRequired(true);
+        name.setRequired(true);
+        surname.setRequired(true);
+
+        formLayout.add(username, passwordField, email, name, surname, middleName);
         formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1)
         );
@@ -86,7 +98,10 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
     }
 
     private void registerUser(ClickEvent<Button> event) {
-        if ((username.isEmpty() && passwordField.isEmpty())) {
+
+        List<TextFieldBase> fieldsForValidation = List.of(username, passwordField, email, name, surname, middleName);
+
+        if (fieldsForValidation.stream().anyMatch(HasValidationProperties::isInvalid)) {
             Map<String, List<String>> query = new HashMap<>();
             query.put("error", new ArrayList<>());
             UI.getCurrent().navigate("register", new QueryParameters(query));
@@ -94,8 +109,16 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
         }
 
         try {
-            // TODO: Добавить авторизацию для регистрации пользователя
-//            userService.registration(new UserRegDto(username.getValue(), passwordField.getValue()));
+            userService.registration(
+                    new UserRegDto(
+                            username.getValue(),
+                            passwordField.getValue(),
+                            name.getValue(),
+                            surname.getValue(),
+                            middleName.getValue(),
+                            email.getValue()
+                    )
+            );
         }
         catch (UsernameAlreadyExistsException e) {
             Map<String, List<String>> query = new HashMap<>();

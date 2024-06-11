@@ -209,8 +209,8 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         HorizontalLayout userInfoLayout = new HorizontalLayout();
         VerticalLayout userData = new VerticalLayout();
 
-        Avatar avatar = new Avatar(portfolio.getName());
-        H3 name = new H3(portfolio.getName() + " " + portfolio.getMiddleName() + " " + portfolio.getSurname());
+        Avatar avatar = new Avatar(portfolio.getUser().getName());
+        H3 name = new H3(portfolio.getUser().getName() + " " + portfolio.getUser().getMiddleName() + " " + portfolio.getUser().getSurname());
         userData.add(avatar, name);
         userData.setWidth("50%");
         userData.setAlignItems(Alignment.CENTER);
@@ -243,15 +243,15 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                 LumoUtility.Padding.MEDIUM
         );
         contactInfo.add(new H4("Контактная информация:"));
-        if (portfolio.getPhone() == null && portfolio.getEmail() == null) {
+        if (portfolio.getPhone() == null && portfolio.getUser().getEmail() == null) {
             contactInfo.add(new Paragraph("Нет контактной информации"));
         }
         else {
             if (portfolio.getPhone() != null) {
                 contactInfo.add(new Paragraph("Телефон: " + portfolio.getPhone()));
             }
-            if (portfolio.getEmail() != null) {
-                contactInfo.add(new Paragraph("Email: " + portfolio.getEmail()));
+            if (portfolio.getUser().getEmail() != null) {
+                contactInfo.add(new Paragraph("Email: " + portfolio.getUser().getEmail()));
             }
         }
         contactInfo.setWidth("50%");

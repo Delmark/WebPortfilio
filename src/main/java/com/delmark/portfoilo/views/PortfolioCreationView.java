@@ -60,21 +60,17 @@ public class PortfolioCreationView extends VerticalLayout implements BeforeEnter
         FormLayout formLayout = new FormLayout();
 
         // Создание полей для заполнения
-        TextField name = new TextField("Имя");
-        TextField surname = new TextField("Фамилия");
-        TextField middleName = new TextField("Отчество");
         TextField education = new TextField("Образование");
         TextArea about = new TextArea("О себе");
         TextField phone = new TextField("Телефон");
-        EmailField email = new EmailField("Электронная почта");
         TextField siteUrl = new TextField("Сайт");
 
         // Валдиация на стороне Vaadin
-        PortfolioView.setPortfolioValidationParams(name, surname, middleName, education, email, about, phone);
+        PortfolioView.setPortfolioValidationParams(education, about, phone);
 
-        formLayout.add(name, surname, middleName, education, about, phone, email, siteUrl);
+        formLayout.add(education, about, phone, siteUrl);
 
-        List<TextFieldBase> fields = List.of(name, surname, middleName, education, about, phone, email, siteUrl);
+        List<TextFieldBase> fields = List.of(education, about, phone, siteUrl);
 
         formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1)
@@ -95,12 +91,8 @@ public class PortfolioCreationView extends VerticalLayout implements BeforeEnter
             if (allFieldsIsValid) {
                 portfolioService.portfolioCreation(
                         new PortfolioDto(
-                                name.getValue(),
-                                surname.getValue(),
-                                middleName.getValue(),
                                 about.getValue(),
                                 education.getValue(),
-                                email.getValue(),
                                 phone.getValue(),
                                 siteUrl.getValue()
                         )

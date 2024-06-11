@@ -7,6 +7,9 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,7 +28,7 @@ import java.util.Set;
 @Setter
 public class User implements UserDetails {
 
-    // Индефикаторы пользователя
+    // Индентификаторы пользователя
     @Id
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
@@ -59,6 +62,7 @@ public class User implements UserDetails {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "app_user_roles",
             joinColumns = @JoinColumn(name = "app_user_id"),
@@ -66,7 +70,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Chat> chats = new HashSet<>();
 
     @Override

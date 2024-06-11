@@ -10,7 +10,7 @@ import java.io.*;
 public class ImageUtils {
     public byte[] getDefaultAvatar() {
         try {
-            File placeholderImage = new File("src/main/resources/static/images/placeholder.png");
+            File placeholderImage = new File("src/main/resources/static/images/img-placeholder.png");
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(placeholderImage));
             return bis.readAllBytes();
         }
