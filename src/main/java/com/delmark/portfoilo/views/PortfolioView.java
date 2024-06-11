@@ -12,12 +12,10 @@ import com.delmark.portfoilo.models.portfoliodata.Techs;
 import com.delmark.portfoilo.models.portfoliodata.Workplace;
 import com.delmark.portfoilo.models.userdata.User;
 import com.delmark.portfoilo.repository.*;
-import com.delmark.portfoilo.service.interfaces.PortfolioService;
-import com.delmark.portfoilo.service.interfaces.ProjectService;
-import com.delmark.portfoilo.service.interfaces.TechService;
-import com.delmark.portfoilo.service.interfaces.WorkplacesService;
+import com.delmark.portfoilo.service.interfaces.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.AccordionPanel;
+import com.vaadin.flow.component.avatar.AvatarVariant;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -30,13 +28,15 @@ import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.Scroller;
-import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldBase;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
@@ -47,13 +47,18 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.delmark.portfoilo.utils.DateUtils.convertToDateViaSqlDate;
 import static com.delmark.portfoilo.utils.DateUtils.getDateString;
 
+@Slf4j
 @Route(value = "/portfolio/:id", layout = MainLayout.class)
 @PermitAll
 public class PortfolioView extends VerticalLayout implements BeforeEnterObserver {
@@ -64,6 +69,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     private final ProjectsRepository projectsRepository;
     private final ProjectService projectService;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthenticationContext authenticationContext;
     private final TechService techService;
     private final WorkplacesService workplacesService;
@@ -76,7 +82,9 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                          ProjectService projectService,
                          TechService techService,
                          WorkplacesService workplacesService,
-                         PortfolioService portfolioService) {
+                         PortfolioService portfolioService,
+                         UserService userService) {
+        this.userService = userService;
         this.projectService = projectService;
         this.portfolioRepository = portfolioRepository;
         this.workplacesRepository = workplacesRepository;
@@ -209,7 +217,14 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         HorizontalLayout userInfoLayout = new HorizontalLayout();
         VerticalLayout userData = new VerticalLayout();
 
-        Avatar avatar = new Avatar(portfolio.getUser().getName());
+        Image avatar = new Image();
+        avatar.setSrc(new StreamResource(
+                portfolio.getUser().getUsername() + "_avatar.png",
+                () -> new ByteArrayInputStream(portfolio.getUser().getAvatar())));
+        avatar.setWidth("150px");
+        avatar.setHeight("150px");
+        avatar.getStyle().setBorderRadius("50%");
+
         H3 name = new H3(portfolio.getUser().getName() + " " + portfolio.getUser().getMiddleName() + " " + portfolio.getUser().getSurname());
         userData.add(avatar, name);
         userData.setWidth("50%");
@@ -507,6 +522,18 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         TextField siteUrl = new TextField("Сайт");
         siteUrl.setValue(portfolio.getSiteUrl());
 
+        MemoryBuffer buffer = new MemoryBuffer();
+        Upload upload = new Upload(buffer);
+
+        AtomicBoolean isFileUploaded = new AtomicBoolean(false);
+
+        upload.setAcceptedFileTypes("image/png", "image/jpeg");
+        upload.setMaxFileSize(10 * 1024 * 1024);
+        upload.addSucceededListener(event -> {
+            log.info("Uploading file {} with type {}, size {}", event.getFileName(), event.getMIMEType(), event.getContentLength());
+            isFileUploaded.set(true);
+        });
+
         // Первичная валидация
         setPortfolioValidationParams(education, about, phone);
 
@@ -537,6 +564,16 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                                 phone.getValue(),
                                 siteUrl.getValue()
                         ));
+
+                if (isFileUploaded.get()) {
+                    try {
+                        userService.setUserAvatar(portfolio.getUser().getId(), buffer.getInputStream().readAllBytes());
+                    } catch (Exception ex) {
+                        Notification.show("Ошибка при загрузке аватара");
+                        log.error("Error while uploading avatar", ex);
+                    }
+                }
+
                 dialog.close();
                 UI.getCurrent().getPage().reload();
             }
@@ -547,7 +584,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
         dialog.getFooter().add(saveButton, cancelButton);
 
-        VerticalLayout dialogLayout = new VerticalLayout(education, about, phone, siteUrl);
+        VerticalLayout dialogLayout = new VerticalLayout(education, about, phone, siteUrl, upload);
         dialogLayout.setSpacing(true);
         dialogLayout.setPadding(true);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);

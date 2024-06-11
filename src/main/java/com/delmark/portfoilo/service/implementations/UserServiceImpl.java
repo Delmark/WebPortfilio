@@ -11,6 +11,7 @@ import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import com.delmark.portfoilo.utils.ImageUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User sessionUser = getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
-        if (!(sessionUser.getId().equals(user.getId())) || !user.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
+        if (!(sessionUser.getId().equals(user.getId())) && !user.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
             throw new AccessDeniedException("Доступ запрещён");
         }
 
@@ -142,11 +143,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         User sessionUser = getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
-        if (!(sessionUser.getId().equals(user.getId())) || !user.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
+        if (!(sessionUser.getId().equals(user.getId())) && !user.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
             throw new AccessDeniedException("Доступ запрещён");
         }
 
+
+        if (!ImageUtils.isValidImage(imageData)) {
+            throw new IllegalArgumentException();
+        }
+
         user.setAvatar(imageData);
+        userRepository.save(user);
     }
 
     @Override

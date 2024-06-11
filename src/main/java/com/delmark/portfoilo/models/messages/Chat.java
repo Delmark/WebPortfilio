@@ -36,6 +36,6 @@ public class Chat {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "chat", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Message> messages;
 }

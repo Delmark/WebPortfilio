@@ -55,7 +55,7 @@ public class User implements UserDetails {
     private String email;
 
     @Lob
-    @Column(name = "avatar_image")
+    @Column(name = "avatar_image", columnDefinition="BLOB")
     private byte[] avatar = ImageUtils.getDefaultAvatar();
 
     private boolean enabled;
@@ -70,7 +70,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Chat> chats = new HashSet<>();
 
     @Override
