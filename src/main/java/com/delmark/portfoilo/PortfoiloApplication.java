@@ -1,7 +1,7 @@
 package com.delmark.portfoilo;
 
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;

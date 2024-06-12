@@ -1,12 +1,12 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
+import com.delmark.portfoilo.controller.requests.PortfolioRequest;
 import com.delmark.portfoilo.models.messages.Comment;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.portfoliodata.Techs;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Techs;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
@@ -61,7 +61,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Portfolio portfolioCreation(PortfolioDto dto) {
+    public Portfolio portfolioCreation(PortfolioRequest dto) {
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         if (portfolioRepository.findByUser(sessionUser).isPresent()) {
@@ -101,7 +101,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
     @Override
-    public Portfolio portfolioEdit(Long id, PortfolioDto dto) {
+    public Portfolio portfolioEdit(Long id, PortfolioRequest dto) {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 

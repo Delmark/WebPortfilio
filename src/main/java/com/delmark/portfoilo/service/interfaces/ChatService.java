@@ -2,27 +2,23 @@ package com.delmark.portfoilo.service.interfaces;
 
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.messages.Message;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.User;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface ChatService {
-    Chat createChat(Set<User> users);
+    Chat createChat(Set<User> users, String chatName);
 
     Chat getChatById(Long id);
 
     Chat addUserToChat(Long userId, Long chatId);
 
-    Chat removeUserFromChat(Long userId, Long chatId);
+    Optional<Chat> removeUserFromChat(Long userId, Long chatId);
 
-    List<User> getChatUsers(Long chatId);
+    Set<User> getChatUsers(Long chatId);
 
-    List<Message> getMessagesByChatId(Long chatId);
+    Page<Message> getMessagesByChatId(Long chatId, int page, int size);
 
-    Message addMessageToChat(Long chatId, Message message);
-
-    void deleteMessageFromChat(Long id);
-
-    void deleteChatById(Long id);
 }

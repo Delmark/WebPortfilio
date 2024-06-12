@@ -1,6 +1,6 @@
-package com.delmark.portfoilo.models.DTO.authorization;
+package com.delmark.portfoilo.controller.requests;
 
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * DTO for {@link User}
  */
 @Value
-public class UserAuthDto implements Serializable {
+public class UserAuthRequest implements Serializable {
     @NotBlank(message = "Логин не должен быть пустым")
     @Size(min = 5, max = 32, message = "Логин должен содержать в себе от 5 до 32 символов")
     @NotNull(message = "Требуется логин")

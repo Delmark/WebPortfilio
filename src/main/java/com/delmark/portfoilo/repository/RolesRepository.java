@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.repository;
 
-import com.delmark.portfoilo.models.userdata.Role;
+import com.delmark.portfoilo.models.user.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

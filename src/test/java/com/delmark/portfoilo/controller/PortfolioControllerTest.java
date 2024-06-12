@@ -1,10 +1,10 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.portfoliodata.Techs;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.controller.requests.PortfolioRequest;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.portfolio.Techs;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
@@ -158,7 +158,7 @@ public class PortfolioControllerTest {
         portfolio.setUser(null);
         portfolioRepository.save(portfolio);
 
-        PortfolioDto dto = new PortfolioDto("TestUser",
+        PortfolioRequest dto = new PortfolioRequest("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -190,7 +190,7 @@ public class PortfolioControllerTest {
     // В этом тесте важно держать в уме, что пользователь и портфолио привязанное к нему уже существуют.
     @Test
     void createNewPortfolioWhenItExists() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
+        PortfolioRequest dto = new PortfolioRequest("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -215,7 +215,7 @@ public class PortfolioControllerTest {
 
     @Test
     void editPortfolio() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
+        PortfolioRequest dto = new PortfolioRequest("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -246,7 +246,7 @@ public class PortfolioControllerTest {
 
     @Test
     void editNonExistingPortfolio() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
+        PortfolioRequest dto = new PortfolioRequest("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -272,7 +272,7 @@ public class PortfolioControllerTest {
 
     @Test
     void editOtherUserPortfolio() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
+        PortfolioRequest dto = new PortfolioRequest("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",

@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.views;
 
-import com.delmark.portfoilo.models.DTO.authorization.JwtTokenDTO;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.DTO.JwtTokenDTO;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import com.vaadin.flow.component.UI;

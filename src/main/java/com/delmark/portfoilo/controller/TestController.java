@@ -1,21 +1,14 @@
 package com.delmark.portfoilo.controller;
 
+import com.delmark.portfoilo.controller.requests.ChatCreationRequest;
 import com.delmark.portfoilo.service.interfaces.UserService;
-import liquibase.resource.Resource;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.stream.Collectors;
@@ -45,5 +38,11 @@ public class TestController {
         log.info("Mime Type is {}", mimeType);
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
+    }
+
+    @PostMapping("/chat")
+    public ResponseEntity<Void> chatCreationTest(@RequestBody ChatCreationRequest chatCreationRequest) {
+        log.info("Trying to create chat {} with {}", chatCreationRequest.getChatName(), chatCreationRequest.getUserIds());
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.views;
 
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
+import com.delmark.portfoilo.controller.requests.PortfolioRequest;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -9,7 +9,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldBase;
@@ -90,7 +89,7 @@ public class PortfolioCreationView extends VerticalLayout implements BeforeEnter
 
             if (allFieldsIsValid) {
                 portfolioService.portfolioCreation(
-                        new PortfolioDto(
+                        new PortfolioRequest(
                                 about.getValue(),
                                 education.getValue(),
                                 phone.getValue(),

@@ -1,10 +1,10 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.portfoliodata.Projects;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.controller.requests.ProjectsRequest;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Projects;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.ProjectsRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
@@ -136,7 +136,7 @@ public class ProjectsControllerTest {
     void addProjectToPortfolio() throws Exception {
         Portfolio portfolio = portfolioRepository.findById(1L).get();
 
-        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "https://projectlink.com");
+        ProjectsRequest dto = new ProjectsRequest("Project 1", "Project Desc", "https://projectlink.com");
 
         Projects expectedProject = mapper.toEntity(dto);
         expectedProject.setId(1L).setPortfolio(portfolio);
@@ -158,7 +158,7 @@ public class ProjectsControllerTest {
 
     @Test
     void addProjectToNonExistingPortfolio() throws Exception {
-        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "https://projectlink.com");
+        ProjectsRequest dto = new ProjectsRequest("Project 1", "Project Desc", "https://projectlink.com");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/projects?portfolioId=2")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ public class ProjectsControllerTest {
 
     @Test
     void addProjectToOtherUserPortfolio() throws Exception {
-        ProjectsDto dto = new ProjectsDto("Project 1", "Project Desc", "https://projectlink.com");
+        ProjectsRequest dto = new ProjectsRequest("Project 1", "Project Desc", "https://projectlink.com");
 
         User otherUser = userRepository.save(
                 new User(
@@ -213,7 +213,7 @@ public class ProjectsControllerTest {
                 new Projects(null, portfolio, "Project 1", "Desc", "Link")
         );
 
-        ProjectsDto dto = new ProjectsDto("Project 1 Edited", "Desc Edited", null);
+        ProjectsRequest dto = new ProjectsRequest("Project 1 Edited", "Desc Edited", null);
 
         Projects expectedProject = new Projects(1L,portfolio,"Project 1 Edited", "Desc Edited", "Link");
 
@@ -234,7 +234,7 @@ public class ProjectsControllerTest {
 
     @Test
     void editNonExistingProject() throws Exception {
-        ProjectsDto dto = new ProjectsDto("Project 1 Edited", "Desc Edited", null);
+        ProjectsRequest dto = new ProjectsRequest("Project 1 Edited", "Desc Edited", null);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/projects?projectId=2")
                         .contentType(MediaType.APPLICATION_JSON)

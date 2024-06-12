@@ -1,7 +1,7 @@
-package com.delmark.portfoilo.models.portfoliodata;
+package com.delmark.portfoilo.models.portfolio;
 
 import com.delmark.portfoilo.models.messages.Comment;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;

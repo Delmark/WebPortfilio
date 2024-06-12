@@ -3,19 +3,18 @@ package com.delmark.portfoilo.views;
 import com.delmark.portfoilo.exceptions.response.TechAlreadyInPortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
-import com.delmark.portfoilo.models.DTO.WorkplaceDto;
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.portfoliodata.Projects;
-import com.delmark.portfoilo.models.portfoliodata.Techs;
-import com.delmark.portfoilo.models.portfoliodata.Workplace;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.controller.requests.ProjectsRequest;
+import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
+import com.delmark.portfoilo.controller.requests.PortfolioRequest;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Projects;
+import com.delmark.portfoilo.models.portfolio.Techs;
+import com.delmark.portfoilo.models.portfolio.Workplace;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.interfaces.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.AccordionPanel;
-import com.vaadin.flow.component.avatar.AvatarVariant;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -43,7 +42,6 @@ import jakarta.annotation.security.PermitAll;
 
 
 import com.vaadin.flow.component.accordion.Accordion;
-import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -51,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -414,7 +411,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         saveButton.addClickListener(e -> {
             workplacesService.addWorkplaceToPortfolio(
                     Long.parseLong(portfolioId),
-                    new WorkplaceDto(
+                    new WorkplaceRequest(
                             workplaceName.getValue(),
                             workplaceDesc.getValue(),
                             post.getValue(),
@@ -483,7 +480,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             } else {
                 projectService.addProjectToPortfolio(
                         Long.parseLong(portfolioId),
-                        new ProjectsDto(
+                        new ProjectsRequest(
                                 projectName.getValue(),
                                 projectDesc.getValue(),
                                 projectLink.getValue()
@@ -558,7 +555,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             if (allFieldsIsValid) {
                 portfolioService.portfolioEdit(
                         Long.parseLong(portfolioId),
-                        new PortfolioDto(
+                        new PortfolioRequest(
                                 about.getValue(),
                                 education.getValue(),
                                 phone.getValue(),

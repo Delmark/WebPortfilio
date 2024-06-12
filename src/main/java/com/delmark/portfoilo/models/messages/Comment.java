@@ -1,15 +1,17 @@
 package com.delmark.portfoilo.models.messages;
 
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comment")
+@Accessors(chain = true)
 @NoArgsConstructor
 @Data
 public class Comment {

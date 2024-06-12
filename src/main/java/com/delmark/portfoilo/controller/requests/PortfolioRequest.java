@@ -1,6 +1,6 @@
-package com.delmark.portfoilo.models.DTO;
+package com.delmark.portfoilo.controller.requests;
 
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
 import jakarta.validation.constraints.*;
 import lombok.Value;
 import org.hibernate.validator.constraints.URL;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * DTO for {@link Portfolio}
  */
 @Value
-public class PortfolioDto implements Serializable {
+public class PortfolioRequest implements Serializable {
     @Size(min = 2, max = 255, message = "Поле 'О себе' должно содержать от 2 до 255 символов")
     String aboutUser;
 

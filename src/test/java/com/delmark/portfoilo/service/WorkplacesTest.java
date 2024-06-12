@@ -2,11 +2,11 @@ package com.delmark.portfoilo.service;
 
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
-import com.delmark.portfoilo.models.DTO.WorkplaceDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.portfoliodata.Workplace;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Workplace;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
@@ -107,7 +107,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(user);
 
-        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
+        WorkplaceRequest dto = new WorkplaceRequest("test", "test", "test", date, date);
 
         Workplace savedWorkplace = new Workplace(null, existingPortfolio, "test", "test", "test", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
@@ -137,7 +137,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(otherUser);
 
-        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
+        WorkplaceRequest dto = new WorkplaceRequest("test", "test", "test", date, date);
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
@@ -155,7 +155,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(user);
 
-        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
+        WorkplaceRequest dto = new WorkplaceRequest("test", "test", "test", date, date);
 
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);

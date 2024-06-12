@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.models.DTO.authorization;
+package com.delmark.portfoilo.models.DTO;
 
 import lombok.Value;
 

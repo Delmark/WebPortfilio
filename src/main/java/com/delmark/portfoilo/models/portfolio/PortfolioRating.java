@@ -1,6 +1,6 @@
-package com.delmark.portfoilo.models.portfoliodata;
+package com.delmark.portfoilo.models.portfolio;
 
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

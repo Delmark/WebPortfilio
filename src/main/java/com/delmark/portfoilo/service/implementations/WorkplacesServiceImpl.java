@@ -3,12 +3,12 @@ package com.delmark.portfoilo.service.implementations;
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
 import com.delmark.portfoilo.exceptions.response.WorkplaceAlreadyExistsInPortfolioException;
-import com.delmark.portfoilo.models.DTO.WorkplaceDto;
-import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
-import com.delmark.portfoilo.models.portfoliodata.Workplace;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
+import com.delmark.portfoilo.models.DTO.WorkplacesStatsProjection;
+import com.delmark.portfoilo.models.portfolio.Workplace;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
@@ -48,7 +48,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     }
 
     @Override
-    public Workplace addWorkplaceToPortfolio(Long portfolioId, WorkplaceDto dto) {
+    public Workplace addWorkplaceToPortfolio(Long portfolioId, WorkplaceRequest dto) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
@@ -74,7 +74,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     }
 
     @Override
-    public Workplace editWorkplaceInfo(Long id, WorkplaceDto dto) {
+    public Workplace editWorkplaceInfo(Long id, WorkplaceRequest dto) {
         Workplace workplace = workplacesRepository.findById(id).orElseThrow(NoSuchWorkException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
@@ -107,7 +107,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     }
 
     @Override
-    public List<WorkplacesStatsDTO> getStatistics() {
+    public List<WorkplacesStatsProjection> getStatistics() {
         return workplacesRepository.getStatistics();
     }
 }

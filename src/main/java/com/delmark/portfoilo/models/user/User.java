@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.models.userdata;
+package com.delmark.portfoilo.models.user;
 
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.utils.ImageUtils;
@@ -9,7 +9,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

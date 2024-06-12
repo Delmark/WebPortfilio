@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.models.DTO.authorization;
+package com.delmark.portfoilo.controller.requests;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Value;
 
 @Value
-public class UserRegDto {
+public class UserRegRequest {
     @NotBlank(message = "Логин не должен быть пустым")
     @Size(min = 5, max = 32, message = "Логин должен содержать в себе от 5 до 32 символов")
     @NotNull(message = "Требуется логин")

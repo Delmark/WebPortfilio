@@ -1,13 +1,15 @@
 package com.delmark.portfoilo.models.messages;
 
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Accessors(chain = true)
 @Table(name = "message")
 @NoArgsConstructor
 @Data

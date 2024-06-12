@@ -2,11 +2,11 @@ package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchProjectException;
-import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.portfoliodata.Projects;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.controller.requests.ProjectsRequest;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Projects;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.ProjectsRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
@@ -42,7 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Projects addProjectToPortfolio(Long portfolioId, ProjectsDto dto) {
+    public Projects addProjectToPortfolio(Long portfolioId, ProjectsRequest dto) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
@@ -62,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Projects editProject(Long id, ProjectsDto dto) {
+    public Projects editProject(Long id, ProjectsRequest dto) {
         Projects project = projectsRepository.findById(id).orElseThrow(NoSuchProjectException::new);
         Portfolio portfolio = project.getPortfolio();
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());

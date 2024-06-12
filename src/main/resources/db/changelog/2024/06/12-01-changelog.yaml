@@ -1,0 +1,575 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1718224246351-1
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: port_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1718224246351-2
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: proj_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1718224246351-3
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: tech_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1718224246351-4
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: user_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1718224246351-5
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: work_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1718224246351-6
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_app_user
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: surname
+                  type: VARCHAR(255)
+              - column:
+                  name: middle_name
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: avatar_image
+                  type: BLOB
+              - column:
+                  constraints:
+                    nullable: false
+                  name: enabled
+                  type: BOOLEAN
+            tableName: app_user
+  - changeSet:
+      id: 1718224246351-7
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_app_user_roles
+                  name: app_user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_app_user_roles
+                  name: role_id
+                  type: BIGINT
+            tableName: app_user_roles
+  - changeSet:
+      id: 1718224246351-8
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_chat
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: chat_name
+                  type: VARCHAR(255)
+            tableName: chat
+  - changeSet:
+      id: 1718224246351-9
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_chat_users
+                  name: chat_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_chat_users
+                  name: user_id
+                  type: BIGINT
+            tableName: chat_users
+  - changeSet:
+      id: 1718224246351-10
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_comment
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: comment_text
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: sender_id
+                  type: BIGINT
+              - column:
+                  name: portfolio_id
+                  type: BIGINT
+            tableName: comment
+  - changeSet:
+      id: 1718224246351-11
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_message
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: message_text
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: sender_id
+                  type: BIGINT
+              - column:
+                  name: chat_id
+                  type: BIGINT
+            tableName: message
+  - changeSet:
+      id: 1718224246351-12
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_portfolio
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: about
+                  type: VARCHAR(255)
+              - column:
+                  name: education
+                  type: VARCHAR(255)
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+              - column:
+                  name: site
+                  type: VARCHAR(255)
+            tableName: portfolio
+  - changeSet:
+      id: 1718224246351-13
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_portfolio_rating
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: portfolio_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rating
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rated_at
+                  type: DATETIME
+            tableName: portfolio_rating
+  - changeSet:
+      id: 1718224246351-14
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_portfolio_techses
+                  name: portfolio_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_portfolio_techses
+                  name: techses_id
+                  type: BIGINT
+            tableName: portfolio_techses
+  - changeSet:
+      id: 1718224246351-15
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_projects
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: portfolio_id
+                  type: BIGINT
+              - column:
+                  name: project_name
+                  type: VARCHAR(255)
+              - column:
+                  name: project_description
+                  type: VARCHAR(255)
+              - column:
+                  name: project_link
+                  type: VARCHAR(255)
+            tableName: projects
+  - changeSet:
+      id: 1718224246351-16
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_roles
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+            tableName: roles
+  - changeSet:
+      id: 1718224246351-17
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_technologies
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: technology_name
+                  type: VARCHAR(255)
+              - column:
+                  name: technology_description
+                  type: VARCHAR(255)
+            tableName: technologies
+  - changeSet:
+      id: 1718224246351-18
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_workplace
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: portfolio_id
+                  type: BIGINT
+              - column:
+                  name: workplace_name
+                  type: VARCHAR(255)
+              - column:
+                  name: workplace_description
+                  type: VARCHAR(255)
+              - column:
+                  name: post
+                  type: VARCHAR(255)
+              - column:
+                  name: date_of_hire
+                  type: DATETIME
+              - column:
+                  name: date_of_fire
+                  type: DATETIME
+            tableName: workplace
+  - changeSet:
+      id: 1718224246351-19
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: user_id
+            constraintName: uc_portfolio_user
+            tableName: portfolio
+  - changeSet:
+      id: 1718224246351-20
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: portfolio_id
+            baseTableName: comment
+            constraintName: FK_COMMENT_ON_PORTFOLIO
+            referencedColumnNames: id
+            referencedTableName: portfolio
+  - changeSet:
+      id: 1718224246351-21
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: sender_id
+            baseTableName: comment
+            constraintName: FK_COMMENT_ON_SENDER
+            referencedColumnNames: id
+            referencedTableName: app_user
+  - changeSet:
+      id: 1718224246351-22
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: chat_id
+            baseTableName: message
+            constraintName: FK_MESSAGE_ON_CHAT
+            referencedColumnNames: id
+            referencedTableName: chat
+  - changeSet:
+      id: 1718224246351-23
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: sender_id
+            baseTableName: message
+            constraintName: FK_MESSAGE_ON_SENDER
+            referencedColumnNames: id
+            referencedTableName: app_user
+  - changeSet:
+      id: 1718224246351-24
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: portfolio
+            constraintName: FK_PORTFOLIO_ON_USER
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: app_user
+  - changeSet:
+      id: 1718224246351-25
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: portfolio_id
+            baseTableName: portfolio_rating
+            constraintName: FK_PORTFOLIO_RATING_ON_PORTFOLIO
+            referencedColumnNames: id
+            referencedTableName: portfolio
+  - changeSet:
+      id: 1718224246351-26
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: portfolio_rating
+            constraintName: FK_PORTFOLIO_RATING_ON_USER
+            referencedColumnNames: id
+            referencedTableName: app_user
+  - changeSet:
+      id: 1718224246351-27
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: portfolio_id
+            baseTableName: projects
+            constraintName: FK_PROJECTS_ON_PORTFOLIO
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: portfolio
+  - changeSet:
+      id: 1718224246351-28
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: portfolio_id
+            baseTableName: workplace
+            constraintName: FK_WORKPLACE_ON_PORTFOLIO
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: portfolio
+  - changeSet:
+      id: 1718224246351-29
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: app_user_roles
+            constraintName: fk_appuserol_on_role
+            referencedColumnNames: id
+            referencedTableName: roles
+  - changeSet:
+      id: 1718224246351-30
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: app_user_id
+            baseTableName: app_user_roles
+            constraintName: fk_appuserol_on_user
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: app_user
+  - changeSet:
+      id: 1718224246351-31
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: chat_id
+            baseTableName: chat_users
+            constraintName: fk_chause_on_chat
+            referencedColumnNames: id
+            referencedTableName: chat
+  - changeSet:
+      id: 1718224246351-32
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: chat_users
+            constraintName: fk_chause_on_user
+            referencedColumnNames: id
+            referencedTableName: app_user
+  - changeSet:
+      id: 1718224246351-33
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: portfolio_id
+            baseTableName: portfolio_techses
+            constraintName: fk_portec_on_portfolio
+            referencedColumnNames: id
+            referencedTableName: portfolio
+  - changeSet:
+      id: 1718224246351-34
+      author: Classic (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: techses_id
+            baseTableName: portfolio_techses
+            constraintName: fk_portec_on_techs
+            referencedColumnNames: id
+            referencedTableName: technologies
+

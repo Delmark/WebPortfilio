@@ -56,7 +56,7 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                                 .requestMatchers("/api/workPlaces**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/tech/**").hasRole("ADMIN")
-                                .requestMatchers("test/**").permitAll()
+                                .requestMatchers("/test/**").permitAll()
                 ).oauth2ResourceServer(auth -> auth.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .formLogin((loginPage) -> {
                     loginPage.successForwardUrl("/");

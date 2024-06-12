@@ -2,7 +2,7 @@ package com.delmark.portfoilo.views;
 
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.models.DTO.TechStatsProjection;
-import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
+import com.delmark.portfoilo.models.DTO.WorkplacesStatsProjection;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.TechService;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
@@ -125,9 +125,9 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
                 DataSeries dataSeries = new DataSeries();
 
                 Optional<DataSeriesItem> mostPopularCompany = Optional.empty();
-                Long maxCount = 0L;
+                int maxCount = 0;
 
-                for (WorkplacesStatsDTO dto : workplacesService.getStatistics()) {
+                for (WorkplacesStatsProjection dto : workplacesService.getStatistics()) {
                     DataSeriesItem item = new DataSeriesItem(dto.getWorkplaceName(), dto.getCount());
                     dataSeries.add(item);
                     if (dto.getCount() > maxCount) {
@@ -158,21 +158,15 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
             try {
                 portfolioService.getPortfolioByUser(authenticationContext.getPrincipalName().get());
                 button.setText("Перейти к портфолио");
-                button.addClickListener(event -> {
-                    UI.getCurrent().navigate(PortfolioView.class, new RouteParameters("id", authenticationContext.getPrincipalName().get()));
-                });
+                button.addClickListener(event -> UI.getCurrent().navigate(PortfolioView.class, new RouteParameters("id", authenticationContext.getPrincipalName().get())));
             } catch (UserDoesNotHavePortfolioException e) {
                 button.setText("Создать новое портфолио");
-                button.addClickListener(event -> {
-                    UI.getCurrent().navigate(PortfolioCreationView.class);
-                });
+                button.addClickListener(event -> UI.getCurrent().navigate(PortfolioCreationView.class));
             }
         }
         else {
             button.setText("Войти");
-            button.addClickListener(event -> {
-                UI.getCurrent().navigate(LoginView.class);
-            });
+            button.addClickListener(event -> UI.getCurrent().navigate(LoginView.class));
         }
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         layout.add(button);

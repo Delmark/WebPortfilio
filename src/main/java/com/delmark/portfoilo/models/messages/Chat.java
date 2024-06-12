@@ -1,12 +1,13 @@
 package com.delmark.portfoilo.models.messages;
 
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Table(name = "chat")
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @Data
 public class Chat {
     @Id

@@ -1,18 +1,16 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.models.DTO.authorization.UserRegDto;
+import com.delmark.portfoilo.controller.requests.UserRegRequest;
 import com.delmark.portfoilo.models.messages.Chat;
-import com.delmark.portfoilo.models.DTO.authorization.UserAuthDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.userdata.Role;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.ImageUtils;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,8 +44,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private PortfolioRepository portfolioRepository;
 
     @Override
-    public void registration(UserRegDto userRegDto) {
-        if (!userRepository.existsByUsername(userRegDto.getUsername())) {
+    public void registration(UserRegRequest userRegRequest) {
+        if (!userRepository.existsByUsername(userRegRequest.getUsername())) {
 
             HashSet<Role> role = new HashSet<>();
 
@@ -55,12 +53,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
             User user = new User()
                     .setId(null)
-                    .setName(userRegDto.getName())
-                    .setSurname(userRegDto.getSurname())
-                    .setMiddleName(userRegDto.getMiddleName())
-                    .setUsername(userRegDto.getUsername())
+                    .setName(userRegRequest.getName())
+                    .setSurname(userRegRequest.getSurname())
+                    .setMiddleName(userRegRequest.getMiddleName())
+                    .setUsername(userRegRequest.getUsername())
                     .setEnabled(true)
-                    .setPassword(passwordEncoder.encode(userRegDto.getPassword()))
+                    .setPassword(passwordEncoder.encode(userRegRequest.getPassword()))
                     .setRoles(role);
             userRepository.save(user);
         }
@@ -77,6 +75,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } else {
             return (User) authentication.getPrincipal();
         }
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return (User) loadUserByUsername(username);
     }
 
     @Override

@@ -1,10 +1,9 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.models.DTO.authorization.UserRegDto;
+import com.delmark.portfoilo.controller.requests.UserRegRequest;
 import com.delmark.portfoilo.models.messages.Chat;
-import com.delmark.portfoilo.models.DTO.authorization.UserAuthDto;
-import com.delmark.portfoilo.models.portfoliodata.Portfolio;
-import com.delmark.portfoilo.models.userdata.User;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
@@ -14,10 +13,12 @@ import java.util.Set;
 public interface UserService {
 
     // Авторизация
-    void registration(UserRegDto registrationDto);
+    void registration(UserRegRequest registrationDto);
     User getUserByAuth(Authentication authentication);
 
     // Получение общей информации
+    User getUserById(Long id);
+    User getUserByUsername(String username);
     Page<User> getAllUsers(int page);
     List<User> getUsersWithPortfolio();
     Portfolio getPortfolioByUser(String username);
