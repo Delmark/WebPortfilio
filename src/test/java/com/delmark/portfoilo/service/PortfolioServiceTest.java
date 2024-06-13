@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.service;
 
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.controller.requests.PortfolioRequest;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.user.Role;
 import com.delmark.portfoilo.models.portfolio.Techs;
@@ -143,7 +143,7 @@ public class PortfolioServiceTest {
         );
 
 
-        PortfolioRequest dto = new PortfolioRequest(
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestName",
                 "TestSurname",
                 "Test",
@@ -169,7 +169,7 @@ public class PortfolioServiceTest {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
-        PortfolioRequest dto = new PortfolioRequest(
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestName",
                 "TestSurname",
                 "Test",
@@ -241,7 +241,7 @@ public class PortfolioServiceTest {
         User existingUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
         Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "TestName", "TestSurname", "Test", "TestAbout", "Schoolar", "TestEmail@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
-        PortfolioRequest dto = new PortfolioRequest(
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestName",
                 "TestSurname",
                 "Test",
@@ -266,7 +266,7 @@ public class PortfolioServiceTest {
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(NoSuchPortfolioException.class, () -> portfolioService.portfolioEdit(
                 1L,
-                new PortfolioRequest(
+                new PortfolioDTO(
                 "TestName",
                 "TestSurname",
                 "Test",
@@ -286,7 +286,7 @@ public class PortfolioServiceTest {
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
-        PortfolioRequest dto = new PortfolioRequest(
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestName",
                 "TestSurname",
                 "Test",

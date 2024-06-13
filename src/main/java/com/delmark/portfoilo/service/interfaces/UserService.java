@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.controller.requests.UserRegRequest;
+import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.user.User;
@@ -13,7 +13,7 @@ import java.util.Set;
 public interface UserService {
 
     // Авторизация
-    void registration(UserRegRequest registrationDto);
+    void registration(UserRegDTO registrationDto);
     User getUserByAuth(Authentication authentication);
 
     // Получение общей информации

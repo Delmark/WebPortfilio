@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.views;
 
 import com.delmark.portfoilo.exceptions.response.UsernameAlreadyExistsException;
-import com.delmark.portfoilo.controller.requests.UserRegRequest;
+import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
@@ -109,7 +109,7 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
 
         try {
             userService.registration(
-                    new UserRegRequest(
+                    new UserRegDTO(
                             username.getValue(),
                             passwordField.getValue(),
                             name.getValue(),

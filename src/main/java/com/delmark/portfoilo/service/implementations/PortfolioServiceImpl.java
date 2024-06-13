@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.service.implementations;
 
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.controller.requests.PortfolioRequest;
 import com.delmark.portfoilo.models.messages.Comment;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Techs;
@@ -61,7 +61,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Portfolio portfolioCreation(PortfolioRequest dto) {
+    public Portfolio portfolioCreation(PortfolioDTO dto) {
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         if (portfolioRepository.findByUser(sessionUser).isPresent()) {
@@ -101,7 +101,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
     @Override
-    public Portfolio portfolioEdit(Long id, PortfolioRequest dto) {
+    public Portfolio portfolioEdit(Long id, PortfolioDTO dto) {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 

@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.controller.requests.ProjectsRequest;
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.models.portfolio.Projects;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
 import jakarta.validation.Valid;
@@ -30,11 +30,11 @@ public class ProjectsController {
     }
 
     @PostMapping
-    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid ProjectsRequest dto) {
+    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid ProjectsDTO dto) {
         return ResponseEntity.ok(projectService.addProjectToPortfolio(id, dto));
     }
 
-    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody @Valid ProjectsRequest dto) {
+    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody @Valid ProjectsDTO dto) {
         return ResponseEntity.ok(projectService.editProject(id,dto));
     }
 

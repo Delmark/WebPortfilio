@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
+import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.models.portfolio.Workplace;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
 import jakarta.validation.Valid;
@@ -30,12 +30,12 @@ public class WorkplacesController {
     }
 
     @PostMapping
-    public ResponseEntity<Workplace> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid WorkplaceRequest dto) {
+    public ResponseEntity<Workplace> addWorkplaceToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid WorkplaceDTO dto) {
         return ResponseEntity.ok(workplacesService.addWorkplaceToPortfolio(id, dto));
     }
 
     @PutMapping
-    public ResponseEntity<Workplace> editWorkplaceInfo(@RequestParam("workplaceId") Long id, @RequestBody @Valid WorkplaceRequest dto) {
+    public ResponseEntity<Workplace> editWorkplaceInfo(@RequestParam("workplaceId") Long id, @RequestBody @Valid WorkplaceDTO dto) {
         return ResponseEntity.ok(workplacesService.editWorkplaceInfo(id, dto));
     }
 

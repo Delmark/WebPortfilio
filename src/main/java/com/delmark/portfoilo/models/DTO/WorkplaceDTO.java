@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.controller.requests;
+package com.delmark.portfoilo.models.DTO;
 
 import com.delmark.portfoilo.models.portfolio.Workplace;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ import java.util.Date;
  * DTO for {@link Workplace}
  */
 @Value
-public class WorkplaceRequest implements Serializable {
+public class WorkplaceDTO implements Serializable {
     @NotNull
     @NotBlank
     @Size(min = 3, max = 255)

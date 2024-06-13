@@ -1,8 +1,8 @@
 package com.delmark.portfoilo.utils;
 
-import com.delmark.portfoilo.controller.requests.ProjectsRequest;
-import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
-import com.delmark.portfoilo.controller.requests.PortfolioRequest;
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
+import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.models.portfolio.Workplace;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Projects;
@@ -14,15 +14,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface CustomMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updatePortfolioFromDTO(PortfolioRequest dto, @MappingTarget Portfolio portfolio);
+    void updatePortfolioFromDTO(PortfolioDTO dto, @MappingTarget Portfolio portfolio);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateProjectFromDTO(ProjectsRequest dto, @MappingTarget Projects project);
+    void updateProjectFromDTO(ProjectsDTO dto, @MappingTarget Projects project);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateWorkplaceFromDTO(WorkplaceRequest dto, @MappingTarget Workplace workplace);
+    void updateWorkplaceFromDTO(WorkplaceDTO dto, @MappingTarget Workplace workplace);
 
-    Portfolio toEntity(PortfolioRequest portfolioRequest);
+    Portfolio toEntity(PortfolioDTO portfolioDTO);
 
-    Projects toEntity(ProjectsRequest projectsRequest);
+    Projects toEntity(ProjectsDTO projectsDTO);
 }

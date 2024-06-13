@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.controller.requests.PortfolioRequest;
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.user.Role;
 import com.delmark.portfoilo.models.portfolio.Techs;
@@ -158,7 +158,7 @@ public class PortfolioControllerTest {
         portfolio.setUser(null);
         portfolioRepository.save(portfolio);
 
-        PortfolioRequest dto = new PortfolioRequest("TestUser",
+        PortfolioDTO dto = new PortfolioDTO("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -190,7 +190,7 @@ public class PortfolioControllerTest {
     // В этом тесте важно держать в уме, что пользователь и портфолио привязанное к нему уже существуют.
     @Test
     void createNewPortfolioWhenItExists() throws Exception {
-        PortfolioRequest dto = new PortfolioRequest("TestUser",
+        PortfolioDTO dto = new PortfolioDTO("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -215,7 +215,7 @@ public class PortfolioControllerTest {
 
     @Test
     void editPortfolio() throws Exception {
-        PortfolioRequest dto = new PortfolioRequest("TestUser",
+        PortfolioDTO dto = new PortfolioDTO("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -246,7 +246,7 @@ public class PortfolioControllerTest {
 
     @Test
     void editNonExistingPortfolio() throws Exception {
-        PortfolioRequest dto = new PortfolioRequest("TestUser",
+        PortfolioDTO dto = new PortfolioDTO("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",
@@ -272,7 +272,7 @@ public class PortfolioControllerTest {
 
     @Test
     void editOtherUserPortfolio() throws Exception {
-        PortfolioRequest dto = new PortfolioRequest("TestUser",
+        PortfolioDTO dto = new PortfolioDTO("TestUser",
                 "TestMiddleName",
                 "TestSurname",
                 "TestAboutUser",

@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.controller.requests.UserRegRequest;
+import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.user.Role;
@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private PortfolioRepository portfolioRepository;
 
     @Override
-    public void registration(UserRegRequest userRegRequest) {
-        if (!userRepository.existsByUsername(userRegRequest.getUsername())) {
+    public void registration(UserRegDTO userRegDTO) {
+        if (!userRepository.existsByUsername(userRegDTO.getUsername())) {
 
             HashSet<Role> role = new HashSet<>();
 
@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
             User user = new User()
                     .setId(null)
-                    .setName(userRegRequest.getName())
-                    .setSurname(userRegRequest.getSurname())
-                    .setMiddleName(userRegRequest.getMiddleName())
-                    .setUsername(userRegRequest.getUsername())
+                    .setName(userRegDTO.getName())
+                    .setSurname(userRegDTO.getSurname())
+                    .setMiddleName(userRegDTO.getMiddleName())
+                    .setUsername(userRegDTO.getUsername())
                     .setEnabled(true)
-                    .setPassword(passwordEncoder.encode(userRegRequest.getPassword()))
+                    .setPassword(passwordEncoder.encode(userRegDTO.getPassword()))
                     .setRoles(role);
             userRepository.save(user);
         }

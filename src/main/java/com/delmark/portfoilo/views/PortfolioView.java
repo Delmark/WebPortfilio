@@ -3,9 +3,9 @@ package com.delmark.portfoilo.views;
 import com.delmark.portfoilo.exceptions.response.TechAlreadyInPortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
-import com.delmark.portfoilo.controller.requests.ProjectsRequest;
-import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
-import com.delmark.portfoilo.controller.requests.PortfolioRequest;
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
+import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Projects;
 import com.delmark.portfoilo.models.portfolio.Techs;
@@ -411,7 +411,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         saveButton.addClickListener(e -> {
             workplacesService.addWorkplaceToPortfolio(
                     Long.parseLong(portfolioId),
-                    new WorkplaceRequest(
+                    new WorkplaceDTO(
                             workplaceName.getValue(),
                             workplaceDesc.getValue(),
                             post.getValue(),
@@ -480,7 +480,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             } else {
                 projectService.addProjectToPortfolio(
                         Long.parseLong(portfolioId),
-                        new ProjectsRequest(
+                        new ProjectsDTO(
                                 projectName.getValue(),
                                 projectDesc.getValue(),
                                 projectLink.getValue()
@@ -555,7 +555,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             if (allFieldsIsValid) {
                 portfolioService.portfolioEdit(
                         Long.parseLong(portfolioId),
-                        new PortfolioRequest(
+                        new PortfolioDTO(
                                 about.getValue(),
                                 education.getValue(),
                                 phone.getValue(),

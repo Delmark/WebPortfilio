@@ -3,7 +3,7 @@ package com.delmark.portfoilo.service.implementations;
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
 import com.delmark.portfoilo.exceptions.response.WorkplaceAlreadyExistsInPortfolioException;
-import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
+import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.models.DTO.WorkplacesStatsProjection;
 import com.delmark.portfoilo.models.portfolio.Workplace;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
@@ -48,7 +48,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     }
 
     @Override
-    public Workplace addWorkplaceToPortfolio(Long portfolioId, WorkplaceRequest dto) {
+    public Workplace addWorkplaceToPortfolio(Long portfolioId, WorkplaceDTO dto) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(NoSuchPortfolioException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
@@ -74,7 +74,7 @@ public class WorkplacesServiceImpl implements WorkplacesService {
     }
 
     @Override
-    public Workplace editWorkplaceInfo(Long id, WorkplaceRequest dto) {
+    public Workplace editWorkplaceInfo(Long id, WorkplaceDTO dto) {
         Workplace workplace = workplacesRepository.findById(id).orElseThrow(NoSuchWorkException::new);
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 

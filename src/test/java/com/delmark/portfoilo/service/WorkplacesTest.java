@@ -1,8 +1,8 @@
 package com.delmark.portfoilo.service;
 
+import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
-import com.delmark.portfoilo.controller.requests.WorkplaceRequest;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Workplace;
 import com.delmark.portfoilo.models.user.Role;
@@ -107,7 +107,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(user);
 
-        WorkplaceRequest dto = new WorkplaceRequest("test", "test", "test", date, date);
+        WorkplaceDTO dto = new WorkplaceDTO("test", "test", "test", date, date);
 
         Workplace savedWorkplace = new Workplace(null, existingPortfolio, "test", "test", "test", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
@@ -137,7 +137,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(otherUser);
 
-        WorkplaceRequest dto = new WorkplaceRequest("test", "test", "test", date, date);
+        WorkplaceDTO dto = new WorkplaceDTO("test", "test", "test", date, date);
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
@@ -155,7 +155,7 @@ public class WorkplacesTest {
                 .setId(1L)
                 .setUser(user);
 
-        WorkplaceRequest dto = new WorkplaceRequest("test", "test", "test", date, date);
+        WorkplaceDTO dto = new WorkplaceDTO("test", "test", "test", date, date);
 
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);

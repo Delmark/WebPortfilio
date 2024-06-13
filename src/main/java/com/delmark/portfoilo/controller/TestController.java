@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.controller.requests.ChatCreationRequest;
+import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +41,8 @@ public class TestController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<Void> chatCreationTest(@RequestBody ChatCreationRequest chatCreationRequest) {
-        log.info("Trying to create chat {} with {}", chatCreationRequest.getChatName(), chatCreationRequest.getUserIds());
+    public ResponseEntity<Void> chatCreationTest(@RequestBody ChatCreationDTO chatCreationDTO) {
+        log.info("Trying to create chat {} with {}", chatCreationDTO.getChatName(), chatCreationDTO.getUserIds());
         return ResponseEntity.ok().build();
     }
 }

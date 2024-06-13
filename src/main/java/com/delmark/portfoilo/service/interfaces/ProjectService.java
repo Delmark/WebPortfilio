@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.service.interfaces;
 
-import com.delmark.portfoilo.controller.requests.ProjectsRequest;
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.models.portfolio.Projects;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProjectService {
     List<Projects> getAllProjects(Long portfolioId);
     Projects getProjectById(Long id);
-    Projects addProjectToPortfolio(Long portfolioId, ProjectsRequest dto);
-    Projects editProject(Long id, ProjectsRequest dto);
+    Projects addProjectToPortfolio(Long portfolioId, ProjectsDTO dto);
+    Projects editProject(Long id, ProjectsDTO dto);
     void deleteProject(Long id);
 }

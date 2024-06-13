@@ -1,8 +1,8 @@
 package com.delmark.portfoilo.service;
 
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchProjectException;
-import com.delmark.portfoilo.controller.requests.ProjectsRequest;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Projects;
 import com.delmark.portfoilo.models.user.Role;
@@ -114,7 +114,7 @@ public class ProjectsServiceTest {
                 .setUser(user)
                 .setTechses(new HashSet<>());
 
-        ProjectsRequest dto = new ProjectsRequest("Project Name", "Project Desc", "Url");
+        ProjectsDTO dto = new ProjectsDTO("Project Name", "Project Desc", "Url");
         Projects savedProject = new Projects()
                 .setProjectName(dto.getProjectName())
                 .setProjectDesc(dto.getProjectDesc())
@@ -159,7 +159,7 @@ public class ProjectsServiceTest {
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
 
-        assertThrows(AccessDeniedException.class, () -> projectService.addProjectToPortfolio(1L, new ProjectsRequest("1", "1", "1")));
+        assertThrows(AccessDeniedException.class, () -> projectService.addProjectToPortfolio(1L, new ProjectsDTO("1", "1", "1")));
     }
 
     @DisplayName("Редактирование проекта")
@@ -176,7 +176,7 @@ public class ProjectsServiceTest {
 
         Projects existingProject = new Projects(1L, existingPortfolio, "Proj", "Porj Des", null);
 
-        ProjectsRequest dto = new ProjectsRequest("Project Name", "Project Desc", "Url");
+        ProjectsDTO dto = new ProjectsDTO("Project Name", "Project Desc", "Url");
 
         Projects expectedProject = new Projects()
                 .setId(1L)
@@ -197,7 +197,7 @@ public class ProjectsServiceTest {
     @Test
     void editNonExistingProject() {
         Mockito.when(projectsRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(NoSuchProjectException.class, () -> projectService.editProject(1L, new ProjectsRequest("1", "1", "1")));
+        assertThrows(NoSuchProjectException.class, () -> projectService.editProject(1L, new ProjectsDTO("1", "1", "1")));
     }
 
     @DisplayName("Попытка отредактировать чужой проект")
@@ -218,7 +218,7 @@ public class ProjectsServiceTest {
         Mockito.when(projectsRepository.findById(1L)).thenReturn(Optional.of(existingProject));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
-        assertThrows(AccessDeniedException.class, () -> projectService.editProject(1L, new ProjectsRequest("1", "1", "1")));
+        assertThrows(AccessDeniedException.class, () -> projectService.editProject(1L, new ProjectsDTO("1", "1", "1")));
     }
 
     @Test

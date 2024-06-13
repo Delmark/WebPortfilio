@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.controller.requests;
+package com.delmark.portfoilo.models.DTO;
 
 import com.delmark.portfoilo.models.portfolio.Projects;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * DTO for {@link Projects}
  */
 @Value
-public class ProjectsRequest implements Serializable {
+public class ProjectsDTO implements Serializable {
     @Size(min = 2, max = 32, message = "Размер названия должен быть от 2 до 32 символов")
     @NotNull(message = "У проекта должно быть имя")
     String projectName;

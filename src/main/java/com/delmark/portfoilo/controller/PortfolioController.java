@@ -1,6 +1,6 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.controller.requests.PortfolioRequest;
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class PortfolioController {
     // POST
 
     @PostMapping
-    public ResponseEntity<Portfolio> createPortfolio(@RequestBody @Valid PortfolioRequest portfolio) {
+    public ResponseEntity<Portfolio> createPortfolio(@RequestBody @Valid PortfolioDTO portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioCreation(portfolio));
     }
 
@@ -45,7 +45,7 @@ public class PortfolioController {
 
 
     @PutMapping
-    public ResponseEntity<Portfolio> editPortfolio(@RequestParam Long id, @RequestBody @Valid PortfolioRequest portfolio) {
+    public ResponseEntity<Portfolio> editPortfolio(@RequestParam Long id, @RequestBody @Valid PortfolioDTO portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioEdit(id, portfolio));
     }
 
