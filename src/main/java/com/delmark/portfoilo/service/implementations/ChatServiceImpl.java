@@ -65,7 +65,14 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat getChatById(Long id) {
-        return chatRepository.findById(id).orElseThrow(NoSuchChatException::new);
+        Chat chat = chatRepository.findById(id).orElseThrow(NoSuchChatException::new);
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+
+        if (!chat.getUsers().contains(sessionUser) && !sessionUser.getRoles().contains(rolesRepository.findByAuthority("ADMIN"))) {
+            throw new AccessDeniedException("Вы не состоите в этом чате!");
+        }
+
+        return chat;
     }
 
     @Override

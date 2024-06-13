@@ -51,9 +51,14 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**")).permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN", "USER")
+                                // Общедоступные запросы
                                 .requestMatchers("/api/projects**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/portfolio**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/workPlaces**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/chat/**").hasAnyRole("ADMIN", "USER")
+                                // Запросы, требующие роли администратора
+                                .requestMatchers(HttpMethod.GET, "/api/chat").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/chat/{username}").hasRole("ADMIN")
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/tech/**").hasRole("ADMIN")
                                 .requestMatchers("/test/**").permitAll()
