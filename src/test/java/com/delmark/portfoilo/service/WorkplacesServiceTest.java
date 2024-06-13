@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class WorkplacesTest {
+public class WorkplacesServiceTest {
 
     private final Date date = new Date();
 

@@ -36,6 +36,11 @@ public class ChatServiceImpl implements ChatService {
     public Chat createChat(ChatCreationDTO dto) {
         String chatName = dto.getChatName();
         Set<User> users = new HashSet<>(dto.getUserIds().stream().map(userService::getUserById).toList());
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+
+        if (!users.contains(sessionUser) && !sessionUser.getAuthorities().contains(rolesRepository.findByAuthority("ADMIN").get())) {
+            throw new AccessDeniedException("Вы не можете создать чат без своего участия!");
+        }
 
         if (users.size() < 2) {
             throw new IllegalArgumentException("В чате должно не меньше двух участников!");
@@ -86,7 +91,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         if (!chat.getUsers().contains(sessionUser)) {
-            throw new AccessDeniedException("Вы не можете добавить пользователя в чат!");
+            throw new AccessDeniedException("Вы не состоите в этом чате!");
         }
 
         chat.getUsers().add(user);

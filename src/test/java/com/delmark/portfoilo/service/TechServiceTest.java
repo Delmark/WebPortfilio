@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
-public class TechTest {
+public class TechServiceTest {
 
     private static final TechRepository techRepository = Mockito.mock(TechRepository.class);
 
