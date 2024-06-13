@@ -5,6 +5,7 @@ import com.delmark.portfoilo.models.DTO.UserAuthDTO;
 import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,12 +23,14 @@ public class AuthController {
     private UserService userService;
     private TokenService tokenService;
 
+    @ApiResponses
     @PostMapping("/register")
     public ResponseEntity<Void> registerUser(@RequestBody @Valid UserRegDTO registrationDto) {
         userService.registration(registrationDto);
         return ResponseEntity.ok().build();
     }
 
+    @ApiResponses
     @GetMapping("/getToken")
     public ResponseEntity<JwtTokenDTO> getToken(@RequestBody @Valid UserAuthDTO dto) {
         JwtTokenDTO jwtTokenDTO = tokenService.provideToken(dto.getUsername(), dto.getPassword());

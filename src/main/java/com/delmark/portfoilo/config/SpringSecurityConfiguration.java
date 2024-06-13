@@ -51,9 +51,9 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**")).permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 // Документация API
-                                .requestMatchers("/api-docs").permitAll()
+                                .requestMatchers("/api-docs/**").permitAll()
                                 .requestMatchers("/delm-api-info.html").permitAll()
-                                .requestMatchers("/swagger-ui/index.html").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN", "USER")
                                 // Общедоступные запросы
                                 .requestMatchers("/api/projects**").hasAnyRole("ADMIN", "USER")
