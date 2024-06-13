@@ -61,8 +61,7 @@ public class WorkplacesTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setUser(user)
-                .setName("test");
+                .setUser(user);
 
         List<Workplace> existingWorkplaces = List.of(
                 new Workplace(1L, existingPortfolio, "test", "test", "test", date, date),
@@ -103,7 +102,6 @@ public class WorkplacesTest {
     void createWorkplace() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
 
@@ -133,7 +131,6 @@ public class WorkplacesTest {
     void createWorkplaceForOtherUser() {
         User otherUser = new User().setUsername("test").setPassword("geniusPass").setEnabled(true).setId(2L);
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
 
@@ -151,7 +148,6 @@ public class WorkplacesTest {
     void updateWorkplace() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
 
@@ -179,7 +175,6 @@ public class WorkplacesTest {
     void updateWorkplaceForOtherUser() {
         User otherUser = new User().setUsername("test").setPassword("testPass").setEnabled(true).setId(2L);
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
@@ -196,7 +191,6 @@ public class WorkplacesTest {
     void deleteWorkplace() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
@@ -218,7 +212,6 @@ public class WorkplacesTest {
     void deleteWorkplaceForOtherUser() {
         User otherUser = new User().setUsername("test").setPassword("testPass").setEnabled(true).setId(2L);
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);

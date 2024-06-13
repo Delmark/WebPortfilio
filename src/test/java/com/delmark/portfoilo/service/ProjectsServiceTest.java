@@ -48,13 +48,8 @@ public class ProjectsServiceTest {
     @Test
     @DisplayName("Получение всех проектов")
     void getAllProjects() {
-        User existingUser = new User(1L, "Existing User", "123", true, new HashSet<>(List.of(new Role(1L, "USER"))));
-        Portfolio existingPortfolio = new Portfolio()
-                .setId(1L)
-                .setName("Average Portfolio")
-                .setAboutUser("About user")
-                .setUser(existingUser)
-                .setTechses(new HashSet<>());
+        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>(), new HashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "About me", "YSTU", null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
 
         List<Projects> expectedProjects = List.of(
                 new Projects(1L, existingPortfolio, "1", "1", "1"),
@@ -79,11 +74,11 @@ public class ProjectsServiceTest {
     @Test
     @DisplayName("Получение проекта по ID")
     void getProjectById() {
-        User existingUser = new User(1L, "Existing User", "123", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>(), new HashSet<>());
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
+                .setEducation("YSTU")
                 .setUser(existingUser)
                 .setTechses(new HashSet<>());
 
@@ -109,7 +104,6 @@ public class ProjectsServiceTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -147,11 +141,10 @@ public class ProjectsServiceTest {
     @Test
     @WithMockCustomUser
     void addProjectToOtherUserPortfolio() {
-        User user = new User(2L, "123", "345", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User user = new User().setId(2L).setName("Test User");
 
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -169,7 +162,6 @@ public class ProjectsServiceTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -204,11 +196,10 @@ public class ProjectsServiceTest {
     @Test
     @WithMockCustomUser
     void editOtherUserProject() {
-        User user = new User(2L, "123", "345", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User user = new User().setId(2L).setName("Test User");
 
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -228,7 +219,6 @@ public class ProjectsServiceTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -245,11 +235,10 @@ public class ProjectsServiceTest {
     @DisplayName("Попытка удалить чужой проект")
     @WithMockCustomUser
     void deleteOtherUserProject() {
-        User user = new User(2L, "123", "345", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User user = new User().setId(2L).setName("Test User");
 
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
