@@ -1,6 +1,7 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.NoSuchChatException;
+import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.messages.Message;
 import com.delmark.portfoilo.models.user.Role;
@@ -18,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,7 +33,10 @@ public class ChatServiceImpl implements ChatService {
     private final RolesRepository rolesRepository;
 
     @Override
-    public Chat createChat(Set<User> users, String chatName) {
+    public Chat createChat(ChatCreationDTO dto) {
+        String chatName = dto.getChatName();
+        Set<User> users = new HashSet<>(dto.getUserIds().stream().map(userService::getUserById).toList());
+
         if (users.size() < 2) {
             throw new IllegalArgumentException("В чате должно не меньше двух участников!");
         }
@@ -48,6 +53,17 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public Page<Chat> getAllChats(int page, int size) {
+        return chatRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<Chat> getAllUserChats(String username, int page, int size) {
+        User user = userService.getUserByUsername(username);
+        return chatRepository.findByUsersContains(user, PageRequest.of(page, size));
+    }
+
+    @Override
     public Chat getChatById(Long id) {
         return chatRepository.findById(id).orElseThrow(NoSuchChatException::new);
     }
@@ -56,9 +72,14 @@ public class ChatServiceImpl implements ChatService {
     public Chat addUserToChat(Long userId, Long chatId) {
         User user = userService.getUserById(userId);
         Chat chat = chatRepository.findById(chatId).orElseThrow(NoSuchChatException::new);
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         if (chat.getUsers().contains(user)) {
             throw new IllegalArgumentException("Пользователь уже в чате!");
+        }
+
+        if (!chat.getUsers().contains(sessionUser)) {
+            throw new AccessDeniedException("Вы не можете добавить пользователя в чат!");
         }
 
         chat.getUsers().add(user);
