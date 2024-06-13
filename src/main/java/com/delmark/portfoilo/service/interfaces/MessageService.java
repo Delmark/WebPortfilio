@@ -3,7 +3,7 @@ package com.delmark.portfoilo.service.interfaces;
 import com.delmark.portfoilo.models.messages.Message;
 
 public interface MessageService {
-    Message createMessage(Long chatId, String message, Long senderId);
+    Message createMessage(Long chatId, String message);
 
     Message getMessageById(Long id);
 
