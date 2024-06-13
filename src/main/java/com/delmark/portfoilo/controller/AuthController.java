@@ -5,6 +5,7 @@ import com.delmark.portfoilo.models.DTO.UserAuthDTO;
 import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.service.interfaces.TokenService;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @AllArgsConstructor
+@Tag(name = "Authorization")
 @RequestMapping("/api/auth")
 public class AuthController {
     private UserService userService;

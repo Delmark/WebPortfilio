@@ -3,6 +3,7 @@ package com.delmark.portfoilo.controller;
 import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.models.portfolio.Projects;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 @Validated
 @RestController
 @AllArgsConstructor
+@Tag(name = "Portfolio Projects", description = "API for Portfolio Projects management")
 @RequestMapping("/api/projects")
 public class ProjectsController {
 

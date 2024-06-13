@@ -3,6 +3,7 @@ package com.delmark.portfoilo.controller;
 import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.models.portfolio.Workplace;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 @Validated
 @RestController
 @AllArgsConstructor
+@Tag(name = "Workplaces", description = "API for Portfolio Workplaces management")
 @RequestMapping("/api/workPlaces")
 public class WorkplacesController {
 

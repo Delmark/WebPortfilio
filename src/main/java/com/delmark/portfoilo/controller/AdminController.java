@@ -2,12 +2,15 @@ package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Hidden
 @RequestMapping("/api/admin")
 @AllArgsConstructor
 public class AdminController {

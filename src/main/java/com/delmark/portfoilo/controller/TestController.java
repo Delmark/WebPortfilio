@@ -2,6 +2,7 @@ package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/test")
 @AllArgsConstructor
+@Hidden
 @Slf4j
 public class TestController {
 

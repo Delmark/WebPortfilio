@@ -4,6 +4,7 @@ import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.messages.Message;
 import com.delmark.portfoilo.service.interfaces.ChatService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
+@Tag(name = "Chats", description = "API for managing chats")
 @RequestMapping("/api/chat")
 public class ChatController {
 

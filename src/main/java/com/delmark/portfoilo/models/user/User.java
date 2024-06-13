@@ -53,6 +53,7 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
+    @JsonIgnore
     @Lob
     @Column(name = "avatar_image", columnDefinition="BLOB")
     private byte[] avatar = ImageUtils.getDefaultAvatar();
@@ -69,6 +70,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Chat> chats = new HashSet<>();
 

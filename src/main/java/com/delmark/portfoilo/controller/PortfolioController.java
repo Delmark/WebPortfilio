@@ -3,6 +3,7 @@ package com.delmark.portfoilo.controller;
 import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
+@Tag(name = "Portfolio", description = "API for Portfolio management")
 @AllArgsConstructor
 @RequestMapping("/api/portfolio")
 public class PortfolioController {

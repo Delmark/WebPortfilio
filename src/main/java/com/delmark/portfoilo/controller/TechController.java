@@ -2,6 +2,7 @@ package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.portfolio.Techs;
 import com.delmark.portfoilo.service.interfaces.TechService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
+@Tag(name = "")
+@Tag(name = "Techonlogies", description = "API for Portfolio Techs management")
 @AllArgsConstructor
 @RequestMapping("/api/tech")
 public class TechController {

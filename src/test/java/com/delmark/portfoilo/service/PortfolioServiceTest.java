@@ -170,14 +170,10 @@ public class PortfolioServiceTest {
         Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         PortfolioDTO dto = new PortfolioDTO(
-                "TestName",
-                "TestSurname",
                 "Test",
                 "TestAbout",
                 "TestEdu",
-                "TestEmail@gmail.com",
-                null,
-                null
+                "TestEmail@gmail.com"
         );
 
         Mockito.when(portfolioRepository.findByUser(existingUser)).thenReturn(Optional.of(existingPortfolio));
@@ -242,13 +238,9 @@ public class PortfolioServiceTest {
         Portfolio existingPortfolio = new Portfolio(1L, existingUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
         Portfolio expectedPortfolio = new Portfolio(1L, existingUser, "TestName", "TestSurname", "Test", "TestAbout", "Schoolar", "TestEmail@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
         PortfolioDTO dto = new PortfolioDTO(
-                "TestName",
-                "TestSurname",
-                "Test",
                 "TestAbout",
                 "Schoolar",
                 "TestEmail@gmail.com",
-                null,
                 null
         );
 
@@ -270,11 +262,7 @@ public class PortfolioServiceTest {
                 "TestName",
                 "TestSurname",
                 "Test",
-                "TestAbout",
-                "Schoolar",
-                "TestEmail@gmail.com",
-                null,
-                null
+                "TestAbout"
         )));
     }
 
@@ -287,13 +275,9 @@ public class PortfolioServiceTest {
         Portfolio existingPortfolio = new Portfolio(1L, otherUser, "Delm", "Delmovich", null, "Programmer", "Student", "ex@gmail.com", null, null, new LinkedHashSet<>(), new HashSet<>(), new HashSet<>());
 
         PortfolioDTO dto = new PortfolioDTO(
-                "TestName",
-                "TestSurname",
-                "Test",
                 "TestAbout",
                 "Schoolar",
                 "TestEmail@gmail.com",
-                null,
                 null
         );
 
