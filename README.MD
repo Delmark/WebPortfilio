@@ -12,6 +12,8 @@
 - Spring Boot 
 - Spring Security
 - JPA
+- OpenAPI + Swagger UI
+- Liquibase
 - PostgreSQL
 ### Frontend
 - Vaadin
@@ -117,4 +119,4 @@
 }
 ```
 
-Проект выполнен Delmark :tm: a.k.a Алексеем Кругловым.
+Проект выполнен Delmark :tm:.
