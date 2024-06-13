@@ -1,6 +1,7 @@
 package com.delmark.portfoilo.controller;
 
 import com.delmark.portfoilo.models.DTO.UserAuthDTO;
+import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
@@ -36,28 +37,36 @@ public class AuthControllerTest {
     @Autowired
     private RolesRepository rolesRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void registerNewUser() throws Exception {
-        User expectedUser = new User(2L, "Delmark", passwordEncoder.encode("123"), true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
-        UserAuthDTO userAuthDTO = new UserAuthDTO("Delmark", "123456");
+        User expectedUser = new User().
+                setId(2L).
+                setUsername("Delmark").
+                setPassword(passwordEncoder.encode("123456")).
+                setName("Delmark").
+                setSurname("Delmarkovich").
+                setRoles(new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get()))).
+                setEmail("gmail@gmail.com").
+                setEnabled(true);
+        UserRegDTO regDTO = new UserRegDTO("Delmark", "123456", "Delmark", "Delmarkovich", null, "gmail@gmail.com");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userAuthDTO)))
+                .content(objectMapper.writeValueAsString(regDTO)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void registerExistingUser() throws Exception {
-        UserAuthDTO userAuthDTO = new UserAuthDTO("testAdmin", "123");
+        UserRegDTO regDTO = new UserRegDTO("testAdmin", "123", "Delmark", "Delmarkovich", null, "gmail@gmail.com");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userAuthDTO)))
+                        .content(objectMapper.writeValueAsString(regDTO)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -66,7 +75,7 @@ public class AuthControllerTest {
     void getToken() throws Exception {
         UserAuthDTO userAuthDTO = new UserAuthDTO("testAdmin", "adminPass");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/getToken")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/getToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userAuthDTO)))
                 .andDo(MockMvcResultHandlers.print())
@@ -77,7 +86,7 @@ public class AuthControllerTest {
     void getTokenWithWrongUserData() throws Exception {
         UserAuthDTO userAuthDTO = new UserAuthDTO("test", "admass");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/getToken")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/getToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userAuthDTO)))
                 .andDo(MockMvcResultHandlers.print())
