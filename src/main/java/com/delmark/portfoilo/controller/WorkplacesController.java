@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Tag(name = "Workplaces", description = "API for Portfolio Workplaces management")
-@RequestMapping("/api/workPlaces")
+@RequestMapping("/api/v1/workPlaces")
 public class WorkplacesController {
 
     WorkplacesService workplacesService;

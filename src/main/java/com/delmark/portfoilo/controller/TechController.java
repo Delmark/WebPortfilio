@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "")
 @Tag(name = "Techonlogies", description = "API for Portfolio Techs management")
 @AllArgsConstructor
-@RequestMapping("/api/tech")
+@RequestMapping("/api/v1/tech")
 public class TechController {
 
     TechService techService;

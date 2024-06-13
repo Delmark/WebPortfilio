@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Hidden
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 @AllArgsConstructor
 public class AdminController {
 

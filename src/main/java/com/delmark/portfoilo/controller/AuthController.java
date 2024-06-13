@@ -18,19 +18,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @Tag(name = "Authorization")
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
     private UserService userService;
     private TokenService tokenService;
 
-    @ApiResponses
     @PostMapping("/register")
     public ResponseEntity<Void> registerUser(@RequestBody @Valid UserRegDTO registrationDto) {
         userService.registration(registrationDto);
         return ResponseEntity.ok().build();
     }
 
-    @ApiResponses
     @GetMapping("/getToken")
     public ResponseEntity<JwtTokenDTO> getToken(@RequestBody @Valid UserAuthDTO dto) {
         JwtTokenDTO jwtTokenDTO = tokenService.provideToken(dto.getUsername(), dto.getPassword());

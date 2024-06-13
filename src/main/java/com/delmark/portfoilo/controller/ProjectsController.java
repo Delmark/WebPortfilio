@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Tag(name = "Portfolio Projects", description = "API for Portfolio Projects management")
-@RequestMapping("/api/projects")
+@RequestMapping("/api/v1/projects")
 public class ProjectsController {
 
     ProjectService projectService;
