@@ -7,10 +7,7 @@ import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Techs;
 import com.delmark.portfoilo.models.user.Role;
 import com.delmark.portfoilo.models.user.User;
-import com.delmark.portfoilo.repository.PortfolioRepository;
-import com.delmark.portfoilo.repository.RolesRepository;
-import com.delmark.portfoilo.repository.TechRepository;
-import com.delmark.portfoilo.repository.UserRepository;
+import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
@@ -32,6 +29,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     private TechRepository techRepository;
     private final RolesRepository rolesRepository;
     public final CustomMapper customMapper;
+    private final CommentRepository commentRepository;
 
     @Override
     public Portfolio getPortfolioByUser(String username) {
@@ -139,11 +137,6 @@ public class PortfolioServiceImpl implements PortfolioService {
         return portfolioRepository.save(portfolio);
     }
 
-    // TODO: Реализовать получение комментариев портфолио
-    @Override
-    public Set<Comment> getPortfolioComments(Long portfolioId) {
-        return null;
-    }
 
     @Override
     public void deletePortfolio(Long id) {

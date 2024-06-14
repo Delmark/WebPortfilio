@@ -6,6 +6,7 @@ import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
 import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.models.DTO.PortfolioDTO;
+import com.delmark.portfoilo.models.messages.Comment;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Projects;
 import com.delmark.portfoilo.models.portfolio.Techs;
@@ -15,6 +16,8 @@ import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.interfaces.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.AccordionPanel;
+import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.avatar.AvatarVariant;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -73,6 +76,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     private final TechService techService;
     private final WorkplacesService workplacesService;
     private final PortfolioService portfolioService;
+    private final CommentService commentService;
     public PortfolioView(PortfolioRepository portfolioRepository,
                          WorkplacesRepository workplacesRepository,
                          ProjectsRepository projectsRepository,
@@ -82,7 +86,9 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                          TechService techService,
                          WorkplacesService workplacesService,
                          PortfolioService portfolioService,
-                         UserService userService) {
+                         UserService userService,
+                         CommentService commentService) {
+        this.commentService = commentService;
         this.userService = userService;
         this.projectService = projectService;
         this.portfolioRepository = portfolioRepository;
@@ -118,9 +124,165 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         mainLayout.add(createProjectsAndWorkplacesLayout(portfolio));
         mainLayout.add(hr2);
         mainLayout.add(createTechStackLayout());
+        mainLayout.add(createCommentsLayout());
         mainLayout.setWidth("100%");
         mainLayout.setHeight("100%");
         add(mainLayout);
+    }
+
+    private VerticalLayout createCommentsLayout() {
+        VerticalLayout commentsLayout = new VerticalLayout();
+        commentsLayout.addClassNames(
+                LumoUtility.Margin.Top.MEDIUM,
+                LumoUtility.JustifyContent.CENTER,
+                LumoUtility.Margin.AUTO
+        );
+        commentsLayout.setWidth("80%");
+
+        H3 commentsH3 = new H3("Комментарии");
+
+        List<Comment> portfolioComments = commentService.getCommentsByPortfolio(Long.parseLong(portfolioId));
+
+        VerticalLayout commentSenderLayout = new VerticalLayout();
+        commentSenderLayout.setWidth("80%");
+        commentSenderLayout.setMaxHeight("40%");
+        commentSenderLayout.addClassNames(
+                LumoUtility.Margin.AUTO
+        );
+
+        TextArea commentArea = new TextArea();
+        commentArea.setWidth("80%");
+        commentArea.setMinLength(5);
+        commentArea.setMaxLength(255);
+        commentArea.setPlaceholder("Введите комментарий");
+        commentArea.addClassNames(LumoUtility.AlignSelf.CENTER);
+
+        Button sendCommentButton = new Button("Отправить", event -> {
+            String comment = commentArea.getValue();
+
+            if (!commentArea.isInvalid() && !comment.isBlank()) {
+                commentService.createComment(Long.parseLong(portfolioId), comment);
+                UI.getCurrent().getPage().reload();
+            } else {
+                Notification.show("Комментарий должен содержать от 5 до 255 символов");
+            }
+        });
+
+        sendCommentButton.setWidth("20%");
+        sendCommentButton.addClassNames(LumoUtility.Margin.Left.AUTO);
+        commentSenderLayout.add(commentArea, sendCommentButton);
+        commentsLayout.add(commentsH3);
+        commentsLayout.add(commentSenderLayout);
+
+        VerticalLayout commentsListLayout = new VerticalLayout();
+        commentsListLayout.setWidth("100%");
+        commentsListLayout.setMaxHeight("60%");
+        commentsListLayout.addClassNames(
+                LumoUtility.Margin.AUTO
+        );
+
+        for (Comment comment : portfolioComments) {
+            HorizontalLayout commentCard = new HorizontalLayout();
+            commentCard.addClassNames(LumoUtility.Margin.MEDIUM);
+
+            Avatar commenterAvatar = new Avatar();
+            commenterAvatar.setImageResource(
+                    new StreamResource(comment.getSender().getUsername() + "_avatar.png",
+                            () -> new ByteArrayInputStream(comment.getSender().getAvatar()))
+            );
+            commenterAvatar.setThemeName(AvatarVariant.LUMO_XLARGE.getVariantName());
+            commentCard.add(commenterAvatar);
+            commentCard.setWidth("100%");
+            commentCard.setHeight("100%");
+
+            VerticalLayout commentDataLayout = new VerticalLayout();
+            commentDataLayout.setPadding(false);
+
+            Anchor userLink = new Anchor();
+            userLink.setHref("portfolio/" + comment.getSender().getId());
+            userLink.setText(comment.getSender().getUsername());
+
+            Span commentText = new Span(comment.getComment());
+            commentDataLayout.add(userLink, commentText);
+            commentCard.add(commentDataLayout);
+
+            if (comment.getSender().getUsername().equals(authenticationContext.getPrincipalName().get())) {
+                Button editCommentButton = new Button(LineAwesomeIcon.EDIT.create());
+                editCommentButton.addClassNames(LumoUtility.Margin.Left.AUTO, LumoUtility.Padding.SMALL);
+                editCommentButton.setMaxWidth("10%");
+                editCommentButton.setMaxHeight("10%");
+                editCommentButton.addClickListener(e -> {
+                    openEditCommentDialog(comment);
+                });
+                commentCard.add(editCommentButton);
+
+                Button deleteCommentButton = new Button(LineAwesomeIcon.LONG_ARROW_ALT_DOWN_SOLID.create());
+                deleteCommentButton.addClassNames(LumoUtility.Margin.Left.AUTO, LumoUtility.Padding.SMALL);
+                deleteCommentButton.setMaxWidth("10%");
+                deleteCommentButton.setMaxHeight("10%");
+                deleteCommentButton.addClickListener(e -> {
+                    try {
+                        commentService.deleteCommentById(comment.getId());
+                        UI.getCurrent().getPage().reload();
+                    }
+                    catch (Exception ex) {
+                        log.error(ex.getMessage());
+                        Notification.show("Произошла ошибка!");
+                    }
+                });
+                commentCard.add(deleteCommentButton);
+            }
+
+            commentsListLayout.add(commentCard);
+        }
+
+        commentsLayout.add(commentsListLayout);
+
+        return commentsLayout;
+    }
+
+    private void openEditCommentDialog(Comment comment) {
+        Dialog editCommentDialog = new Dialog();
+        editCommentDialog.setHeaderTitle("Редактировать комментарий");
+        editCommentDialog.setModal(true);
+        VerticalLayout commentSenderLayout = new VerticalLayout();
+        commentSenderLayout.setWidth("80%");
+        commentSenderLayout.setMaxHeight("40%");
+        commentSenderLayout.addClassNames(
+                LumoUtility.Margin.AUTO
+        );
+
+        editCommentDialog.setWidth("400px");
+
+        TextArea commentArea = new TextArea();
+        commentArea.setWidth("80%");
+        commentArea.setMinLength(5);
+        commentArea.setMaxLength(255);
+        commentArea.setValue(comment.getComment());
+        commentArea.addClassNames(LumoUtility.AlignSelf.CENTER);
+
+        Button sendCommentButton = new Button("Редактировать", event -> {
+            String commentText = commentArea.getValue();
+
+            if (!commentArea.isInvalid() && !commentText.isBlank()) {
+                commentService.editCommentById(comment.getId(), commentText);
+                editCommentDialog.close();
+                UI.getCurrent().getPage().reload();
+            } else {
+                Notification.show("Комментарий должен содержать от 5 до 255 символов");
+            }
+        });
+
+        Button closeDialog = new Button("Отмена", event -> {
+            editCommentDialog.close();
+        });
+
+        sendCommentButton.setWidth("20%");
+        sendCommentButton.addClassNames(LumoUtility.Margin.Left.AUTO);
+        commentSenderLayout.add(commentArea);
+        editCommentDialog.add(commentSenderLayout);
+        editCommentDialog.getFooter().add(sendCommentButton, closeDialog);
+        editCommentDialog.open();
     }
 
 

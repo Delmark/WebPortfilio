@@ -63,13 +63,16 @@ public class Portfolio {
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Projects> projects = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Workplace> workplaces = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Comment> comments = new HashSet<>();
 }

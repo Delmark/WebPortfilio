@@ -13,7 +13,6 @@ public interface PortfolioService {
     Portfolio addTechToPortfolio(Long portfolioId, Long techId);
     Portfolio portfolioEdit(Long id, PortfolioDTO dto);
     Portfolio removeTechFromPortfolio(Long portfolioId, Long techId);
-    Set<Comment> getPortfolioComments(Long portfolioId);
     boolean portfolioExistsByUser(String username);
     void deletePortfolio(Long id);
 }

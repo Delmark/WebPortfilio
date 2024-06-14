@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +38,11 @@ public class CommentServiceImpl implements CommentService {
                 setPortfolio(portfolio);
 
         return commentRepository.save(newComment);
+    }
+
+    @Override
+    public List<Comment> getCommentsByPortfolio(Long portfolioId) {
+        return commentRepository.findByPortfolioOrderByCreatedAtDesc(portfolioService.getPortfolio(portfolioId));
     }
 
     @Override
@@ -66,6 +72,6 @@ public class CommentServiceImpl implements CommentService {
             throw new AccessDeniedException("Вы не являетесь автором данного комментария");
         }
 
-        commentRepository.delete(commentForDelete);
+        commentRepository.deleteById(commentId);
     }
 }
