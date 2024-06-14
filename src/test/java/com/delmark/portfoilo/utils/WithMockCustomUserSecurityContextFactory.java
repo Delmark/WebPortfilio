@@ -18,7 +18,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
         User principal =
-                new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmail.com", null, true, new HashSet<>(List.of(new Role(1L, "USER"))), new HashSet<>());
+                new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmail.com", null, true, new HashSet<>(List.of(new Role(1L, "USER"))));
 
         Authentication auth =
                 UsernamePasswordAuthenticationToken.authenticated(principal, "123", principal.getAuthorities());

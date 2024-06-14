@@ -57,6 +57,7 @@ public class Portfolio {
             inverseJoinColumns = @JoinColumn(name = "techses_id"))
     private Set<Techs> techses = new LinkedHashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

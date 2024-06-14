@@ -71,11 +71,6 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    @JsonIgnore
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    private Set<Chat> chats = new HashSet<>();
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

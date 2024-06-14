@@ -48,7 +48,7 @@ public class ProjectsServiceTest {
     @Test
     @DisplayName("Получение всех проектов")
     void getAllProjects() {
-        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>(), new HashSet<>());
+        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>());
         Portfolio existingPortfolio = new Portfolio(1L, existingUser, "About me", "YSTU", null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
 
         List<Projects> expectedProjects = List.of(
@@ -74,7 +74,7 @@ public class ProjectsServiceTest {
     @Test
     @DisplayName("Получение проекта по ID")
     void getProjectById() {
-        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>(), new HashSet<>());
+        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>());
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
                 .setAboutUser("About user")

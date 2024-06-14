@@ -3,6 +3,7 @@ package com.delmark.portfoilo.models.portfolio;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.builder.EqualsExclude;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
