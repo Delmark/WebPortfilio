@@ -23,7 +23,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getAllChats(page, size));
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/user/{username}")
     public ResponseEntity<Page<Chat>> getAllUserChats(
             @PathVariable("username") String username,
             @RequestParam("page") Integer page,
@@ -53,12 +53,12 @@ public class ChatController {
 
     @PutMapping("/{chatId}/user/{userId}")
     public ResponseEntity<Chat> addUserToChat(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
-        return ResponseEntity.ok(chatService.addUserToChat(chatId, userId));
+        return ResponseEntity.ok(chatService.addUserToChat(userId, chatId));
     }
 
     @DeleteMapping("/{chatId}/user/{userId}")
     public ResponseEntity<Void> removeUserFromChat(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
-        chatService.removeUserFromChat(chatId, userId);
+        chatService.removeUserFromChat(userId, chatId);
         return ResponseEntity.ok().build();
     }
 

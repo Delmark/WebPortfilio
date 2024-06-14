@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,18 +28,17 @@ public class Chat {
     @Column(name = "chat_name", nullable = false)
     private String chatName;
 
-    @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "chat_users",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
 }

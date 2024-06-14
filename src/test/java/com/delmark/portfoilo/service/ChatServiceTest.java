@@ -1,5 +1,6 @@
 package com.delmark.portfoilo.service;
 
+import com.delmark.portfoilo.exceptions.response.ChatPrincipalsCountException;
 import com.delmark.portfoilo.exceptions.response.NoSuchChatException;
 import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
 import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
@@ -24,10 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,8 +49,8 @@ public class ChatServiceTest {
         User chatMember = new User().setId(2L).setName("Biba");
 
         ChatCreationDTO dto = new ChatCreationDTO("chat", new HashSet<>(List.of(1L, 2L)));
-        Chat chatForSave = new Chat(null, "chat", Set.of(chatOwner, chatMember), null);
-        Chat expectedChat = new Chat(1L, "chat", Set.of(chatOwner, chatMember), null);
+        Chat chatForSave = new Chat(null, "chat", Set.of(chatOwner, chatMember), new ArrayList<>());
+        Chat expectedChat = new Chat(1L, "chat", Set.of(chatOwner, chatMember), new ArrayList<>());
 
         Mockito.when(userRepository.findByUsername("Delmark")).thenReturn(Optional.of(chatOwner));
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(chatOwner));
@@ -90,7 +88,7 @@ public class ChatServiceTest {
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(chatOwner));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
-        assertThrows(IllegalArgumentException.class, () -> chatService.createChat(dto));
+        assertThrows(ChatPrincipalsCountException.class, () -> chatService.createChat(dto));
     }
 
     @Test
@@ -132,7 +130,7 @@ public class ChatServiceTest {
     void addUserToChat() {
         User client = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User existingMember = new User().setId(2L).setName("Biba");
-        Chat existingChat = new Chat(1L, "chat", new HashSet<>(Set.of(client, existingMember)), null);
+        Chat existingChat = new Chat(1L, "chat", new HashSet<>(Set.of(client, existingMember)), new ArrayList<>());
         User newMember = new User().setId(3L).setName("Boba");
         Chat expectedToSave = new Chat().setId(1L).setChatName("chat").setUsers(
                 Set.of(
@@ -140,7 +138,7 @@ public class ChatServiceTest {
                         existingMember,
                         newMember)
         );
-        Chat expectedChat = new Chat(1L, "chat", Set.of(client, existingMember, newMember), null);
+        Chat expectedChat = new Chat(1L, "chat", Set.of(client, existingMember, newMember), new ArrayList<>());
 
         Mockito.when(chatRepository.findById(1L)).thenReturn(Optional.of(existingChat));
         Mockito.when(userRepository.findById(3L)).thenReturn(Optional.of(newMember));

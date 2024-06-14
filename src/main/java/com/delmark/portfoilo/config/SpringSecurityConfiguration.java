@@ -54,15 +54,18 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                                 .requestMatchers("/api-docs/**").permitAll()
                                 .requestMatchers("/delm-api-info.html").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN", "USER")
                                 // Общедоступные запросы
                                 .requestMatchers("/api/v1/projects**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/v1/portfolio**").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers("/api/v1/workPlaces**").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/api/v1/chat/**").hasAnyRole("ADMIN", "USER")
+                                // Общедоступные запросы на чаты
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat/{id}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat/{id}/messages").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/v1/chat/{chatId}/user/{userId}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST,"/api/v1/chat/**").hasAnyRole("ADMIN", "USER")
                                 // Запросы, требующие роли администратора
-                                .requestMatchers(HttpMethod.GET, "/api/chat").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/chat/{username}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat/user/{username}").hasRole("ADMIN")
                                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/v1/tech/**").hasRole("ADMIN")
                                 .requestMatchers("/test/**").permitAll()

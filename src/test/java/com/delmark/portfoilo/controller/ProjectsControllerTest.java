@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,6 +57,8 @@ public class ProjectsControllerTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JwtAuthenticationConverter jwtAuthenticationConverter;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
@@ -93,13 +96,8 @@ public class ProjectsControllerTest {
         List<Projects> projectsList = List.of(project1, project2);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/projects?portfolioId=1")
-                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                {
-                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                    return grantedAuthoritiesConverter.convert(jwt);
-                })))
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                        jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(projectsList)));
@@ -112,13 +110,8 @@ public class ProjectsControllerTest {
         Projects expectedProject = projectsRepository.save(new Projects(null, portfolio, "Project 1", "Project Description", null));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/projects/id/1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedProject)));
@@ -127,13 +120,8 @@ public class ProjectsControllerTest {
     @Test
     void getProjectByNonExistingId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/projects/id/2")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -150,13 +138,8 @@ public class ProjectsControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/projects?portfolioId=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto))
-                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                {
-                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                    return grantedAuthoritiesConverter.convert(jwt);
-                })))
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                        jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedProject)));
@@ -169,13 +152,8 @@ public class ProjectsControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/projects?portfolioId=2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -202,13 +180,8 @@ public class ProjectsControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/projects?portfolioId=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto))
-                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                {
-                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                    return grantedAuthoritiesConverter.convert(jwt);
-                })))
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                        jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -228,13 +201,8 @@ public class ProjectsControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/projects?projectId=1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedProject)));
@@ -247,13 +215,8 @@ public class ProjectsControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/projects?projectId=2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -267,13 +230,8 @@ public class ProjectsControllerTest {
         );
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/projects?projectId=1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -301,13 +259,8 @@ public class ProjectsControllerTest {
         );
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/projects?projectId=1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }

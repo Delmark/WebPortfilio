@@ -1,5 +1,6 @@
 package com.delmark.portfoilo.service.implementations;
 
+import com.delmark.portfoilo.exceptions.response.ChatPrincipalsCountException;
 import com.delmark.portfoilo.exceptions.response.NoSuchChatException;
 import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.models.messages.Chat;
@@ -43,11 +44,11 @@ public class ChatServiceImpl implements ChatService {
         }
 
         if (users.size() < 2) {
-            throw new IllegalArgumentException("В чате должно не меньше двух участников!");
+            throw new ChatPrincipalsCountException();
         }
 
         if (chatName == null || chatName.isEmpty()) {
-            chatName = String.join(" - ", users.stream().map(Object::toString).toList()) + " chat";
+            chatName = String.join(" - ", users.stream().map(User::getName).sorted().toList()) + " chat";
         }
 
         Chat chat = new Chat()
