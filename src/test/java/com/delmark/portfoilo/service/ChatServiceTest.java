@@ -1,6 +1,7 @@
 package com.delmark.portfoilo.service;
 
 import com.delmark.portfoilo.exceptions.response.NoSuchChatException;
+import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
 import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.user.Role;
@@ -17,6 +18,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
@@ -148,4 +150,47 @@ public class ChatServiceTest {
 
         assertEquals(expectedChat, chatService.addUserToChat(3L, 1L));
     }
+
+    @Test
+    @WithMockCustomUser
+    void removeUserFromChat() {
+        User client = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User existingMember = new User().setId(3L).setName("Biba");
+        Chat existingChat = new Chat(1L, "chat", new HashSet<>(Set.of(client, existingMember)), null);
+
+        Chat expectedChat = new Chat(1L, "chat", new HashSet<>(Set.of(client)), null);
+
+        Mockito.when(chatRepository.findById(1L)).thenReturn(Optional.of(existingChat));
+        Mockito.when(userRepository.findById(3L)).thenReturn(Optional.of(existingMember));
+        Mockito.when(userRepository.findByUsername("Delmark")).thenReturn(Optional.of(client));
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
+        Mockito.when(chatRepository.save(existingChat)).thenReturn(expectedChat);
+
+        assertEquals(Optional.of(expectedChat), chatService.removeUserFromChat(3L, 1L));
+    }
+
+    @Test
+    @WithMockCustomUser
+    void removeNonExistingUserFromChat() {
+        Mockito.when(userRepository.findById(3L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> chatService.removeUserFromChat(3L, 1L));
+    }
+
+    @Test
+    @WithMockCustomUser
+    void removeLastUserFromChat() {
+        User client = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Chat existingChat = new Chat(1L, "chat", new HashSet<>(Set.of(client)), null);
+
+        Mockito.when(chatRepository.findById(1L)).thenReturn(Optional.of(existingChat));
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(client));
+        Mockito.when(userRepository.findByUsername("Delmark")).thenReturn(Optional.of(client));
+        Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
+
+        assertEquals(Optional.empty(), chatService.removeUserFromChat(1L, 1L));
+        Mockito.verify(chatRepository, Mockito.times(1)).delete(existingChat);
+    }
+
+
 }

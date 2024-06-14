@@ -102,6 +102,11 @@ public class ChatServiceImpl implements ChatService {
     public Optional<Chat> removeUserFromChat(Long userId, Long chatId) {
         User user = userService.getUserById(userId);
         Chat chat = chatRepository.findById(chatId).orElseThrow(NoSuchChatException::new);
+        User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+
+        if (!chat.getUsers().contains(sessionUser) && !sessionUser.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
+            throw new AccessDeniedException("Вы не состоите в этом чате!");
+        }
 
         if (!chat.getUsers().contains(user)) {
             throw new IllegalArgumentException("Пользователь не в чате!");
@@ -126,8 +131,6 @@ public class ChatServiceImpl implements ChatService {
     @Transactional
     public Page<Message> getMessagesByChatId(Long chatId, int page, int size) {
         User user = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
-        Chat chat = chatRepository.findById(chatId).orElseThrow(NoSuchChatException::new);
-
         Role adminRole = rolesRepository.findByAuthority("ADMIN").get();
 
         if (!getChatUsers(chatId).contains(user) && !user.getAuthorities().contains(adminRole)) {
