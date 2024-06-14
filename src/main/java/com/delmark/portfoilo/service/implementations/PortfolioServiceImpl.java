@@ -1,15 +1,13 @@
 package com.delmark.portfoilo.service.implementations;
 
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.Techs;
-import com.delmark.portfoilo.models.User;
-import com.delmark.portfoilo.repository.PortfolioRepository;
-import com.delmark.portfoilo.repository.RolesRepository;
-import com.delmark.portfoilo.repository.TechRepository;
-import com.delmark.portfoilo.repository.UserRepository;
+import com.delmark.portfoilo.models.messages.Comment;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Techs;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
+import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.delmark.portfoilo.utils.CustomMapper;
@@ -19,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +29,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     private TechRepository techRepository;
     private final RolesRepository rolesRepository;
     public final CustomMapper customMapper;
+    private final CommentRepository commentRepository;
 
     @Override
     public Portfolio getPortfolioByUser(String username) {
@@ -59,7 +59,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Portfolio portfolioCreation(PortfolioDto dto) {
+    public Portfolio portfolioCreation(PortfolioDTO dto) {
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
         if (portfolioRepository.findByUser(sessionUser).isPresent()) {
@@ -67,11 +67,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         Portfolio newPortfolio = new Portfolio()
-                .setName(dto.getName())
-                .setMiddleName(dto.getMiddleName())
-                .setSurname(dto.getSurname())
                 .setAboutUser(dto.getAboutUser())
-                .setEmail(dto.getEmail())
                 .setEducation(dto.getEducation())
                 .setPhone(dto.getPhone())
                 .setSiteUrl(dto.getSiteUrl())
@@ -103,7 +99,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
     @Override
-    public Portfolio portfolioEdit(Long id, PortfolioDto dto) {
+    public Portfolio portfolioEdit(Long id, PortfolioDTO dto) {
         Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(NoSuchPortfolioException::new);
         User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
 
@@ -136,10 +132,11 @@ public class PortfolioServiceImpl implements PortfolioService {
             throw new NoSuchTechInPortfolio();
         }
 
-        portfolio.getTechses().add(tech);
+        portfolio.getTechses().remove(tech);
 
         return portfolioRepository.save(portfolio);
     }
+
 
     @Override
     public void deletePortfolio(Long id) {

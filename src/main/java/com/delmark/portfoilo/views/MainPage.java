@@ -2,10 +2,12 @@ package com.delmark.portfoilo.views;
 
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.models.DTO.TechStatsProjection;
-import com.delmark.portfoilo.models.DTO.WorkplacesStatsDTO;
+import com.delmark.portfoilo.models.DTO.WorkplacesStatsProjection;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.TechService;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,12 +21,14 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @PageTitle("Главная")
 @Route(value = "", layout = MainLayout.class)
 @AnonymousAllowed
+@Slf4j
 @PermitAll
 public class MainPage extends VerticalLayout implements BeforeEnterObserver {
 
@@ -38,6 +42,7 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
                     WorkplacesService workplacesService,
                     AuthenticationContext authenticationContext,
                     PortfolioService portfolioService) {
+
         this.authenticationContext = authenticationContext;
         this.techService = techService;
         this.workplacesService = workplacesService;
@@ -53,7 +58,6 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
         add(new Hr());
         add(createStatsPage());
     }
-
 
     private VerticalLayout createStatsPage() {
         VerticalLayout statsPage = new VerticalLayout();
@@ -85,9 +89,6 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
 
                 DataSeries dataSeries = new DataSeries();
 
-                // Наверное лучше всего было вынести лист с TechStatsProjection в отдельную переменную и
-                // отсортировать его с помощью Comparator.comparingInt(TechStatsProjection::getCount).reversed()?
-                // Но тогда придётся начинать массив не с 0, а с 1?
                 Optional<DataSeriesItem> mostUsedTechnology = Optional.empty();
                 int maxCount = 0;
 
@@ -127,10 +128,11 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
                 DataSeries dataSeries = new DataSeries();
 
                 Optional<DataSeriesItem> mostPopularCompany = Optional.empty();
-                Long maxCount = 0L;
+                int maxCount = 0;
 
-                for (WorkplacesStatsDTO dto : workplacesService.getStatistics()) {
+                for (WorkplacesStatsProjection dto : workplacesService.getStatistics()) {
                     DataSeriesItem item = new DataSeriesItem(dto.getWorkplaceName(), dto.getCount());
+                    log.info("workplace name: " + dto.getWorkplaceName() + " count: " + dto.getCount());
                     dataSeries.add(item);
                     if (dto.getCount() > maxCount) {
                         maxCount = dto.getCount();
@@ -139,6 +141,7 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
                 }
                 if (mostPopularCompany.isPresent()) {
                     DataSeriesItem usedItem = mostPopularCompany.get();
+                    log.info("Most used workplace: " + usedItem);
                     usedItem.setSliced(true);
                     usedItem.setSelected(true);
                 }
@@ -160,21 +163,15 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
             try {
                 portfolioService.getPortfolioByUser(authenticationContext.getPrincipalName().get());
                 button.setText("Перейти к портфолио");
-                button.addClickListener(event -> {
-                    UI.getCurrent().navigate(PortfolioView.class, new RouteParameters("id", authenticationContext.getPrincipalName().get()));
-                });
+                button.addClickListener(event -> UI.getCurrent().navigate(PortfolioView.class, new RouteParameters("id", authenticationContext.getPrincipalName().get())));
             } catch (UserDoesNotHavePortfolioException e) {
                 button.setText("Создать новое портфолио");
-                button.addClickListener(event -> {
-                    UI.getCurrent().navigate(PortfolioCreationView.class);
-                });
+                button.addClickListener(event -> UI.getCurrent().navigate(PortfolioCreationView.class));
             }
         }
         else {
             button.setText("Войти");
-            button.addClickListener(event -> {
-                UI.getCurrent().navigate(LoginView.class);
-            });
+            button.addClickListener(event -> UI.getCurrent().navigate(LoginView.class));
         }
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         layout.add(button);

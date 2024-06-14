@@ -1,19 +1,23 @@
 package com.delmark.portfoilo.service.implementations;
 
 import com.delmark.portfoilo.exceptions.response.*;
-import com.delmark.portfoilo.models.DTO.UserDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.DTO.UserRegDTO;
+import com.delmark.portfoilo.models.messages.Chat;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
 import com.delmark.portfoilo.service.interfaces.UserService;
+import com.delmark.portfoilo.utils.ImageUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +26,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+
+// TODO: Реализовать новые методы
 @AllArgsConstructor
 @Service
 @Slf4j
@@ -37,8 +44,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private PortfolioRepository portfolioRepository;
 
     @Override
-    public void registration(UserDto userDto) {
-        if (!userRepository.existsByUsername(userDto.getUsername())) {
+    public void registration(UserRegDTO userRegDTO) {
+        if (!userRepository.existsByUsername(userRegDTO.getUsername())) {
 
             HashSet<Role> role = new HashSet<>();
 
@@ -46,9 +53,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
             User user = new User()
                     .setId(null)
-                    .setUsername(userDto.getUsername())
+                    .setName(userRegDTO.getName())
+                    .setSurname(userRegDTO.getSurname())
+                    .setMiddleName(userRegDTO.getMiddleName())
+                    .setUsername(userRegDTO.getUsername())
                     .setEnabled(true)
-                    .setPassword(passwordEncoder.encode(userDto.getPassword()))
+                    .setPassword(passwordEncoder.encode(userRegDTO.getPassword()))
                     .setRoles(role);
             userRepository.save(user);
         }
@@ -65,6 +75,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } else {
             return (User) authentication.getPrincipal();
         }
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return (User) loadUserByUsername(username);
     }
 
     @Override
@@ -106,6 +126,36 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         user.getRoles().remove(role);
         return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User sessionUser = getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+
+        if (!(sessionUser.getId().equals(user.getId())) && !user.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
+            throw new AccessDeniedException("Доступ запрещён");
+        }
+
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void setUserAvatar(Long userId, byte[] imageData) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User sessionUser = getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+
+        if (!(sessionUser.getId().equals(user.getId())) && !user.getRoles().contains(rolesRepository.findByAuthority("ADMIN").get())) {
+            throw new AccessDeniedException("Доступ запрещён");
+        }
+
+
+        if (!ImageUtils.isValidImage(imageData)) {
+            throw new IllegalArgumentException();
+        }
+
+        user.setAvatar(imageData);
+        userRepository.save(user);
     }
 
     @Override

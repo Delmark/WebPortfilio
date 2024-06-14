@@ -1,10 +1,10 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.Techs;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.portfolio.Techs;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.TechRepository;
@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,6 +60,8 @@ public class PortfolioControllerTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JwtAuthenticationConverter jwtAuthenticationConverter;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
@@ -67,12 +70,14 @@ public class PortfolioControllerTest {
 
         Role userRole = rolesRepository.findByAuthority("USER").get();
 
-        User normalUser = new User(null,
-                "Delmark",
-                passwordEncoder.encode("123"),
-                true,
-                new HashSet<>(List.of(userRole))
-        );
+        User normalUser = new User().
+                setId(null).
+                setUsername("Delmark").
+                setName("Delmark").
+                setSurname("Delmarkovich").
+                setPassword(passwordEncoder.encode("123456")).
+                setEnabled(true).
+                setRoles(new HashSet<>(List.of(userRole)));
         normalUser = userRepository.save(normalUser);
 
         // Добавление существующего технологии
@@ -84,9 +89,6 @@ public class PortfolioControllerTest {
         // Добавление существующего портфолио
 
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Name")
-                .setMiddleName("Middle name")
-                .setSurname("Surname")
                 .setAboutUser("About")
                 .setEducation("Education")
                 .setUser(normalUser);
@@ -97,7 +99,7 @@ public class PortfolioControllerTest {
     void getPortfolioByUser() throws Exception {
         Portfolio expected = portfolioRepository.findById(1L).get();
 
-        mockMvc.perform(MockMvcRequestBuilders.get( "/api/portfolio/Delmark")
+        mockMvc.perform(MockMvcRequestBuilders.get( "/api/v1/portfolio/Delmark")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -108,7 +110,7 @@ public class PortfolioControllerTest {
     void getPortfolioByID() throws Exception {
         Portfolio expected = portfolioRepository.findById(1L).get();
 
-        mockMvc.perform(MockMvcRequestBuilders.get( "/api/portfolio/id/1")
+        mockMvc.perform(MockMvcRequestBuilders.get( "/api/v1/portfolio/id/1")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -117,7 +119,7 @@ public class PortfolioControllerTest {
 
     @Test
     void getPortfolioByWrongID() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/portfolio/id/100")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/portfolio/id/100")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -125,7 +127,7 @@ public class PortfolioControllerTest {
 
     @Test
     void getPortfolioByWrongName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/portfolio/Delma")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/portfolio/Delma")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -136,14 +138,9 @@ public class PortfolioControllerTest {
         Portfolio expected = portfolioRepository.findById(1L).get();
         expected.getTechses().add(techRepository.findById(1L).get());
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/portfolio/tech?portId=1&techId=1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/portfolio/tech?portId=1&techId=1")
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expected)));
@@ -158,12 +155,9 @@ public class PortfolioControllerTest {
         portfolio.setUser(null);
         portfolioRepository.save(portfolio);
 
-        PortfolioDto dto = new PortfolioDto("TestUser",
-                "TestMiddleName",
-                "TestSurname",
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestAboutUser",
                 "TestEducation",
-                "testgmail@gmail.com",
                 null,
                 null
         );
@@ -173,15 +167,10 @@ public class PortfolioControllerTest {
         expected.setUser(userRepository.findByUsername("Delmark").get());
         expected.setTechses(new HashSet<>());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/portfolio")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/portfolio")
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expected)));
@@ -190,37 +179,26 @@ public class PortfolioControllerTest {
     // В этом тесте важно держать в уме, что пользователь и портфолио привязанное к нему уже существуют.
     @Test
     void createNewPortfolioWhenItExists() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
-                "TestMiddleName",
-                "TestSurname",
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestAboutUser",
                 "TestEducation",
-                "testgmail@gmail.com",
                 null,
                 null
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/portfolio")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/portfolio")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     void editPortfolio() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
-                "TestMiddleName",
-                "TestSurname",
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestAboutUser",
                 "TestEducation",
-                "testgmail@gmail.com",
                 null,
                 null
         );
@@ -228,15 +206,10 @@ public class PortfolioControllerTest {
         Portfolio expectedPortfolio = portfolioRepository.findById(1L).get();
         mapper.updatePortfolioFromDTO(dto, expectedPortfolio);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/portfolio?id=1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/portfolio?id=1")
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto))
-                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                {
-                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                    return grantedAuthoritiesConverter.convert(jwt);
-                })))
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                        jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(
@@ -246,82 +219,64 @@ public class PortfolioControllerTest {
 
     @Test
     void editNonExistingPortfolio() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
-                "TestMiddleName",
-                "TestSurname",
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestAboutUser",
                 "TestEducation",
-                "testgmail@gmail.com",
                 null,
                 null
         );
 
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/portfolio?id=2")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/portfolio?id=2")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     void editOtherUserPortfolio() throws Exception {
-        PortfolioDto dto = new PortfolioDto("TestUser",
-                "TestMiddleName",
-                "TestSurname",
+        PortfolioDTO dto = new PortfolioDTO(
                 "TestAboutUser",
                 "TestEducation",
-                "testgmail@gmail.com",
                 null,
                 null
         );
 
-        User user = new User(null, "OtherUser", "123", true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+        User user = new User().
+                setId(null).
+                setUsername("OtherUser").
+                setName("Delmark").
+                setSurname("Delmarkovich").
+                setPassword(passwordEncoder.encode("123456")).
+                setEnabled(true).
+                setRoles(new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+
         portfolioRepository.save(mapper.toEntity(dto).setUser(userRepository.saveAndFlush(user)));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/portfolio?id=2")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/portfolio?id=2")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto))
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void deletePortfolio() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/portfolio/1")
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void deleteNonExistingPortfolio() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/2")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/portfolio/2")
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -330,18 +285,21 @@ public class PortfolioControllerTest {
     void deleteOtherUserPortfolio() throws Exception {
 
         // Заменяем владельца превого портфолио на нового пользователя
-        User user = new User(null, "OtherUser", "123", true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+        User user = new User().
+                setId(null).
+                setUsername("OtherUser").
+                setName("Other Delmark").
+                setSurname("Other Delmarkovich").
+                setPassword(passwordEncoder.encode("123456")).
+                setEnabled(true).
+                setRoles(new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+
         user = userRepository.save(user);
         portfolioRepository.save(portfolioRepository.findById(1L).get().setUser(user));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/portfolio/1")
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -355,14 +313,9 @@ public class PortfolioControllerTest {
         portfolioRepository.save(existingPortfolio);
         existingPortfolio.getTechses().remove(java);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/tech?portId=1&techId=1")
-                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                {
-                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                    return grantedAuthoritiesConverter.convert(jwt);
-                })))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/portfolio/tech?portId=1&techId=1")
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                        jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(existingPortfolio)));
@@ -370,14 +323,9 @@ public class PortfolioControllerTest {
 
     @Test
     void deleteNonExistingTechFromPortfolio() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/tech?portId=1&techId=1")
-                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                        {
-                            JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                            grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                            grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                            return grantedAuthoritiesConverter.convert(jwt);
-                        })))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/portfolio/tech?portId=1&techId=1")
+                        .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                                jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -385,18 +333,21 @@ public class PortfolioControllerTest {
     @Test
     void deleteTechFromOtherUserPortfolio() throws Exception {
         Portfolio existingPortfolio = portfolioRepository.findById(1L).get();
-        User user = new User(null, "OtherUser", "123", true, new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+        User user = new User().
+                setId(null).
+                setUsername("OtherUser").
+                setName("Other Delmark").
+                setSurname("Other Delmarkovich").
+                setPassword(passwordEncoder.encode("123456")).
+                setEnabled(true).
+                setRoles(new HashSet<>(List.of(rolesRepository.findByAuthority("USER").get())));
+
         userRepository.save(user);
         portfolioRepository.save(existingPortfolio.setUser(user));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/portfolio/tech?portId=1&techId=1")
-                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(jwt ->
-                {
-                    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-                    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-                    return grantedAuthoritiesConverter.convert(jwt);
-                })))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/portfolio/tech?portId=1&techId=1")
+                .with(jwt().jwt(jwt -> jwt.subject("Delmark").claim("authorities", "USER")).authorities(
+                        jwt -> jwtAuthenticationConverter.convert(jwt).getAuthorities())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }

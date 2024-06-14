@@ -3,7 +3,7 @@ package com.delmark.portfoilo.service.implementations;
 import com.delmark.portfoilo.exceptions.response.NoSuchTechException;
 import com.delmark.portfoilo.exceptions.response.TechAlreadyExistsException;
 import com.delmark.portfoilo.models.DTO.TechStatsProjection;
-import com.delmark.portfoilo.models.Techs;
+import com.delmark.portfoilo.models.portfolio.Techs;
 import com.delmark.portfoilo.repository.TechRepository;
 import com.delmark.portfoilo.service.interfaces.TechService;
 import lombok.AllArgsConstructor;

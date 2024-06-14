@@ -1,4 +1,4 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.portfolio;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

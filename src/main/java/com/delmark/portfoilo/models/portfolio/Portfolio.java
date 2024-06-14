@@ -1,13 +1,15 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.portfolio;
 
+import com.delmark.portfoilo.models.messages.Comment;
+import com.delmark.portfoilo.models.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -28,28 +30,16 @@ public class Portfolio {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "port_id_seq")
     private Long id;
 
-    @ManyToOne
+    @OneToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "surname")
-    private String surname;
-
-    @Column(name = "middle_name")
-    @Nullable
-    private String middleName;
 
     @Column(name = "about")
     private String aboutUser;
 
     @Column(name = "education")
     private String education;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "phone")
     @Nullable
@@ -67,13 +57,22 @@ public class Portfolio {
             inverseJoinColumns = @JoinColumn(name = "techses_id"))
     private Set<Techs> techses = new LinkedHashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Projects> projects = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<Workplace> workplaces = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
+    Set<Comment> comments = new HashSet<>();
 }

@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.repository;
 
 import com.delmark.portfoilo.models.DTO.TechStatsProjection;
-import com.delmark.portfoilo.models.Techs;
+import com.delmark.portfoilo.models.portfolio.Techs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

@@ -1,23 +1,22 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Projects;
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
+import com.delmark.portfoilo.models.portfolio.Projects;
 import com.delmark.portfoilo.service.interfaces.ProjectService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @Validated
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/projects")
+@Tag(name = "Portfolio Projects", description = "API for Portfolio Projects management")
+@RequestMapping("/api/v1/projects")
 public class ProjectsController {
 
     ProjectService projectService;
@@ -33,11 +32,11 @@ public class ProjectsController {
     }
 
     @PostMapping
-    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid ProjectsDto dto) {
+    public ResponseEntity<Projects> addProjectToPortfolio(@RequestParam("portfolioId") Long id, @RequestBody @Valid ProjectsDTO dto) {
         return ResponseEntity.ok(projectService.addProjectToPortfolio(id, dto));
     }
 
-    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody @Valid ProjectsDto dto) {
+    @PutMapping ResponseEntity<Projects> editProject(@RequestParam("projectId") Long id, @RequestBody @Valid ProjectsDTO dto) {
         return ResponseEntity.ok(projectService.editProject(id,dto));
     }
 

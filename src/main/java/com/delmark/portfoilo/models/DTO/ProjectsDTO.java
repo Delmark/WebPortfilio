@@ -1,5 +1,6 @@
 package com.delmark.portfoilo.models.DTO;
 
+import com.delmark.portfoilo.models.portfolio.Projects;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Value;
@@ -8,10 +9,10 @@ import org.hibernate.validator.constraints.URL;
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.delmark.portfoilo.models.Projects}
+ * DTO for {@link Projects}
  */
 @Value
-public class ProjectsDto implements Serializable {
+public class ProjectsDTO implements Serializable {
     @Size(min = 2, max = 32, message = "Размер названия должен быть от 2 до 32 символов")
     @NotNull(message = "У проекта должно быть имя")
     String projectName;

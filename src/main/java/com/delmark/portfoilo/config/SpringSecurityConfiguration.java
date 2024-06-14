@@ -18,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -49,21 +50,31 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**")).permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/api/projects**").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/api/portfolio**").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/api/workPlaces**").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/tech/**").hasRole("ADMIN")
-                                .requestMatchers("/portfolio/**").permitAll()
-                                .requestMatchers("/register").permitAll()
-                                .requestMatchers("/logout").permitAll()
-                                .requestMatchers("/settings").permitAll()
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                // Документация API
+                                .requestMatchers("/api-docs/**").permitAll()
+                                .requestMatchers("/delm-api-info.html").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                // Общедоступные запросы
+                                .requestMatchers("/api/v1/projects**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/v1/portfolio**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/v1/workPlaces**").hasAnyRole("ADMIN", "USER")
+                                // Общедоступные запросы на чаты
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat/{id}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat/{id}/messages").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/api/v1/chat/{chatId}/user/{userId}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST,"/api/v1/chat/**").hasAnyRole("ADMIN", "USER")
+                                // Запросы, требующие роли администратора
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/chat/user/{username}").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/tech/**").hasRole("ADMIN")
+                                .requestMatchers("/test/**").permitAll()
                 ).oauth2ResourceServer(auth -> auth.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .formLogin((loginPage) -> {
                     loginPage.successForwardUrl("/");
                 })
+                .rememberMe(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
 //        http.csrf(AbstractHttpConfigurer::disable);

@@ -2,7 +2,7 @@ package com.delmark.portfoilo.service;
 
 import com.delmark.portfoilo.exceptions.response.NoSuchTechException;
 import com.delmark.portfoilo.exceptions.response.TechAlreadyExistsException;
-import com.delmark.portfoilo.models.Techs;
+import com.delmark.portfoilo.models.portfolio.Techs;
 import com.delmark.portfoilo.repository.TechRepository;
 import com.delmark.portfoilo.service.implementations.TechServiceImpl;
 import com.delmark.portfoilo.service.interfaces.TechService;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
-public class TechTest {
+public class TechServiceTest {
 
     private static final TechRepository techRepository = Mockito.mock(TechRepository.class);
 

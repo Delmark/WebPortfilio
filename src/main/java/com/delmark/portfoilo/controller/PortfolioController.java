@@ -1,24 +1,20 @@
 package com.delmark.portfoilo.controller;
 
-import com.delmark.portfoilo.exceptions.ErrorResponse;
-import com.delmark.portfoilo.models.DTO.PortfolioDto;
-import com.delmark.portfoilo.models.Portfolio;
+import com.delmark.portfoilo.models.DTO.PortfolioDTO;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 @Validated
 @RestController
+@Tag(name = "Portfolio", description = "API for Portfolio management")
 @AllArgsConstructor
-@RequestMapping("/api/portfolio")
+@RequestMapping("/api/v1/portfolio")
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
@@ -37,7 +33,7 @@ public class PortfolioController {
     // POST
 
     @PostMapping
-    public ResponseEntity<Portfolio> createPortfolio(@RequestBody @Valid PortfolioDto portfolio) {
+    public ResponseEntity<Portfolio> createPortfolio(@RequestBody @Valid PortfolioDTO portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioCreation(portfolio));
     }
 
@@ -51,7 +47,7 @@ public class PortfolioController {
 
 
     @PutMapping
-    public ResponseEntity<Portfolio> editPortfolio(@RequestParam Long id, @RequestBody @Valid PortfolioDto portfolio) {
+    public ResponseEntity<Portfolio> editPortfolio(@RequestParam Long id, @RequestBody @Valid PortfolioDTO portfolio) {
         return ResponseEntity.ok(portfolioService.portfolioEdit(id, portfolio));
     }
 

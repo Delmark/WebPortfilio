@@ -1,8 +1,9 @@
-package com.delmark.portfoilo.models;
+package com.delmark.portfoilo.models.portfolio;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.builder.EqualsExclude;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -26,8 +27,15 @@ public class Projects {
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
+    @Column(name = "project_name")
     private String projectName;
+
+
+    @Column(name = "project_description")
     private String projectDesc;
+
+
+    @Column(name = "project_link")
     private String projectLink;
 
 }

@@ -1,7 +1,7 @@
 package com.delmark.portfoilo.views;
 
 import com.delmark.portfoilo.exceptions.response.UsernameAlreadyExistsException;
-import com.delmark.portfoilo.models.DTO.UserDto;
+import com.delmark.portfoilo.models.DTO.UserRegDTO;
 import com.delmark.portfoilo.service.interfaces.UserService;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
@@ -13,8 +13,10 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.HasValidationProperties;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldBase;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -34,6 +36,10 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
 
     private TextField username = new TextField("Логин", "Ваш логин");
     private PasswordField passwordField = new PasswordField("Пароль", "Ваш пароль");
+    private TextField email = new TextField("Email", "Ваш Email");
+    private TextField name = new TextField("Имя", "Ваше имя");
+    private TextField surname = new TextField("Фамилия", "Ваша фамилия");
+    private TextField middleName = new TextField("Отчество", "Ваше отчество");
     private Button button = new Button("Зарегистрироваться");
     private VerticalLayout registerFormLayout = new VerticalLayout();
     private Span errorSpan = new Span();
@@ -58,16 +64,23 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
 
         registerFormLayout.add(errorMessagediv);
 
-        HorizontalLayout wrapper = new HorizontalLayout(createRegisterForm());
+        VerticalLayout wrapper = new VerticalLayout(createRegisterForm());
+        wrapper.addClassNames(LumoUtility.JustifyContent.CENTER);
+        wrapper.setWidth("90%");
 
+        this.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.ROW, LumoUtility.JustifyContent.CENTER);
+
+        wrapper.add(button);
         registerFormLayout.add(wrapper);
-        registerFormLayout.add(button);
         button.addClickListener(this::registerUser);
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        button.addClassNames(LumoUtility.AlignSelf.CENTER);
+        button.setWidth("40%");
         registerFormLayout.setAlignItems(Alignment.CENTER);
         registerFormLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        registerFormLayout.setHeight("100%");
-        registerFormLayout.setWidth("100%");
+        registerFormLayout.setHeight("70%");
+        registerFormLayout.setWidth("40%");
+        registerFormLayout.addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Margin.AUTO, LumoUtility.BorderRadius.LARGE);
         setWidth("100%");
         setHeight("100%");
         add(registerFormLayout);
@@ -76,7 +89,21 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
     private FormLayout createRegisterForm() {
         FormLayout formLayout = new FormLayout();
 
-        formLayout.add(username, passwordField);
+        username.setRequired(true);
+        username.setMinLength(5);
+        username.setMaxLength(32);
+        passwordField.setRequired(true);
+        passwordField.setMinLength(5);
+        passwordField.setMaxLength(32);
+        email.setRequired(true);
+        name.setRequired(true);
+        name.setMinLength(5);
+        name.setMaxLength(32);
+        surname.setRequired(true);
+        surname.setMinLength(5);
+        surname.setMaxLength(32);
+
+        formLayout.add(username, passwordField, email, name, surname, middleName);
         formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1)
         );
@@ -85,7 +112,10 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
     }
 
     private void registerUser(ClickEvent<Button> event) {
-        if ((username.isEmpty() && passwordField.isEmpty())) {
+
+        List<TextFieldBase> fieldsForValidation = List.of(username, passwordField, email, name, surname, middleName);
+
+        if (fieldsForValidation.stream().anyMatch(HasValidationProperties::isInvalid)) {
             Map<String, List<String>> query = new HashMap<>();
             query.put("error", new ArrayList<>());
             UI.getCurrent().navigate("register", new QueryParameters(query));
@@ -93,7 +123,16 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
         }
 
         try {
-            userService.registration(new UserDto(username.getValue(), passwordField.getValue()));
+            userService.registration(
+                    new UserRegDTO(
+                            username.getValue(),
+                            passwordField.getValue(),
+                            name.getValue(),
+                            surname.getValue(),
+                            middleName.getValue(),
+                            email.getValue()
+                    )
+            );
         }
         catch (UsernameAlreadyExistsException e) {
             Map<String, List<String>> query = new HashMap<>();

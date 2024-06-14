@@ -1,12 +1,12 @@
 package com.delmark.portfoilo.service;
 
+import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchProjectException;
-import com.delmark.portfoilo.models.DTO.ProjectsDto;
-import com.delmark.portfoilo.models.Portfolio;
-import com.delmark.portfoilo.models.Projects;
-import com.delmark.portfoilo.models.Role;
-import com.delmark.portfoilo.models.User;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Projects;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.*;
 import com.delmark.portfoilo.service.implementations.ProjectServiceImpl;
 import com.delmark.portfoilo.service.implementations.UserServiceImpl;
@@ -48,13 +48,8 @@ public class ProjectsServiceTest {
     @Test
     @DisplayName("Получение всех проектов")
     void getAllProjects() {
-        User existingUser = new User(1L, "Existing User", "123", true, new HashSet<>(List.of(new Role(1L, "USER"))));
-        Portfolio existingPortfolio = new Portfolio()
-                .setId(1L)
-                .setName("Average Portfolio")
-                .setAboutUser("About user")
-                .setUser(existingUser)
-                .setTechses(new HashSet<>());
+        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>());
+        Portfolio existingPortfolio = new Portfolio(1L, existingUser, "About me", "YSTU", null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
 
         List<Projects> expectedProjects = List.of(
                 new Projects(1L, existingPortfolio, "1", "1", "1"),
@@ -79,11 +74,11 @@ public class ProjectsServiceTest {
     @Test
     @DisplayName("Получение проекта по ID")
     void getProjectById() {
-        User existingUser = new User(1L, "Existing User", "123", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User existingUser = new User(1L, "Delmark", "123", "Delmark", "Delmarkovich", null, "gmail@gmaii.com", null, true, new HashSet<>());
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
+                .setEducation("YSTU")
                 .setUser(existingUser)
                 .setTechses(new HashSet<>());
 
@@ -109,12 +104,11 @@ public class ProjectsServiceTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
 
-        ProjectsDto dto = new ProjectsDto("Project Name", "Project Desc", "Url");
+        ProjectsDTO dto = new ProjectsDTO("Project Name", "Project Desc", "Url");
         Projects savedProject = new Projects()
                 .setProjectName(dto.getProjectName())
                 .setProjectDesc(dto.getProjectDesc())
@@ -147,11 +141,10 @@ public class ProjectsServiceTest {
     @Test
     @WithMockCustomUser
     void addProjectToOtherUserPortfolio() {
-        User user = new User(2L, "123", "345", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User user = new User().setId(2L).setName("Test User");
 
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -159,7 +152,7 @@ public class ProjectsServiceTest {
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
 
-        assertThrows(AccessDeniedException.class, () -> projectService.addProjectToPortfolio(1L, new ProjectsDto("1", "1", "1")));
+        assertThrows(AccessDeniedException.class, () -> projectService.addProjectToPortfolio(1L, new ProjectsDTO("1", "1", "1")));
     }
 
     @DisplayName("Редактирование проекта")
@@ -169,14 +162,13 @@ public class ProjectsServiceTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
 
         Projects existingProject = new Projects(1L, existingPortfolio, "Proj", "Porj Des", null);
 
-        ProjectsDto dto = new ProjectsDto("Project Name", "Project Desc", "Url");
+        ProjectsDTO dto = new ProjectsDTO("Project Name", "Project Desc", "Url");
 
         Projects expectedProject = new Projects()
                 .setId(1L)
@@ -197,18 +189,17 @@ public class ProjectsServiceTest {
     @Test
     void editNonExistingProject() {
         Mockito.when(projectsRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(NoSuchProjectException.class, () -> projectService.editProject(1L, new ProjectsDto("1", "1", "1")));
+        assertThrows(NoSuchProjectException.class, () -> projectService.editProject(1L, new ProjectsDTO("1", "1", "1")));
     }
 
     @DisplayName("Попытка отредактировать чужой проект")
     @Test
     @WithMockCustomUser
     void editOtherUserProject() {
-        User user = new User(2L, "123", "345", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User user = new User().setId(2L).setName("Test User");
 
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -218,7 +209,7 @@ public class ProjectsServiceTest {
         Mockito.when(projectsRepository.findById(1L)).thenReturn(Optional.of(existingProject));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
 
-        assertThrows(AccessDeniedException.class, () -> projectService.editProject(1L, new ProjectsDto("1", "1", "1")));
+        assertThrows(AccessDeniedException.class, () -> projectService.editProject(1L, new ProjectsDTO("1", "1", "1")));
     }
 
     @Test
@@ -228,7 +219,6 @@ public class ProjectsServiceTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());
@@ -245,11 +235,10 @@ public class ProjectsServiceTest {
     @DisplayName("Попытка удалить чужой проект")
     @WithMockCustomUser
     void deleteOtherUserProject() {
-        User user = new User(2L, "123", "345", true, new HashSet<>(List.of(new Role(1L, "USER"))));
+        User user = new User().setId(2L).setName("Test User");
 
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setName("Average Portfolio")
                 .setAboutUser("About user")
                 .setUser(user)
                 .setTechses(new HashSet<>());

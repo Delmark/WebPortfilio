@@ -1,9 +1,12 @@
 package com.delmark.portfoilo.service;
 
+import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.exceptions.response.NoSuchPortfolioException;
 import com.delmark.portfoilo.exceptions.response.NoSuchWorkException;
-import com.delmark.portfoilo.models.*;
-import com.delmark.portfoilo.models.DTO.WorkplaceDto;
+import com.delmark.portfoilo.models.portfolio.Portfolio;
+import com.delmark.portfoilo.models.portfolio.Workplace;
+import com.delmark.portfoilo.models.user.Role;
+import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.WorkplacesRepository;
 import com.delmark.portfoilo.repository.PortfolioRepository;
 import com.delmark.portfoilo.repository.RolesRepository;
@@ -34,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class WorkplacesTest {
+public class WorkplacesServiceTest {
 
     private final Date date = new Date();
 
@@ -58,8 +61,7 @@ public class WorkplacesTest {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
                 .setId(1L)
-                .setUser(user)
-                .setName("test");
+                .setUser(user);
 
         List<Workplace> existingWorkplaces = List.of(
                 new Workplace(1L, existingPortfolio, "test", "test", "test", date, date),
@@ -100,11 +102,10 @@ public class WorkplacesTest {
     void createWorkplace() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
 
-        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
+        WorkplaceDTO dto = new WorkplaceDTO("test", "test", "test", date, date);
 
         Workplace savedWorkplace = new Workplace(null, existingPortfolio, "test", "test", "test", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
@@ -130,11 +131,10 @@ public class WorkplacesTest {
     void createWorkplaceForOtherUser() {
         User otherUser = new User().setUsername("test").setPassword("geniusPass").setEnabled(true).setId(2L);
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
 
-        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
+        WorkplaceDTO dto = new WorkplaceDTO("test", "test", "test", date, date);
 
         Mockito.when(portfolioRepository.findById(1L)).thenReturn(Optional.ofNullable(existingPortfolio));
         Mockito.when(rolesRepository.findByAuthority("ADMIN")).thenReturn(Optional.of(new Role(2L, "ADMIN")));
@@ -148,11 +148,10 @@ public class WorkplacesTest {
     void updateWorkplace() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
 
-        WorkplaceDto dto = new WorkplaceDto("test", "test", "test", date, date);
+        WorkplaceDTO dto = new WorkplaceDTO("test", "test", "test", date, date);
 
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
         Workplace expectedWorkplace = new Workplace(1L, existingPortfolio, "test", "test", "test", date, date);
@@ -176,7 +175,6 @@ public class WorkplacesTest {
     void updateWorkplaceForOtherUser() {
         User otherUser = new User().setUsername("test").setPassword("testPass").setEnabled(true).setId(2L);
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
@@ -193,7 +191,6 @@ public class WorkplacesTest {
     void deleteWorkplace() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(user);
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
@@ -215,7 +212,6 @@ public class WorkplacesTest {
     void deleteWorkplaceForOtherUser() {
         User otherUser = new User().setUsername("test").setPassword("testPass").setEnabled(true).setId(2L);
         Portfolio existingPortfolio = new Portfolio()
-                .setName("Test Portfolio")
                 .setId(1L)
                 .setUser(otherUser);
         Workplace existingWorkplace = new Workplace(1L, existingPortfolio, "none", "none", "none", date, date);
