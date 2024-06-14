@@ -6,6 +6,8 @@ import com.delmark.portfoilo.models.DTO.WorkplacesStatsProjection;
 import com.delmark.portfoilo.service.interfaces.PortfolioService;
 import com.delmark.portfoilo.service.interfaces.TechService;
 import com.delmark.portfoilo.service.interfaces.WorkplacesService;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -56,7 +58,6 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
         add(new Hr());
         add(createStatsPage());
     }
-
 
     private VerticalLayout createStatsPage() {
         VerticalLayout statsPage = new VerticalLayout();

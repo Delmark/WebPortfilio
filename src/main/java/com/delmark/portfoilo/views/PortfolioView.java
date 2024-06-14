@@ -199,7 +199,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             commentDataLayout.setPadding(false);
 
             Anchor userLink = new Anchor();
-            userLink.setHref("portfolio/" + comment.getSender().getId());
+            userLink.setHref("portfolio/" + comment.getSender().getUsername());
             userLink.setText(comment.getSender().getUsername());
 
             Span commentText = new Span(comment.getComment());

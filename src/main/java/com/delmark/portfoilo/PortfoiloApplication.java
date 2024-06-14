@@ -4,6 +4,8 @@ import com.delmark.portfoilo.models.user.Role;
 import com.delmark.portfoilo.models.user.User;
 import com.delmark.portfoilo.repository.RolesRepository;
 import com.delmark.portfoilo.repository.UserRepository;
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,8 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 
+@Push
 @SpringBootApplication
-public class PortfoiloApplication {
+public class PortfoiloApplication implements AppShellConfigurator {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PortfoiloApplication.class, args);

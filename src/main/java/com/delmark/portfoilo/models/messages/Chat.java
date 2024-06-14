@@ -29,7 +29,7 @@ public class Chat {
     private String chatName;
 
     @ToString.Exclude
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "chat_users",
             joinColumns = @JoinColumn(name = "chat_id"),
@@ -39,6 +39,6 @@ public class Chat {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
 }

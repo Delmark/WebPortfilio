@@ -52,12 +52,13 @@ public class MainLayout extends AppLayout {
         else {
             SideNavItem settingsNavItem = new SideNavItem("Настройки", SettingsView.class, LineAwesomeIcon.WRENCH_SOLID.create());
             SideNavItem exitNavItem = new SideNavItem("Выйти", LogoutView.class, LineAwesomeIcon.SIGN_OUT_ALT_SOLID.create());
+            SideNavItem chatNavItem = new SideNavItem("Чаты", ChatListView.class, LineAwesomeIcon.COMMENT_SOLID.create());
             nav.addItem(new SideNavItem("Моё портфолио", "/portfolio/" + authenticationContext.getPrincipalName().get(), LineAwesomeIcon.TOOLBOX_SOLID.create()));
             nav.addItem(new SideNavItem("Другие пользователи", OtherPeoplePortfolios.class,
                     LineAwesomeIcon.USER_FRIENDS_SOLID.create()));
+            nav.addItem(chatNavItem);
             nav.addItem(settingsNavItem);
             nav.addItem(exitNavItem);
-
         }
 
         nav.setHeightFull();
