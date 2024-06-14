@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +32,7 @@ public class Chat {
 
     @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "chat_users",
             joinColumns = @JoinColumn(name = "chat_id"),
@@ -39,6 +42,7 @@ public class Chat {
 
     @JsonIgnore
     @ToString.Exclude
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(mappedBy = "chat", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
 }

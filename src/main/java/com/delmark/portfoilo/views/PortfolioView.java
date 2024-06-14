@@ -3,9 +3,11 @@ package com.delmark.portfoilo.views;
 import com.delmark.portfoilo.exceptions.response.TechAlreadyInPortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserDoesNotHavePortfolioException;
 import com.delmark.portfoilo.exceptions.response.UserNotFoundException;
+import com.delmark.portfoilo.models.DTO.ChatCreationDTO;
 import com.delmark.portfoilo.models.DTO.ProjectsDTO;
 import com.delmark.portfoilo.models.DTO.WorkplaceDTO;
 import com.delmark.portfoilo.models.DTO.PortfolioDTO;
+import com.delmark.portfoilo.models.messages.Chat;
 import com.delmark.portfoilo.models.messages.Comment;
 import com.delmark.portfoilo.models.portfolio.Portfolio;
 import com.delmark.portfoilo.models.portfolio.Projects;
@@ -77,6 +79,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     private final WorkplacesService workplacesService;
     private final PortfolioService portfolioService;
     private final CommentService commentService;
+    private final ChatService chatService;
     public PortfolioView(PortfolioRepository portfolioRepository,
                          WorkplacesRepository workplacesRepository,
                          ProjectsRepository projectsRepository,
@@ -87,7 +90,9 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                          WorkplacesService workplacesService,
                          PortfolioService portfolioService,
                          UserService userService,
-                         CommentService commentService) {
+                         CommentService commentService,
+                         ChatService chatService) {
+        this.chatService = chatService;
         this.commentService = commentService;
         this.userService = userService;
         this.projectService = projectService;
@@ -478,6 +483,31 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             });
             deletePortfolioBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
             buttonLayout.add(deletePortfolioBtn);
+            userInfoLayout.add(buttonLayout);
+        }
+        else {
+            Div buttonLayout = new Div();
+            buttonLayout.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN, LumoUtility.Margin.MEDIUM);
+            Button contactButton = new Button("Написать пользователю");
+            contactButton.addClickListener(e -> {
+                // TODO: Обработка пагинации
+                List<Chat> portfolioOwnerChats = chatService.getAllUserChats(portfolio.getUser().getUsername(), 1, 1000).getContent();
+                User sessionUser = userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication());
+
+                // TODO: Не корректно работает, если пользователь уже состоит в чате, продебажить
+                if (portfolioOwnerChats.stream().anyMatch(chat -> chat.getUsers().contains(sessionUser) && chat.getUsers().contains(portfolio.getUser()))) {
+                    Chat chatWithBothUsers = portfolioOwnerChats.stream().filter(chat -> chat.getUsers().contains(sessionUser) && chat.getUsers().contains(portfolio.getUser())).findFirst().get();
+                    {
+                        UI.getCurrent().navigate(ChatListView.class, QueryParameters.of("chat", String.valueOf(chatWithBothUsers.getId())));
+                    }
+                }
+                else {
+                    ChatCreationDTO dto = new ChatCreationDTO(null, Set.of(portfolio.getUser().getId(), sessionUser.getId()));
+                    Chat newChat = chatService.createChat(dto);
+                    UI.getCurrent().navigate(ChatListView.class, QueryParameters.of("chat", String.valueOf(newChat.getId())));
+                }
+            });
+            buttonLayout.add(contactButton);
             userInfoLayout.add(buttonLayout);
         }
 

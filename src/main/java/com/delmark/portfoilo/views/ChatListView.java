@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 @Route(value = "chats", layout = MainLayout.class)
 @PermitAll
 @Slf4j
-public class ChatListView extends HorizontalLayout {
+public class ChatListView extends HorizontalLayout implements BeforeEnterObserver {
     private List<Chat> chatList;
     private final UserService userService;
     private final ChatService chatService;
@@ -254,5 +254,20 @@ public class ChatListView extends HorizontalLayout {
     public void onDetach(DetachEvent event) {;
         broadcast.remove();
         broadcast = null;
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (beforeEnterEvent.getLocation().getQueryParameters().getParameters().containsKey("chat")) {
+            try {
+                openChatPage(chatService.getChatById(Long.valueOf(beforeEnterEvent.getLocation().getQueryParameters().getParameters().get("chat").getFirst())));
+            }
+            catch (Exception exception) {
+                log.warn("User got {} while he tried get chat {} redirecting him to main chat page",
+                        beforeEnterEvent.getLocation().getQueryParameters().getParameters().get("chat").getFirst(),
+                        exception.getMessage());
+                beforeEnterEvent.forwardTo(ChatListView.class);
+            }
+        }
     }
 }
