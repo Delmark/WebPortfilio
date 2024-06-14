@@ -134,7 +134,7 @@ public class PortfolioServiceImpl implements PortfolioService {
             throw new NoSuchTechInPortfolio();
         }
 
-        portfolio.getTechses().add(tech);
+        portfolio.getTechses().remove(tech);
 
         return portfolioRepository.save(portfolio);
     }

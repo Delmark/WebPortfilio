@@ -22,7 +22,6 @@ public interface UserService {
     Page<User> getAllUsers(int page);
     List<User> getUsersWithPortfolio();
     Portfolio getPortfolioByUser(String username);
-    Set<Chat> getUserChats(String username);
 
     // Управление ролями
     User grantAuthority(String authority, String username);

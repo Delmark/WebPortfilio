@@ -64,16 +64,23 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
 
         registerFormLayout.add(errorMessagediv);
 
-        HorizontalLayout wrapper = new HorizontalLayout(createRegisterForm());
+        VerticalLayout wrapper = new VerticalLayout(createRegisterForm());
+        wrapper.addClassNames(LumoUtility.JustifyContent.CENTER);
+        wrapper.setWidth("90%");
 
+        this.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.ROW, LumoUtility.JustifyContent.CENTER);
+
+        wrapper.add(button);
         registerFormLayout.add(wrapper);
-        registerFormLayout.add(button);
         button.addClickListener(this::registerUser);
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        button.addClassNames(LumoUtility.AlignSelf.CENTER);
+        button.setWidth("40%");
         registerFormLayout.setAlignItems(Alignment.CENTER);
         registerFormLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        registerFormLayout.setHeight("100%");
-        registerFormLayout.setWidth("100%");
+        registerFormLayout.setHeight("70%");
+        registerFormLayout.setWidth("40%");
+        registerFormLayout.addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Margin.AUTO, LumoUtility.BorderRadius.LARGE);
         setWidth("100%");
         setHeight("100%");
         add(registerFormLayout);
@@ -83,10 +90,18 @@ public class RegisterView extends HorizontalLayout implements BeforeEnterObserve
         FormLayout formLayout = new FormLayout();
 
         username.setRequired(true);
+        username.setMinLength(5);
+        username.setMaxLength(32);
         passwordField.setRequired(true);
+        passwordField.setMinLength(5);
+        passwordField.setMaxLength(32);
         email.setRequired(true);
         name.setRequired(true);
+        name.setMinLength(5);
+        name.setMaxLength(32);
         surname.setRequired(true);
+        surname.setMinLength(5);
+        surname.setMaxLength(32);
 
         formLayout.add(username, passwordField, email, name, surname, middleName);
         formLayout.setResponsiveSteps(

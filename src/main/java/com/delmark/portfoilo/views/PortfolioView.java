@@ -47,6 +47,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -60,6 +61,7 @@ import static com.delmark.portfoilo.utils.DateUtils.getDateString;
 @PermitAll
 public class PortfolioView extends VerticalLayout implements BeforeEnterObserver {
 
+    boolean isLoadedPage = false;
     private String portfolioId;
     private final PortfolioRepository portfolioRepository;
     private final WorkplacesRepository workplacesRepository;
@@ -98,9 +100,17 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
     private void createMainLayout() {
         Portfolio portfolio = portfolioRepository.findById(Long.parseLong(portfolioId)).get();
         VerticalLayout mainLayout = new VerticalLayout();
-        H1 yourProfile = new H1("Ваше портфолио");
+        H1 yourProfile;
+        if (userService.getUserByAuth(SecurityContextHolder.getContext().getAuthentication()).getId().equals(portfolio.getUser().getId())) {
+            yourProfile = new H1("Ваше портфолио");
+        }
+        else {
+            yourProfile = new H1("Портфолио пользователя " + portfolio.getUser().getUsername());
+        }
         Hr hr = new Hr();
+        hr.setHeight("10px");
         Hr hr2 = new Hr();
+        hr.setHeight("10px");
         mainLayout.add(yourProfile);
         mainLayout.setAlignSelf(Alignment.CENTER, yourProfile);
         mainLayout.add(createUserInfo(portfolio));
@@ -115,11 +125,14 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
 
 
     private VerticalLayout createTechStackLayout() {
+        Portfolio portfolio = portfolioService.getPortfolio(Long.parseLong(portfolioId));
         VerticalLayout techStackLayout = new VerticalLayout();
-        H3 techStack = new H3("Мой стек технологий");
+        H3 techStack = new H3("Технические навыки");
         techStackLayout.add(techStack);
 
         HorizontalLayout techWrapper = new HorizontalLayout();
+        techWrapper.setWidth("100%");
+        techWrapper.addClassNames(LumoUtility.FlexWrap.WRAP);
 
         Set<Techs> techPool = portfolioRepository.findById(Long.parseLong(portfolioId)).get().getTechses();
 
@@ -128,21 +141,31 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             techCard.addClassNames(
                     "bg-contrast-5",
                     LumoUtility.BorderRadius.MEDIUM,
-                    LumoUtility.Padding.SMALL,
+                    LumoUtility.Padding.MEDIUM,
                     LumoUtility.Display.FLEX,
-                    LumoUtility.FlexDirection.COLUMN)
+                    LumoUtility.FlexDirection.ROW)
             ;
 
             Span techName = new Span(tech.getTechName());
-            techName.addClassNames("font-bold", LumoUtility.Margin.MEDIUM);
-
+            techName.addClassNames("font-bold", LumoUtility.Margin.SMALL);
             techCard.add(techName);
+
+            if (portfolio.getUser().getUsername().equals(authenticationContext.getPrincipalName().get())) {
+                Button deleteTechButton = new Button(LineAwesomeIcon.LONG_ARROW_ALT_DOWN_SOLID.create());
+                deleteTechButton.addClassNames(LumoUtility.Margin.Left.AUTO, LumoUtility.Padding.SMALL);
+                deleteTechButton.setMaxWidth("10%");
+                deleteTechButton.setMaxHeight("10%");
+                deleteTechButton.addClickListener(e -> {
+                    portfolioService.removeTechFromPortfolio(portfolio.getId(), tech.getId());
+                    UI.getCurrent().getPage().reload();
+                });
+                techCard.add(deleteTechButton);
+            }
             techWrapper.add(techCard);
         }
 
         techStackLayout.add(techWrapper);
 
-        Portfolio portfolio = portfolioService.getPortfolio(Long.parseLong(portfolioId));
 
         if (portfolio.getUser().getUsername().equals(authenticationContext.getPrincipalName().get())) {
             Button addTechButton = new Button("Добавить технологию");
@@ -305,11 +328,15 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         overall.setWidth("100%");
 
         // Layout для проектов
-        VerticalLayout projects = new VerticalLayout();
-        H4 projectsH4 = new H4("Мои проекты");
+        VerticalLayout projectLayout = new VerticalLayout();
+        H4 projectsH4 = new H4("Проекты");
+        projectLayout.setWidth("50%");
+
         projectsH4.addClassNames(LumoUtility.AlignSelf.CENTER);
+        projectLayout.add(projectsH4);
+        VerticalLayout projects = new VerticalLayout();
         VerticalLayout projectList = new VerticalLayout();
-        projectList.addClassNames(LumoUtility.BorderRadius.SMALL, LumoUtility.BorderColor.CONTRAST);
+        projectList.addClassNames(LumoUtility.BorderRadius.SMALL, LumoUtility.Margin.MEDIUM);
 
         List<Projects> projectsList = projectsRepository.findAllByPortfolio(portfolio);
 
@@ -324,7 +351,16 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             }
         }
 
-        projects.add(projectsH4, projectList);
+        projects.add(projectList);
+
+        projectList.setAlignSelf(Alignment.CENTER);
+        projectList.setAlignItems(Alignment.CENTER);
+
+        Scroller scroller = new Scroller(projects);
+        scroller.setWidth("100%");
+        scroller.addClassNames(LumoUtility.Background.CONTRAST_5);
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        projectLayout.add(scroller);
 
         if (portfolio.getUser().getUsername().equals(authenticationContext.getPrincipalName().get())) {
             Button addProject = new Button("Добавить проект");
@@ -333,49 +369,54 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
                 createProjectDialog.open();
             });
             addProject.addClassNames(LumoUtility.AlignSelf.CENTER);
-            projects.add(addProject);
+            projectLayout.add(addProject);
         }
 
-        projectList.setAlignSelf(Alignment.CENTER);
-        projectList.setAlignItems(Alignment.CENTER);
+        overall.add(projectLayout);
 
-        Scroller scroller = new Scroller(projects);
-        scroller.setWidth("50%");
-        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        overall.add(scroller);
-
+        // Layout для мест работы
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.addClassNames(LumoUtility.AlignItems.CENTER);
-        VerticalLayout acrdionLayout = new VerticalLayout();
-        acrdionLayout.addClassNames(LumoUtility.AlignItems.CENTER);
-        // Layout для мест работы
-        Accordion accordion = new Accordion();
+        VerticalLayout workplacesLayout = new VerticalLayout();
+        wrapper.setWidth("50%");
+        workplacesLayout.addClassNames(LumoUtility.AlignItems.CENTER);
+        VerticalLayout workplacesList = new VerticalLayout();
+        workplacesList.addClassNames(LumoUtility.BorderRadius.SMALL, LumoUtility.JustifyContent.CENTER);
+        workplacesLayout.setHeight("100%");
         List<Workplace> workplaces = workplacesRepository.findAllByPortfolioId(Long.parseLong(portfolioId));
 
         if (workplaces.isEmpty()) {
-            accordion.add(new AccordionPanel("У вас нет мест работы :("));
+            workplacesList.add(new H4("У вас нет мест работы :("));
         }
         else {
             for (Workplace workplace : workplaces) {
                 Div workCard = new Div();
-                workCard.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN);
-                String workplaceName = "Место работы: " + workplace.getWorkplaceName();
+                workCard.setWidth("70%");
+                workCard.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN, LumoUtility.AlignSelf.CENTER, LumoUtility.Background.CONTRAST_5, LumoUtility.Padding.MEDIUM);
+                String workplaceName =  workplace.getWorkplaceName();
                 String workplaceDesc = workplace.getWorkplaceDesc();
                 String post = "Должность: " + ((workplace.getPost() == null) ? "N/A" : workplace.getPost());
-                String timeOfWork = ((workplace.getHireDate() == null) ? "N/A" : getDateString(workplace.getHireDate())) +
+                String timeOfWork = "Время работы: " + ((workplace.getHireDate() == null) ? "N/A" : getDateString(workplace.getHireDate())) +
                         " - " + ((workplace.getFireDate() == null) ? "N/A" : getDateString(workplace.getFireDate()));
+                Span workplaceNameSpan = new Span(workplaceName);
+                workplaceNameSpan.addClassNames(LumoUtility.FontWeight.BOLD, LumoUtility.AlignSelf.CENTER);
                 workCard.add(
-                        new Span(workplaceName),
+                        workplaceNameSpan,
                         new Span(workplaceDesc),
                         new Span(post),
                         new Span(timeOfWork)
                 );
-                accordion.add(workplace.getWorkplaceName(), workCard);
+                workplacesList.add(workCard);
             }
         }
-        acrdionLayout.add(accordion);
-        wrapper.add(new H4("Ваши места работы"), acrdionLayout);
+        workplacesLayout.add(workplacesList);
         wrapper.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.CENTER);
+
+        Scroller scrollerWork = new Scroller(workplacesLayout);
+        scrollerWork.setWidth("100%");
+        scrollerWork.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        scrollerWork.addClassNames(LumoUtility.Background.CONTRAST_5);
+        wrapper.add(new H4("Места работы"), scrollerWork);
 
         if (portfolio.getUser().getUsername().equals(authenticationContext.getPrincipalName().get())) {
             Button addWorkPlaceButton = new Button("Добавить место работы");
@@ -384,12 +425,7 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             wrapper.add(addWorkPlaceButton);
         }
 
-        Scroller scrollerWork = new Scroller(wrapper);
-        scrollerWork.setWidth("50%");
-        scrollerWork.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        overall.add(scrollerWork);
-
-
+        overall.add(wrapper);
         return overall;
     }
 
@@ -514,10 +550,10 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
         about.setHeight("150px");
 
         TextField phone = new TextField("Телефон");
-        phone.setValue(portfolio.getPhone());
+        phone.setValue(portfolio.getPhone() == null ? "" : portfolio.getPhone());
 
         TextField siteUrl = new TextField("Сайт");
-        siteUrl.setValue(portfolio.getSiteUrl());
+        siteUrl.setValue(portfolio.getSiteUrl() == null ? "" : portfolio.getSiteUrl());
 
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
@@ -642,6 +678,8 @@ public class PortfolioView extends VerticalLayout implements BeforeEnterObserver
             return;
         }
 
+
+        removeAll();
         createMainLayout();
     }
 }

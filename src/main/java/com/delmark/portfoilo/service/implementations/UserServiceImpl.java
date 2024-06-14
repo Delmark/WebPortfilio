@@ -103,12 +103,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Set<Chat> getUserChats(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        return user.getChats();
-    }
-
-    @Override
     public User grantAuthority(String authority, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Role role = rolesRepository.findByAuthority(authority).orElseThrow(NoSuchRoleException::new);

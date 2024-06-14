@@ -19,12 +19,14 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @PageTitle("Главная")
 @Route(value = "", layout = MainLayout.class)
 @AnonymousAllowed
+@Slf4j
 @PermitAll
 public class MainPage extends VerticalLayout implements BeforeEnterObserver {
 
@@ -129,6 +131,7 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
 
                 for (WorkplacesStatsProjection dto : workplacesService.getStatistics()) {
                     DataSeriesItem item = new DataSeriesItem(dto.getWorkplaceName(), dto.getCount());
+                    log.info("workplace name: " + dto.getWorkplaceName() + " count: " + dto.getCount());
                     dataSeries.add(item);
                     if (dto.getCount() > maxCount) {
                         maxCount = dto.getCount();
@@ -137,6 +140,7 @@ public class MainPage extends VerticalLayout implements BeforeEnterObserver {
                 }
                 if (mostPopularCompany.isPresent()) {
                     DataSeriesItem usedItem = mostPopularCompany.get();
+                    log.info("Most used workplace: " + usedItem);
                     usedItem.setSliced(true);
                     usedItem.setSelected(true);
                 }

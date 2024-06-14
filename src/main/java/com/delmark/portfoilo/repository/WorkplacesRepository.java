@@ -15,6 +15,6 @@ public interface WorkplacesRepository extends JpaRepository<Workplace, Long> {
     List<Workplace> findAllByPortfolioId(Long portfolioId);
     Optional<Workplace> findByWorkplaceNameAndPortfolio(String name, Portfolio portfolio);
 
-    @Query(value = "SELECT p.workplace_name, count(*) FROM workplace p GROUP BY p.workplace_name ORDER BY count(*) DESC", nativeQuery = true)
+    @Query(value = "SELECT p.workplace_name AS workplaceName, count(*) FROM workplace p GROUP BY p.workplace_name ORDER BY count(*) DESC", nativeQuery = true)
     List<WorkplacesStatsProjection> getStatistics();
 }

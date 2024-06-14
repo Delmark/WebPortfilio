@@ -18,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -73,6 +74,7 @@ public class SpringSecurityConfiguration extends VaadinWebSecurity {
                 .formLogin((loginPage) -> {
                     loginPage.successForwardUrl("/");
                 })
+                .rememberMe(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
 //        http.csrf(AbstractHttpConfigurer::disable);
